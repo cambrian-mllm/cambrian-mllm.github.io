@@ -53,15 +53,16 @@ header .logo {
 /* --- Main Content Layout (Sidebar + Articles) --- */
 main {
     display: grid;
-    grid-template-columns: 15% 1fr;
+    grid-template-columns: minmax(180px, auto) 1fr;
     gap: 4rem;
 }
 
 .sidebar-nav {
-    position: fixed;
+    position: relative;
     border-right: 1px solid #333;
-    height: 100vh;
+    min-height: 100%;
     padding-right: 2rem;
+    padding-bottom: 2rem;
 }
 
 .sidebar-nav h3 {
@@ -152,10 +153,17 @@ main {
     font-size: 0.9rem;
     display: flex;
     flex-direction: column;
-    top: 0.25rem;
-    gap: 1.5rem;
     position: relative;
     padding-left: 20px;
+}
+
+.article-meta-left .article-category {
+    line-height: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.article-meta-left .article-date {
+    line-height: 1.5rem;
 }
 
 .article-meta-left::before {
@@ -180,7 +188,8 @@ main {
 
 .article-list h2 {
     font-size: 1.5rem;
-    margin: 0 0 0 0;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.5rem;
 }
 
 .article-list p {
@@ -193,4 +202,45 @@ main {
     font-size: 0.9rem;
     color: #888;
     margin-top: 1rem; /* Changed from margin-bottom */
+}
+
+@media (max-width: 768px) {
+    main {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .sidebar-nav {
+        display: none;
+    }
+
+    .content-area {
+        grid-column: 1 / -1;
+    }
+
+    .article-list a {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .article-meta-left {
+        flex-direction: row;
+        gap: 1rem;
+        padding-left: 0;
+        position: static;
+        margin-bottom: 1rem;
+    }
+
+    .article-meta-left .article-category,
+    .article-meta-left .article-date {
+        margin-bottom: 0;
+    }
+
+    .article-meta-left::before {
+        display: none;
+    }
+
+    .mission-statement h1 {
+        font-size: 1.5rem;
+    }
 }
