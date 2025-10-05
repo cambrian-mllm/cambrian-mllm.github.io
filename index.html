@@ -3,69 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Showcase</title>
+    <title>Cambrian World</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;800&family=Bitcount:wght@100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Lora:ital,wght@0,400..700;1,400..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bitcount:wght@100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Lora:ital,wght@0,400..700;1,400..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <header class="hero">
-        <div class="hero-content">
-            <h1>Cambrian World</h1>
-            <p>Welcome to the Cambrian World.</p>
-        </div>
-        <div class="scroll-down-indicator">
-            <span>Scroll down to unlock more</span>
-            <div class="arrow">↓</div>
-        </div>
-    </header>
+    <div class="container">
+        <header>
+            <div class="logo">Cambrian World</div>
+            <nav>
+                </nav>
+        </header>
 
-    <main>
-        <section class="product-list">
-            <h2 class="list-title">Our Innovations</h2>
+        <main>
+            <aside class="sidebar-nav">
+                <h3>Latest Advancements</h3>
+                <div class="sub-links">
+                    <a href="#cambrians">Cambrian-S</a>
+                    <a href="#cambrian1">Cambrian-1</a>
+                </div>
+            </aside>
 
-            <div class="filter-buttons">
-                <button class="filter-btn active" data-filter="all">All</button>
+            <div class="content-area">
+                <h1>Research</h1>
+                
+                <div class="filters">
+                    <div class="tabs">
+                        <a href="#" class="filter-btn active" data-filter="all">All</a>
+                        <a href="#" class="filter-btn" data-filter="publication">Publication</a>
+                        <a href="#" class="filter-btn" data-filter="release">Release</a>
+                    </div>
+                </div>
+
+                <div class="article-list">
+
+                    <article id="cambrians" data-category="release">
+                        <a href="#">
+                            <h2>Cambrian-S</h2>
+                            <p>Towards Spatial Supersensing in Video</p>
+                            <div class="article-meta">Release &nbsp;&nbsp;&bull;&nbsp;&nbsp; Est., 2025</div>
+                        </a>
+                    </article>
+
+                    <article id="sora-release" data-category="publication">
+                        <a href="#">
+                            <h2>Cambrian-1</h2>
+                            <p>A Fully Open, Vision-Centric Exploration of Multimodal LLMs</p>
+                            <div class="article-meta">Publication &nbsp;&nbsp;&bull;&nbsp;&nbsp; Jun 24, 2024</div>
+                        </a>
+                    </article>
+
+                </div>
             </div>
-
-            <a href="" class="product-card" data-category="ai">
-                <div class="card-image">
-                    <img src="assets/cambrians.png" alt="Cambrian-S">
-                </div>
-                <div class="card-content">
-                    <h3>Cambrian-S</h3>
-                    <p>Toward spatial supersensing in video.</p>
-                    <div class="card-meta">
-                        <span>Multimodal LLMs</span>
-                        <span>&bull;</span>
-                        <span>Est. 2025</span>
-                    </div>
-                </div>
-            </a>
-
-            <a href="https://cambrian-mllm.github.io/" class="product-card" data-category="ai">
-                <div class="card-image">
-                    <img src="https://cambrian-mllm.github.io/static/img/cambrian.png" alt="Cambrian-1">
-                </div>
-                <div class="card-content">
-                    <h3>Cambrian-1</h3>
-                    <p>A Fully Open, Vision-Centric Exploration of Multimodal LLMs.</p>
-                    <div class="card-meta">
-                        <span>Multimodal LLMs</span>
-                        <span>&bull;</span>
-                        <span>June 24, 2024</span>
-                    </div>
-                </div>
-            </a>
-
-        </section>
-    </main>
-
-    <footer>
-        <p>&copy; 2025 NYU-Vision-X. All Rights Reserved.</p>
-    </footer>
+        </main>
+    </div>
 
     <script src="script.js"></script>
 </body>

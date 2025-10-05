@@ -1,137 +1,144 @@
-/* Basic Reset and Global Styles */
-:root {
-    --background-color: #0a0a0a;
-    --card-background: #1a1a1a;
-    --text-color: #f0f0f0;
-    --primary-accent: #0071e3;
-    --subtle-text: #888;
-}
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-html { scroll-behavior: smooth; }
-
+/* --- General Body & Font Styles --- */
 body {
-    background-color: var(--background-color);
-    color: var(--text-color);
-    /* Added heavier font weight for titles */
-    /* font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; */
-    font-family: 'Lato', sans-serif;
-    /* font-family: 'Lora', serif; */
-    /* font-family: 'Bitcount', system-ui; */
-    /* font-family: "Roboto", sans-serif; */
-    line-height: 1.6;
-}
-
-/* Hero Section Styling (Unchanged) */
-.hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8)), url('assets/background.jpg'); background-size: cover; background-position: center; background-attachment: fixed; }
-.hero-content h1 { font-size: 3.5rem; font-weight: 700; margin-bottom: 0.5rem; letter-spacing: -1px; }
-.hero-content p { font-size: 1.25rem; font-weight: 300; color: var(--subtle-text); }
-.scroll-down-indicator { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); color: var(--subtle-text); font-size: 0.8rem; opacity: 0.7; }
-.scroll-down-indicator .arrow { font-size: 1.2rem; text-align: center; margin-top: 4px; }
-
-/* Product List Section Styling */
-.product-list { max-width: 900px; margin: 0 auto; padding: 80px 20px; display: flex; flex-direction: column; align-items: center; gap: 60px; }
-.list-title { text-align: center; font-size: 2.5rem; margin-bottom: 20px; color: var(--text-color); }
-
-/* Filter Buttons Styling (Unchanged) */
-.filter-buttons { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; margin-bottom: 30px; }
-.filter-btn { background-color: var(--card-background); color: var(--subtle-text); border: 1px solid #2a2a2a; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-family: Lato; font-size: 0.9rem; transition: all 0.3s ease; }
-.filter-btn:hover { background-color: #2a2a2a; color: var(--text-color); }
-.filter-btn.active { background-color: var(--primary-accent); color: #fff; border-color: var(--primary-accent); }
-
-/* --- Product Card Styling - MODIFIED --- */
-.product-card {
-    background-color: var(--card-background);
-    border-radius: 18px;
-    overflow: hidden;
-    text-decoration: none;
-    color: var(--text-color);
-    border: 1px solid #2a2a2a;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    opacity: 0;
-    transform: translateY(30px);
-    width: 100%;
-    
-    /* Changed to a vertical flex layout */
+    background-color: #000000; /* Black background */
+    color: #FFFFFF; /* White text */
+    /* font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; */
+    font-family: "Lato", sans-serif;
+    margin: 0;
+    padding: 0;
     display: flex;
-    flex-direction: column;
-    height: 480px; /* Set a fixed height for all cards */
+    justify-content: center;
 }
 
-.product-card.visible { opacity: 1; transform: translateY(0); }
-.product-card:hover {
-    transform: scale(1.02);
-    box-shadow: 0 10px 35px 5px rgba(0, 113, 227, 0.4);
-}
-.product-card.hide { display: none; }
-
-.product-card .card-image {
+/* --- Main Container --- */
+.container {
+    max-width: 1200px;
     width: 100%;
-    height: 65%; /* Image container takes most of the height */
-    overflow: hidden;
+    padding: 2rem;
 }
 
-.product-card img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.4s ease;
-}
-
-.product-card:hover img { transform: scale(1.05); }
-
-.card-content {
-    width: 100%;
-    height: 35%; /* Text container takes the remaining height */
-    padding: 30px;
+/* --- Header Section --- */
+header {
     display: flex;
-    flex-direction: column;
-    justify-content: center; /* Center the text block vertically */
-}
-
-/* Text Hierarchy Styling */
-.card-content h3 {
-    font-size: 1.7rem; /* Largest */
-    font-weight: 800;
-    line-height: 1.2;
-    margin: 0 0 8px 0;
-}
-
-.card-content p {
-    font-size: 1rem; /* Medium */
-    color: var(--subtle-text);
-    margin: 0 0 16px 0;
-}
-
-.card-meta {
-    display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 8px;
-    font-size: 0.8rem; /* Smallest */
-    color: #6e6e73;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #333; /* Dark grey border */
+    margin-bottom: 2rem;
+}
+
+header .logo {
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+/* --- Main Content Layout (Sidebar + Articles) --- */
+main {
+    display: grid;
+    grid-template-columns: 240px 1fr; /* Sidebar width and main content area */
+    gap: 4rem;
+}
+
+/* --- Left Sidebar Navigation --- */
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-nav h3 {
+    font-size: 0.9rem;
+    color: #888; /* Grey for headings */
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.sidebar-nav a {
+    color: #FFFFFF;
+    text-decoration: none;
+    padding: 0.5rem 0.8rem;
+    border-radius: 5px;
+    margin-bottom: 0.25rem;
+}
+
+.sidebar-nav a:hover {
+    background-color: #222; /* Dark grey on hover */
+}
+
+.sidebar-nav a.active {
+    background-color: #333; /* Slightly lighter grey for active link */
     font-weight: 600;
 }
-/* --- End of Modifications --- */
 
-/* Footer Styling */
-footer { text-align: center; padding: 20px; color: var(--subtle-text); font-size: 0.9rem; border-top: 1px solid #2a2a2a; }
+.sidebar-nav .sub-links {
+    padding-left: 1rem;
+    display: flex;
+    flex-direction: column;
+}
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .hero-content h1 { font-size: 2.5rem; }
-    .hero-content p { font-size: 1rem; }
-    .product-list { padding: 60px 15px; }
+/* --- Right Content Area (Articles) --- */
+.content-area h1 {
+    font-size: 2.5rem;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+}
 
-    /* Adjust card height and text size for smaller screens */
-    .product-card {
-        height: 420px;
-    }
-    .card-content h3 {
-        font-size: 1.5rem;
-    }
-    .card-content p {
-        font-size: 0.9rem;
-    }
+.filters {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #333;
+    padding-bottom: 1rem;
+}
+
+.filters .tabs a {
+    color: #888;
+    text-decoration: none;
+    margin-right: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+}
+
+.filters .tabs a.active, .filters .tabs a:hover {
+    color: #FFFFFF;
+    border-bottom: 2px solid #FFFFFF;
+}
+
+/* --- Article List --- */
+.article-list article {
+    padding: 1.5rem 0;
+    border-bottom: 1px solid #333;
+}
+
+.article-list article:last-child {
+    border-bottom: none;
+}
+
+.article-list a {
+    text-decoration: none;
+    color: #FFFFFF;
+}
+
+.article-list a:hover h2 {
+    text-decoration: underline;
+}
+
+.article-list h2 {
+    font-size: 1.5rem;
+    margin: 0 0 0.5rem 0;
+}
+
+.article-list p {
+    color: #ccc; /* Lighter grey for description text */
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.article-meta {
+    font-size: 0.9rem;
+    color: #888;
+    margin-top: 1rem; /* Changed from margin-bottom */
 }
