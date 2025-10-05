@@ -15,12 +15,16 @@ body {
     background-color: var(--background-color);
     color: var(--text-color);
     /* Added heavier font weight for titles */
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    /* font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; */
+    font-family: 'Lato', sans-serif;
+    /* font-family: 'Lora', serif; */
+    /* font-family: 'Bitcount', system-ui; */
+    /* font-family: "Roboto", sans-serif; */
     line-height: 1.6;
 }
 
 /* Hero Section Styling (Unchanged) */
-.hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8)), url('https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=1600'); background-size: cover; background-position: center; background-attachment: fixed; }
+.hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8)), url('assets/background.jpg'); background-size: cover; background-position: center; background-attachment: fixed; }
 .hero-content h1 { font-size: 3.5rem; font-weight: 700; margin-bottom: 0.5rem; letter-spacing: -1px; }
 .hero-content p { font-size: 1.25rem; font-weight: 300; color: var(--subtle-text); }
 .scroll-down-indicator { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); color: var(--subtle-text); font-size: 0.8rem; opacity: 0.7; }
@@ -32,7 +36,7 @@ body {
 
 /* Filter Buttons Styling (Unchanged) */
 .filter-buttons { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; margin-bottom: 30px; }
-.filter-btn { background-color: var(--card-background); color: var(--subtle-text); border: 1px solid #2a2a2a; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-family: inherit; font-size: 0.9rem; transition: all 0.3s ease; }
+.filter-btn { background-color: var(--card-background); color: var(--subtle-text); border: 1px solid #2a2a2a; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-family: Lato; font-size: 0.9rem; transition: all 0.3s ease; }
 .filter-btn:hover { background-color: #2a2a2a; color: var(--text-color); }
 .filter-btn.active { background-color: var(--primary-accent); color: #fff; border-color: var(--primary-accent); }
 
@@ -56,7 +60,10 @@ body {
 }
 
 .product-card.visible { opacity: 1; transform: translateY(0); }
-.product-card:hover { transform: scale(1.02); box-shadow: 0 10px 30px rgba(0, 113, 227, 0.2); }
+.product-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 35px 5px rgba(0, 113, 227, 0.4);
+}
 .product-card.hide { display: none; }
 
 .product-card .card-image {
