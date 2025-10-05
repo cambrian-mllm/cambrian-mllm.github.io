@@ -26,7 +26,14 @@
         <section class="product-list">
             <h2 class="list-title">Our Innovations</h2>
 
-            <a href="product-1.html" class="product-card">
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="hardware">Hardware</button>
+                <button class="filter-btn" data-filter="ai">AI & Data</button>
+                <button class="filter-btn" data-filter="blockchain">Blockchain</button>
+            </div>
+
+            <a href="product-1.html" class="product-card" data-category="hardware">
                 <div class="card-image">
                     <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726a?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=1200" alt="Product 1 Image">
                 </div>
@@ -36,7 +43,7 @@
                 </div>
             </a>
 
-            <a href="product-2.html" class="product-card">
+            <a href="product-2.html" class="product-card" data-category="ai">
                 <div class="card-image">
                     <img src="https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=1200" alt="Product 2 Image">
                 </div>
@@ -46,7 +53,7 @@
                 </div>
             </a>
 
-            <a href="product-3.html" class="product-card">
+            <a href="product-3.html" class="product-card" data-category="blockchain">
                 <div class="card-image">
                      <img src="https://images.unsplash.com/photo-1614741118884-62ac62b2230d?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=1200" alt="Product 3 Image">
                 </div>
