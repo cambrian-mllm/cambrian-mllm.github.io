@@ -14,6 +14,7 @@ html { scroll-behavior: smooth; }
 body {
     background-color: var(--background-color);
     color: var(--text-color);
+    /* Added heavier font weight for titles */
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     line-height: 1.6;
 }
@@ -29,63 +30,101 @@ body {
 .product-list { max-width: 900px; margin: 0 auto; padding: 80px 20px; display: flex; flex-direction: column; align-items: center; gap: 60px; }
 .list-title { text-align: center; font-size: 2.5rem; margin-bottom: 20px; color: var(--text-color); }
 
-/* NEW: Filter Buttons Styling */
-.filter-buttons {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin-bottom: 30px; /* Adjusted from 50px */
-}
+/* Filter Buttons Styling (Unchanged) */
+.filter-buttons { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; margin-bottom: 30px; }
+.filter-btn { background-color: var(--card-background); color: var(--subtle-text); border: 1px solid #2a2a2a; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-family: inherit; font-size: 0.9rem; transition: all 0.3s ease; }
+.filter-btn:hover { background-color: #2a2a2a; color: var(--text-color); }
+.filter-btn.active { background-color: var(--primary-accent); color: #fff; border-color: var(--primary-accent); }
 
-.filter-btn {
+/* --- Product Card Styling - MODIFIED --- */
+.product-card {
     background-color: var(--card-background);
-    color: var(--subtle-text);
-    border: 1px solid #2a2a2a;
-    padding: 10px 20px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
-}
-
-.filter-btn:hover {
-    background-color: #2a2a2a;
+    border-radius: 18px;
+    overflow: hidden;
+    text-decoration: none;
     color: var(--text-color);
+    border: 1px solid #2a2a2a;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    opacity: 0;
+    transform: translateY(30px);
+    width: 100%;
+    
+    /* Changed to a vertical flex layout */
+    display: flex;
+    flex-direction: column;
+    height: 480px; /* Set a fixed height for all cards */
 }
 
-.filter-btn.active {
-    background-color: var(--primary-accent);
-    color: #fff;
-    border-color: var(--primary-accent);
-}
-
-/* Product Card Styling */
-.product-card { background-color: var(--card-background); border-radius: 18px; overflow: hidden; text-decoration: none; color: var(--text-color); border: 1px solid #2a2a2a; transition: transform 0.3s ease, box-shadow 0.3s ease; opacity: 0; transform: translateY(30px); display: flex; width: 100%; }
 .product-card.visible { opacity: 1; transform: translateY(0); }
 .product-card:hover { transform: scale(1.02); box-shadow: 0 10px 30px rgba(0, 113, 227, 0.2); }
-.product-card .card-image { flex: 1 1 50%; overflow: hidden; }
-.product-card img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s ease; }
+.product-card.hide { display: none; }
+
+.product-card .card-image {
+    width: 100%;
+    height: 65%; /* Image container takes most of the height */
+    overflow: hidden;
+}
+
+.product-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+}
+
 .product-card:hover img { transform: scale(1.05); }
-.card-content { flex: 1 1 50%; padding: 40px; display: flex; flex-direction: column; justify-content: center; }
-.card-content h3 { font-size: 1.8rem; margin-bottom: 15px; }
-.card-content p { font-size: 1.1rem; color: var(--subtle-text); }
-.product-card.hide { display: none; } /* NEW: Hides filtered cards */
+
+.card-content {
+    width: 100%;
+    height: 35%; /* Text container takes the remaining height */
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center the text block vertically */
+}
+
+/* Text Hierarchy Styling */
+.card-content h3 {
+    font-size: 1.7rem; /* Largest */
+    font-weight: 800;
+    line-height: 1.2;
+    margin: 0 0 8px 0;
+}
+
+.card-content p {
+    font-size: 1rem; /* Medium */
+    color: var(--subtle-text);
+    margin: 0 0 16px 0;
+}
+
+.card-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem; /* Smallest */
+    color: #6e6e73;
+    font-weight: 600;
+}
+/* --- End of Modifications --- */
 
 /* Footer Styling */
 footer { text-align: center; padding: 20px; color: var(--subtle-text); font-size: 0.9rem; border-top: 1px solid #2a2a2a; }
 
 /* Responsive Design */
-@media (min-width: 769px) {
-    /* MODIFIED: Enforce fixed height on larger screens */
-    .product-card {
-        height: 350px;
-    }
-}
 @media (max-width: 768px) {
     .hero-content h1 { font-size: 2.5rem; }
     .hero-content p { font-size: 1rem; }
     .product-list { padding: 60px 15px; }
-    .product-card { flex-direction: column; }
+
+    /* Adjust card height and text size for smaller screens */
+    .product-card {
+        height: 420px;
+    }
+    .card-content h3 {
+        font-size: 1.5rem;
+    }
+    .card-content p {
+        font-size: 0.9rem;
+    }
 }
