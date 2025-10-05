@@ -23,13 +23,27 @@ header {
     justify-content: space-between;
     align-items: center;
     padding-bottom: 2rem;
-    border-bottom: 1px solid #333; /* Dark grey border */
-    margin-bottom: 2rem;
 }
 
 header .logo {
     font-weight: bold;
     font-size: 1.2rem;
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+.mission-statement {
+    border-top: 1px solid #333;
+    border-bottom: 1px solid #333;
+    padding: 2rem 0;
+    margin-bottom: 2rem;
+    text-align: left;
+}
+
+.mission-statement h1 {
+    font-size: 2rem;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
 }
 
 /* --- Main Content Layout (Sidebar + Articles) --- */
@@ -120,6 +134,34 @@ main {
 .article-list a {
     text-decoration: none;
     color: #FFFFFF;
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 2rem;
+}
+
+.article-meta-left {
+    color: #888;
+    font-size: 0.9rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding-left: 20px;
+}
+
+.article-meta-left::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(to bottom, #8A2BE2, #4169E1);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.article-list article:hover .article-meta-left::before {
+    opacity: 1;
 }
 
 .article-list a:hover h2 {
