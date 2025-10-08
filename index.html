@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Research | Anthropic</title>
+    <title>Cambrian World</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -109,7 +109,7 @@
     </style>
 </head>
 
-<body class="antialiased">
+<body class="antialiased flex flex-col min-h-screen">
 
     <!-- Header -->
     <header class="bg-[--color-ivory-light] sticky top-0 z-50" style="--header-nav-height: 80px;">
@@ -136,7 +136,7 @@
     </header>
 
     <!-- Main Content -->
-    <main id="main-content">
+    <main id="main-content" class="flex-grow">
         <!-- Tab Navigation -->
         <section class="sticky top-[80px] bg-[--color-ivory-light] z-40">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -276,7 +276,7 @@
                 <div class="text-center fade-in-up">
                     <h2 class="font-styrene text-5xl">Publications</h2>
                     <div class="mt-8">
-                        <input id="publication-search" type="text" placeholder="Search publications" class="w-full px-4 py-3 rounded-lg border border-black focus:ring-2 focus:ring-gray-800 focus:border-transparent transition font-styrene">
+                        <input id="publication-search" type="text" placeholder="Search" class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-800 focus:border-transparent transition font-styrene">
                     </div>
                 </div>
                 
@@ -336,26 +336,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const publications = [
-            { title: 'Petri: An open-source auditing tool to accelerate AI safety research', category: 'Alignment', date: 'Oct 6, 2025' },
-            { title: 'Building AI for cyber defenders', category: 'Policy', date: 'Oct 3, 2025' },
-            { title: 'Anthropic Economic Index report: Uneven geographic and enterprise AI adoption', category: 'Societal Impacts', date: 'Sep 15, 2025' },
-            { title: 'Anthropic Economic Index: Tracking AI’s role in the US and global economy', category: 'Societal Impacts', date: 'Sep 15, 2025' },
-            { title: 'Anthropic Education Report: How educators use Claude', category: 'Societal Impacts', date: 'Aug 26, 2025' },
-            { title: 'Claude Opus 4 and 4.1 can now end a rare subset of conversations', category: 'Alignment', date: 'Aug 15, 2025' },
-            { title: 'Persona vectors: Monitoring and controlling character traits in language models', category: 'Interpretability', date: 'Aug 1, 2025' },
-            { title: 'Project Vend: Can Claude run a small shop? (And why does that matter?)', category: 'Policy', date: 'Jun 27, 2025' },
-            { title: 'Agentic Misalignment: How LLMs could be insider threats', category: 'Alignment', date: 'Jun 20, 2025' },
-            { title: 'Confidential Inference via Trusted Virtual Machines', category: 'Announcements', date: 'Jun 18, 2025' },
-            { title: 'SHADE-Arena: Evaluating sabotage and monitoring in LLM agents', category: 'Alignment', date: 'Jun 16, 2025' },
-            { title: 'Open-sourcing circuit tracing tools', category: 'Interpretability', date: 'May 29, 2025' },
-            { title: 'Anthropic Economic Index: AI’s impact on software development', category: 'Societal Impacts', date: 'Apr 28, 2025' },
-            { title: 'Exploring model welfare', category: 'Alignment', date: 'Apr 24, 2025' },
-            { title: 'Values in the wild: Discovering and analyzing values in real-world language model interactions', category: 'Societal Impacts', date: 'Apr 21, 2025' },
-            { title: 'Anthropic Education Report: How university students use Claude', category: 'Announcements · Societal Impacts', date: 'Apr 8, 2025' },
-            { title: 'Reasoning models don\'t always say what they think', category: 'Alignment', date: 'Apr 3, 2025' },
-            { title: 'Mapping the Mind of a Large Language Model', category: 'Interpretability', date: 'May 21, 2024' },
-            { title: 'Many-shot jailbreaking', category: 'Alignment', date: 'Apr 2, 2024' },
-            { title: 'Sleeper Agents: Training Deceptive LLMs that Persist Through Safety Training', category: 'Alignment', date: 'Jan 14, 2024' },
+            { title: 'Cambrian-1: A Fully Open, Vision-Centric Exploration of Multimodal LLMs', category: 'Alignment', date: 'Jun 24, 2024', url: 'https://cambrian-mllm.github.io/' },
         ];
 
         const publicationList = document.getElementById('publication-list');
@@ -385,7 +366,10 @@
 
             filteredPublications.forEach(pub => {
                 const pubElement = document.createElement('a');
-                pubElement.href = '#';
+                pubElement.href = pub.url; // Use the new url property
+                // Optional: To make links open in a new tab
+                pubElement.target = '_blank'; 
+                pubElement.rel = 'noopener noreferrer'; // Good practice for security
                 pubElement.className = 'publication-card block border-t border-slate-800 last:border-b border-slate-800';
                 pubElement.innerHTML = `
                     <div class="py-6 md:py-8 grid grid-cols-12 gap-x-8 gap-y-2 items-center">
