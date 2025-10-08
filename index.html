@@ -87,35 +87,34 @@
             position: absolute;
             right: 0;
         }
+        .publication-card:hover h3 {
+            text-decoration: underline;
+        }
     </style>
 </head>
 
 <body class="antialiased">
 
     <!-- Header -->
-    <header class="bg-[--color-ivory-light] sticky top-0 z-50 border-b border-gray-200" style="--header-nav-height: 80px;">
+    <header class="bg-[--color-ivory-light] sticky top-0 z-50" style="--header-nav-height: 80px;">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-20">
                 <a href="#" class="flex items-center space-x-2">
-                    <!-- <svg class="h-8 w-auto" width="46" height="32" viewBox="0 0 46 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg class="h-8 w-auto" width="46" height="32" viewBox="0 0 46 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M32.73 0h-6.945L38.45 32h6.945L32.73 0ZM12.665 0 0 32h7.082l2.59-6.72h13.25l2.59 6.72h7.082L19.929 0h-7.264Zm-.702 19.337 4.334-11.246 4.334 11.246h-8.668Z" fill="currentColor"></path>
-                    </svg> -->
+                    </svg>
                     <span class="font-styrene font-bold text-xl hidden md:inline">Cambrian World</span>
                 </a>
                 <nav class="hidden md:flex space-x-8 items-center font-styrene">
                     <a href="#overview" class="text-gray-700 hover:text-black font-medium">Research</a>
                     <a href="#" class="text-gray-700 hover:text-black font-medium">Publications</a>
                     <a href="#" class="text-gray-700 hover:text-black font-medium">Resources</a>
-                    <!-- <a href="#" class="text-gray-700 hover:text-black font-medium">Economic Futures</a>
-                    <a href="#" class="text-gray-700 hover:text-black font-medium">Commitments</a>
-                    <a href="#" class="text-gray-700 hover:text-black font-medium">Learn</a>
-                    <a href="#" class="text-gray-700 hover:text-black font-medium">News</a> -->
                 </nav>
-                <div class="flex items-center">
+                <!-- <div class="flex items-center">
                     <a href="#" class="bg-black text-white px-6 py-2 rounded-lg font-styrene font-medium hover:bg-gray-800 transition-colors">
                         Try Claude
                     </a>
-                </div>
+                </div> -->
             </div>
         </div>
     </header>
@@ -123,15 +122,16 @@
     <!-- Main Content -->
     <main id="main-content">
         <!-- Tab Navigation -->
-        <section class="sticky top-[80px] bg-[--color-ivory-light] z-40 border-b border-gray-300">
+        <section class="sticky top-[80px] bg-[--color-ivory-light] z-40">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="tabs-container flex space-x-2 py-4 overflow-x-auto">
                     <button class="tab-btn active-tab flex-shrink-0 font-styrene text-sm font-medium px-4 py-2 rounded-full border border-gray-800 bg-gray-800 text-white" data-tab="overview">Overview</button>
-                    <button class="tab-btn flex-shrink-0 font-styrene text-sm font-medium px-4 py-2 rounded-full border border-gray-400 text-gray-800 hover:bg-gray-200" data-tab="interpretability">Interpretability</button>
-                    <button class="tab-btn flex-shrink-0 font-styrene text-sm font-medium px-4 py-2 rounded-full border border-gray-400 text-gray-800 hover:bg-gray-200" data-tab="alignment">Alignment</button>
-                    <button class="tab-btn flex-shrink-0 font-styrene text-sm font-medium px-4 py-2 rounded-full border border-gray-400 text-gray-800 hover:bg-gray-200" data-tab="societal-impacts">Societal Impacts</button>
+                    <button class="tab-btn flex-shrink-0 font-styrene text-sm font-medium px-4 py-2 rounded-full border border-black text-gray-800 hover:bg-gray-200" data-tab="interpretability">Interpretability</button>
+                    <button class="tab-btn flex-shrink-0 font-styrene text-sm font-medium px-4 py-2 rounded-full border border-black text-gray-800 hover:bg-gray-200" data-tab="alignment">Alignment</button>
+                    <button class="tab-btn flex-shrink-0 font-styrene text-sm font-medium px-4 py-2 rounded-full border border-black text-gray-800 hover:bg-gray-200" data-tab="societal-impacts">Societal Impacts</button>
                 </div>
             </div>
+            <div class="w-[80%] mx-auto border-b border-black"></div>
         </section>
 
         <!-- Tab Content -->
@@ -141,7 +141,7 @@
                 <section class="py-12 fade-in-up">
                     <div class="grid grid-cols-12 gap-8">
                         <div class="col-span-12 md:col-span-4">
-                            <h2 class="text-3xl">Research at Cambrian World</h2>
+                            <h2 class="text-3xl">Research at Cambrian</h2>
                         </div>
                         <div class="col-span-12 md:col-span-8">
                             <h3 class="text-4xl leading-tight">We work on Cambrian World Model.</h3>
@@ -169,6 +169,8 @@
                     </div>
                 </section>
 
+                <hr class="border-t border-black" />
+
                 <!-- Research Teams -->
                 <section class="py-12 fade-in-up">
                     <div class="grid grid-cols-12 gap-8 items-start">
@@ -191,6 +193,8 @@
                         </div>
                     </div>
                 </section>
+
+                <hr class="border-t border-black" />
 
                  <!-- Research Principles -->
                 <section class="py-12 fade-in-up">
@@ -237,16 +241,16 @@
         </div>
 
         <!-- Publications -->
-        <section class="bg-[--color-ivory-medium] py-16">
+        <section class="bg-[--color-ivory-light] py-16">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center fade-in-up">
                     <h2 class="font-styrene text-5xl">Publications</h2>
-                    <div class="mt-8 max-w-2xl mx-auto">
-                        <input id="publication-search" type="text" placeholder="Search publications" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gray-800 focus:border-transparent transition font-styrene">
+                    <div class="mt-8">
+                        <input id="publication-search" type="text" placeholder="Search publications" class="w-full px-4 py-3 rounded-lg border border-black focus:ring-2 focus:ring-gray-800 focus:border-transparent transition font-styrene">
                     </div>
                 </div>
                 
-                <div id="publication-list" class="mt-12 space-y-4 fade-in-up">
+                <div id="publication-list" class="mt-12 space-y-0 fade-in-up">
                     <!-- Publication items will be dynamically populated by JS -->
                 </div>
             </div>
@@ -258,9 +262,9 @@
     <footer class="bg-[--color-slate-dark] text-[--color-ivory-light] py-16 font-styrene">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
             <div class="col-span-2 lg:col-span-2">
-                 <!-- <svg class="h-8 w-auto mb-4" width="46" height="32" viewBox="0 0 46 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                 <svg class="h-8 w-auto mb-4" width="46" height="32" viewBox="0 0 46 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M32.73 0h-6.945L38.45 32h6.945L32.73 0ZM12.665 0 0 32h7.082l2.59-6.72h13.25l2.59 6.72h7.082L19.929 0h-7.264Zm-.702 19.337 4.334-11.246 4.334 11.246h-8.668Z" fill="#faf9f5"></path>
-                </svg> -->
+                </svg>
                 <small class="text-sm text-[--color-cloud-medium]">© 2025 Cambrian World</small>
             </div>
             
@@ -352,14 +356,16 @@
             filteredPublications.forEach(pub => {
                 const pubElement = document.createElement('a');
                 pubElement.href = '#';
-                pubElement.className = 'block bg-white/50 hover:bg-white transition-colors duration-300 border-t border-gray-300 last:border-b';
+                pubElement.className = 'publication-card block border-t border-slate-800 last:border-b border-slate-800';
                 pubElement.innerHTML = `
-                    <div class="p-6 md:p-8 grid grid-cols-12 gap-4 items-center">
-                        <div class="col-span-12 md:col-span-9">
-                            <span class="font-styrene text-sm text-gray-600 font-medium">${pub.category}</span>
-                            <h3 class="text-xl mt-1">${pub.title}</h3>
+                    <div class="py-6 md:py-8 grid grid-cols-12 gap-x-8 gap-y-2 items-center">
+                        <div class="col-span-12 md:col-span-10 grid grid-cols-1 md:grid-cols-9 gap-x-8 items-center">
+                            <h3 class="text-sm font-medium md:col-span-6 order-2 md:order-1">${pub.title}</h3>
+                            <div class="md:col-span-3 md:col-start-7 order-1 md:order-2 text-left md:text-right">
+                                <span class="font-styrene text-sm text-gray-600 font-medium">${pub.category}</span>
+                            </div>
                         </div>
-                        <div class="col-span-12 md:col-span-3 text-left md:text-right">
+                        <div class="col-span-12 md:col-span-2 text-left md:text-right">
                             <span class="font-styrene text-sm text-gray-600 font-medium">${pub.date}</span>
                         </div>
                     </div>
@@ -378,10 +384,10 @@
                 // Update button styles
                 tabButtons.forEach(btn => {
                     btn.classList.remove('active-tab', 'bg-gray-800', 'text-white');
-                    btn.classList.add('border-gray-400', 'text-gray-800', 'hover:bg-gray-200');
+                    btn.classList.add('border-black', 'text-gray-800', 'hover:bg-gray-200');
                 });
                 button.classList.add('active-tab', 'bg-gray-800', 'text-white');
-                button.classList.remove('border-gray-400', 'text-gray-800', 'hover:bg-gray-200');
+                button.classList.remove('border-black', 'text-gray-800', 'hover:bg-gray-200');
 
                 // Update active category state and pane visibility
                 const targetTab = button.getAttribute('data-tab');
