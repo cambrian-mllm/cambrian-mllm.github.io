@@ -2,10 +2,10 @@
 
 
 :root {
-    --paper: #ffffff;
-    --ink: #0d0d0d;
-    --gray: #888;
-    --light-gray: #ccc;
+    --paper: #000000;
+    --ink: #ffffff;
+    --gray: #999;
+    --light-gray: #444;
    
     /* Banner colors from banner.html */
     --color-book-cloth:#cc785c;
@@ -76,13 +76,13 @@
  }
  
  
- .mission-statement {
-    border-top: 1px solid #333;
-    border-bottom: 1px solid #333;
+.mission-statement {
+    border-top: 1px solid #666;
+    border-bottom: 1px solid #666;
     padding: 2rem 0;
     margin-bottom: 2rem;
     text-align: left;
- }
+}
  
  
  .mission-statement h1 {
@@ -92,12 +92,10 @@
  }
  
  
- /* --- Main Content Layout (Sidebar + Articles) --- */
- main {
-    display: grid;
-    grid-template-columns: minmax(180px, auto) 1fr;
-    gap: 4rem;
- }
+/* --- Main Content Layout (Sidebar + Articles) --- */
+main {
+    display: block;
+}
  
  
  .sidebar-nav {
@@ -151,10 +149,10 @@
  }
  
  
- /* --- Right Content Area (Articles) --- */
- .content-area {
-    grid-column: 2 / -1;
- }
+/* --- Right Content Area (Articles) --- */
+.content-area {
+    width: 100%;
+}
  .content-area h1 {
     font-size: 2.5rem;
     margin-top: 0;
@@ -162,14 +160,14 @@
  }
  
  
- .filters {
+.filters {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 2rem;
-    border-bottom: 1px solid #333;
+    border-bottom: 1px solid #666;
     padding-bottom: 1rem;
- }
+}
  
  
  .filters .tabs a {
@@ -188,11 +186,11 @@
  }
  
  
- /* --- Article List --- */
- .article-list article {
+/* --- Article List --- */
+.article-list article {
     padding: 1rem 0;
-    border-bottom: 1px solid #333;
- }
+    border-bottom: 1px solid #666;
+}
  
  
  .article-list article:last-child {
@@ -262,11 +260,11 @@
  }
  
  
- .article-list p {
-    color: #ccc; /* Lighter grey for description text */
+.article-list p {
+    color: #999; /* Grey for description text */
     line-height: 1rem;
     margin-bottom: 0rem;
- }
+}
  
  
  .article-meta {
@@ -383,9 +381,16 @@
  }
  
  
- .featured-card h3 {
+.featured-card h3 {
     font-size: 1.5rem;
     margin-top: 0.5rem;
     line-height: 1.3;
- }
+}
+
+.cambrian-1-card {
+    background-image: url('header.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
  
