@@ -388,9 +388,17 @@ main {
 }
 
 .cambrian-1-card {
-    background-image: url('header.png');
+    background-image: url('imgs/header.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
 }
+
+.thinking-in-space-card {
+    background-image: url('imgs/tis_spanner.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
  
