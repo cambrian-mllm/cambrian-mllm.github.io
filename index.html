@@ -1,447 +1,153 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cambrian World</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600&family=Outfit:wght@600&family=Space+Grotesk:wght@600&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        /* Custom Styles based on the provided file */
-        :root {
-            --color-book-cloth:#cc785c;
-            --color-cactus:#bcd1ca;
-            --color-clay:#d97757;
-            --color-cloud-dark:#87867f;
-            --color-cloud-light:#d1cfc5;
-            --color-cloud-medium:#b0aea5;
-            --color-coral:#ebcece;
-            --color-dark:#0f0f0e;
-            --color-fig:#c46686;
-            --color-heather:#cbcadb;
-            --color-ivory-dark:#e8e6dc;
-            --color-ivory-light:#faf9f5;
-            --color-ivory-medium:#f0eee6;
-            --color-kraft:#d4a27f;
-            --color-light:#fff;
-            --color-manilla:#ebdbbc;
-            --color-manilla-light:#f1e6d0;
-            --color-oat:#e3dacc;
-            --color-olive:#788c5d;
-            --color-sky:#6a9bcc;
-            --color-slate-dark:#141413;
-            --color-slate-light:#5e5d59;
-            --color-slate-medium:#3d3d3a;
-            --header-nav-height: 64px;
-        }
-
-        @media (min-width: 871px) {
-            :root {
-                --header-nav-height: 80px;
-            }
-        }
-
-        body {
-            font-family: 'Merriweather', serif;
-            background-color: var(--color-ivory-light);
-            color: var(--color-slate-dark);
-        }
-
-        .font-styrene {
-            font-family: "Manrope", "Outfit", "Space Grotesk", system-ui, sans-serif;
-        }
-        
-        h1, h2, h3, h4, h5, h6, .display {
-            font-family: "Styrene A", "Manrope", "Outfit", "Space Grotesk", system-ui, sans-serif;
-            font-weight: 600;
-        }
-        
-        .fade-in-up {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.5s cubic-bezier(0.165, 0.84, 0.44, 1), transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
-        }
-
-        .is-inview {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .tabs-container::-webkit-scrollbar {
-            display: none;
-        }
-
-        .featured-card {
-            border-radius: 24px;
-            display: block;
-            height: clamp(18rem, 25vw, 24rem);
-            position: relative;
-            transition: all .3s cubic-bezier(.165,.84,.44,1);
-            overflow: hidden;
-            color: var(--color-slate-dark);
-            text-decoration: none;
-        }
-        .featured-card img {
-            height: 95%;
-            object-fit: contain;
-            position: absolute;
-            right: -5%;
-            top: -10%;
-            transform: scale(.75);
-            transition: transform .3s cubic-bezier(.165,.84,.44,1);
-        }
-        .featured-card:hover img {
-            transform: scale(.8);
-        }
-        .featured-card .text-container {
-            bottom: 0;
-            left: 0;
-            padding: 24px;
-            position: absolute;
-            right: 0;
-        }
-        .publication-card:hover h3 {
-            text-decoration: underline;
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Bitcount:wght@100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Lora:ital,wght@0,400..700;1,400..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
+<body>
 
-<body class="antialiased flex flex-col min-h-screen">
+    <div class="container">
+        <header>
+            <a href="index.html" class="logo">Vision-X-NYU</a>
+        </header>
 
-    <!-- Header -->
-    <header class="bg-[--color-ivory-light] sticky top-0 z-50" style="--header-nav-height: 80px;">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
-                <a href="#" class="flex items-center space-x-2">
-                    <svg class="h-8 w-auto" width="46" height="32" viewBox="0 0 46 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M32.73 0h-6.945L38.45 32h6.945L32.73 0ZM12.665 0 0 32h7.082l2.59-6.72h13.25l2.59 6.72h7.082L19.929 0h-7.264Zm-.702 19.337 4.334-11.246 4.334 11.246h-8.668Z" fill="currentColor"></path>
-                    </svg>
-                    <span class="font-styrene font-bold text-xl hidden md:inline">Cambrian World</span>
+        <div class="mission-statement">
+            <h1>Cambrian World</h1>
+            <p>Cambrian world landing page.</p>
+        </div>
+
+        <!-- Featured Banners Section -->
+        <section class="featured-banners">
+            <div class="grid grid-cols-1 md:grid-cols-10 gap-8">
+                <a href="#" class="featured-card md:col-span-7" style="background-color: var(--color-book-cloth);">
+                    <img src="https://placehold.co/400x400/cc785c/faf9f5?text=A" alt="Abstract representation of thoughts">
+                    <div class="text-container">
+                        <div class="category-label" style="color: white;">Featured paper</div>
+                        <h3 style="color: white;">Tracing the thoughts of a large language model</h3>
+                    </div>
                 </a>
-                <nav class="hidden md:flex space-x-8 items-center font-styrene">
-                    <a href="#overview" class="text-gray-700 hover:text-black font-medium">Research</a>
-                    <a href="#" class="text-gray-700 hover:text-black font-medium">Publications</a>
-                    <a href="#" class="text-gray-700 hover:text-black font-medium">Resources</a>
-                </nav>
-                <!-- <div class="flex items-center">
-                    <a href="#" class="bg-black text-white px-6 py-2 rounded-lg font-styrene font-medium hover:bg-gray-800 transition-colors">
-                        Try Claude
-                    </a>
-                </div> -->
-            </div>
-        </div>
-    </header>
-
-    <!-- Main Content -->
-    <main id="main-content" class="flex-grow">
-        <!-- Tab Navigation -->
-        <section class="sticky top-[80px] bg-[--color-ivory-light] z-40">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="tabs-container flex space-x-2 py-4 overflow-x-auto">
-                    <button class="tab-btn active-tab flex-shrink-0 font-styrene text-sm font-medium px-4 py-2 rounded-full border border-gray-800 bg-gray-800 text-white" data-tab="overview">Overview</button>
-                    <button class="tab-btn flex-shrink-0 font-styrene text-sm font-medium px-4 py-2 rounded-full border border-black text-gray-800 hover:bg-gray-200" data-tab="interpretability">Interpretability</button>
-                    <button class="tab-btn flex-shrink-0 font-styrene text-sm font-medium px-4 py-2 rounded-full border border-black text-gray-800 hover:bg-gray-200" data-tab="alignment">Alignment</button>
-                    <button class="tab-btn flex-shrink-0 font-styrene text-sm font-medium px-4 py-2 rounded-full border border-black text-gray-800 hover:bg-gray-200" data-tab="societal-impacts">Societal Impacts</button>
-                </div>
-            </div>
-            <div class="w-[80%] mx-auto border-b border-black"></div>
-        </section>
-
-        <!-- Tab Content -->
-        <div id="tab-content" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <!-- Overview Tab -->
-            <div id="overview" class="tab-pane active-pane">
-                <section class="py-12 fade-in-up">
-                    <div class="grid grid-cols-12 gap-8">
-                        <div class="col-span-12 md:col-span-4">
-                            <h2 class="text-3xl">Research at Cambrian</h2>
-                        </div>
-                        <div class="col-span-12 md:col-span-8">
-                            <h3 class="text-4xl leading-tight">We work on Cambrian World Model.</h3>
-                        </div>
+                <a href="#" class="featured-card md:col-span-3" style="background-color: var(--color-cloud-medium);">
+                    <img src="https://placehold.co/400x400/b0aea5/faf9f5?text=B" alt="Abstract representation of alignment">
+                    <div class="text-container">
+                        <div class="category-label">Featured paper</div>
+                        <h3>Alignment faking in large language models</h3>
                     </div>
-                </section>
-                
-                <!-- Featured Papers Section -->
-                <section class="py-12 fade-in-up">
-                    <div class="grid grid-cols-1 md:grid-cols-10 gap-8">
-                        <a href="#" class="featured-card md:col-span-7" style="background-color: var(--color-book-cloth);">
-                            <img src="https://placehold.co/400x400/cc785c/faf9f5?text=A" alt="Abstract representation of thoughts">
-                            <div class="text-container">
-                                <div class="font-styrene text-sm text-white font-medium">Featured paper</div>
-                                <h3 class="text-2xl mt-2 text-white">Tracing the thoughts of a large language model</h3>
-                            </div>
-                        </a>
-                        <a href="#" class="featured-card md:col-span-3" style="background-color: var(--color-cloud-medium);">
-                             <img src="https://placehold.co/400x400/b0aea5/faf9f5?text=B" alt="Abstract representation of alignment">
-                             <div class="text-container">
-                                <div class="font-styrene text-sm font-medium">Featured paper</div>
-                                <h3 class="text-2xl mt-2">Alignment faking in large language models</h3>
-                            </div>
-                        </a>
-                        <a href="https://www.anthropic.com/news/constitutional-classifiers" class="featured-card md:col-span-5" style="background-color: var(--color-manilla);">
-                             <img src="https://placehold.co/400x400/ebdbbc/141413?text=C" alt="Constitutional Classifiers">
-                             <div class="text-container">
-                                <div class="font-styrene text-sm font-medium">Featured paper</div>
-                                <h3 class="text-2xl mt-2">Constitutional Classifiers: Defending against universal jailbreaks</h3>
-                            </div>
-                        </a>
-                        <a href="https://www.anthropic.com/research/exploring-model-welfare" class="featured-card md:col-span-5" style="background-color: var(--color-ivory-medium);">
-                             <img src="https://placehold.co/400x400/f0eee6/141413?text=D" alt="Exploring model welfare">
-                             <div class="text-container">
-                                <div class="font-styrene text-sm font-medium">Featured news</div>
-                                <h3 class="text-2xl mt-2">Exploring model welfare</h3>
-                            </div>
-                        </a>
+                </a>
+                <a href="https://www.anthropic.com/news/constitutional-classifiers" class="featured-card md:col-span-5" style="background-color: var(--color-manilla);">
+                    <img src="https://placehold.co/400x400/ebdbbc/141413?text=C" alt="Constitutional Classifiers">
+                    <div class="text-container">
+                        <div class="category-label">Featured paper</div>
+                        <h3>Constitutional Classifiers: Defending against universal jailbreaks</h3>
                     </div>
-                </section>
-
-                <hr class="border-t border-black" />
-
-                <!-- Research Teams -->
-                <section class="py-12 fade-in-up">
-                    <div class="grid grid-cols-12 gap-8 items-start">
-                        <div class="col-span-12 md:col-span-4">
-                            <h2 class="text-3xl pt-2">Research teams</h2>
-                        </div>
-                        <div class="col-span-12 md:col-span-8 space-y-12">
-                            <div>
-                                <h3 class="text-3xl">Interpretability</h3>
-                                <p class="text-lg mt-2 text-gray-700">The mission of the Interpretability team is to discover and understand how large language models work internally — the foundation of ensuring safety and positive outcomes.</p>
-                            </div>
-                            <div>
-                                <h3 class="text-3xl">Alignment</h3>
-                                <p class="text-lg mt-2 text-gray-700">The Alignment teams works to understand and develop ways to keep future advancements in AI helpful, honest, and harmless.</p>
-                            </div>
-                            <div>
-                                <h3 class="text-3xl">Societal Impacts</h3>
-                                <p class="text-lg mt-2 text-gray-700">Working closely with the Anthropic Policy and Trust & Safety teams, the Societal Impacts team is a technical research team that looks to ensure AI interacts positively with people.</p>
-                            </div>
-                        </div>
+                </a>
+                <a href="https://www.anthropic.com/research/exploring-model-welfare" class="featured-card md:col-span-5" style="background-color: var(--color-ivory-medium);">
+                    <img src="https://placehold.co/400x400/f0eee6/141413?text=D" alt="Exploring model welfare">
+                    <div class="text-container">
+                        <div class="category-label">Featured news</div>
+                        <h3>Exploring model welfare</h3>
                     </div>
-                </section>
-
-                <hr class="border-t border-black" />
-
-                 <!-- Research Principles -->
-                <section class="py-12 fade-in-up">
-                    <div class="grid grid-cols-12 gap-8">
-                         <div class="col-span-12 md:col-span-4">
-                            <h2 class="text-3xl pt-2">Research principles</h2>
-                        </div>
-                        <div class="col-span-12 md:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-12">
-                            <div>
-                                <div class="font-styrene text-xl">01</div>
-                                <h3 class="text-3xl mt-1">AI as a systematic science</h3>
-                                <p class="text-lg mt-2 text-gray-700">Inspired by the universality of scaling in statistical physics, we develop scaling laws to help us do systematic, empirically-driven research.</p>
-                            </div>
-                            <div>
-                                <div class="font-styrene text-xl">02</div>
-                                <h3 class="text-3xl mt-1">Safety and scaling</h3>
-                                <p class="text-lg mt-2 text-gray-700">At Anthropic we believe safety research is most useful when performed on highly capable models. We study and engage with the safety issues of large models.</p>
-                            </div>
-                            <div>
-                                <div class="font-styrene text-xl">03</div>
-                                <h3 class="text-3xl mt-1">Tools and measurements</h3>
-                                <p class="text-lg mt-2 text-gray-700">We believe critically evaluating the potential societal impacts of our work is a key pillar of research. Our approach centers on building tools and measurements to evaluate our AI systems.</p>
-                            </div>
-                             <div>
-                                <div class="font-styrene text-xl">04</div>
-                                <h3 class="text-3xl mt-1">Focused, collaborative research</h3>
-                                <p class="text-lg mt-2 text-gray-700">We highly value collaboration on projects, and aim for a mixture of top-down and bottom-up research planning. We look to collaborate with other labs and researchers.</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-            
-            <!-- Other Tabs (Initially Hidden) -->
-            <div id="interpretability" class="tab-pane hidden">
-                <p class="text-lg p-8">Content for Interpretability would go here, detailing their specific projects and findings.</p>
-            </div>
-            <div id="alignment" class="tab-pane hidden">
-                <p class="text-lg p-8">Content for Alignment would go here, discussing methods for making AI helpful, honest, and harmless.</p>
-            </div>
-            <div id="societal-impacts" class="tab-pane hidden">
-                <p class="text-lg p-8">Content for Societal Impacts would go here, focusing on the interaction between AI and people.</p>
-            </div>
-        </div>
-
-        <!-- Publications -->
-        <section class="bg-[--color-ivory-light] py-16">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center fade-in-up">
-                    <h2 class="font-styrene text-5xl">Publications</h2>
-                    <div class="mt-8">
-                        <input id="publication-search" type="text" placeholder="Search" class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-800 focus:border-transparent transition font-styrene">
-                    </div>
-                </div>
-                
-                <div id="publication-list" class="mt-12 space-y-0 fade-in-up">
-                    <!-- Publication items will be dynamically populated by JS -->
-                </div>
+                </a>
             </div>
         </section>
 
-    </main>
+        <main>
+            <aside class="sidebar-nav">
+                <h3>Latest Advancements</h3>
+                <div class="sub-links">
+                    <a href="#cambrians">Cambrian-S</a>
+                    <a href="#cambrian1">Cambrian-1</a>
+                    <a href="#cambrian2">Cambrian-2</a>
+                </div>
+            </aside>
 
-    <!-- Footer -->
-    <footer class="bg-[--color-slate-dark] text-[--color-ivory-light] py-16 font-styrene">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
-            <div class="col-span-2 lg:col-span-2">
-                 <svg class="h-8 w-auto mb-4" width="46" height="32" viewBox="0 0 46 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M32.73 0h-6.945L38.45 32h6.945L32.73 0ZM12.665 0 0 32h7.082l2.59-6.72h13.25l2.59 6.72h7.082L19.929 0h-7.264Zm-.702 19.337 4.334-11.246 4.334 11.246h-8.668Z" fill="#faf9f5"></path>
-                </svg>
-                <small class="text-sm text-[--color-cloud-medium]">© 2025 Cambrian World</small>
-            </div>
-            
-            <!-- <div>
-                <h3 class="font-bold text-white">Products</h3>
-                <ul class="mt-4 space-y-2 text-sm">
-                    <li><a href="#" class="text-[--color-cloud-medium] hover:text-white">Claude</a></li>
-                    <li><a href="#" class="text-[--color-cloud-medium] hover:text-white">Pricing</a></li>
-                </ul>
-            </div>
-            <div>
-                <h3 class="font-bold text-white">Models</h3>
-                <ul class="mt-4 space-y-2 text-sm">
-                    <li><a href="#" class="text-[--color-cloud-medium] hover:text-white">Opus</a></li>
-                    <li><a href="#" class="text-[--color-cloud-medium] hover:text-white">Sonnet</a></li>
-                    <li><a href="#" class="text-[--color-cloud-medium] hover:text-white">Haiku</a></li>
-                </ul>
-            </div>
-             <div>
-                <h3 class="font-bold text-white">Company</h3>
-                <ul class="mt-4 space-y-2 text-sm">
-                    <li><a href="#" class="text-[--color-cloud-medium] hover:text-white">Anthropic</a></li>
-                    <li><a href="#" class="text-[--color-cloud-medium] hover:text-white">Careers</a></li>
-                    <li><a href="#" class="text-[--color-cloud-medium] hover:text-white">Research</a></li>
-                    <li><a href="#" class="text-[--color-cloud-medium] hover:text-white">News</a></li>
-                </ul>
-            </div>
-             <div>
-                <h3 class="font-bold text-white">Help</h3>
-                <ul class="mt-4 space-y-2 text-sm">
-                    <li><a href="#" class="text-[--color-cloud-medium] hover:text-white">Availability</a></li>
-                    <li><a href="#" class="text-[--color-cloud-medium] hover:text-white">Status</a></li>
-                    <li><a href="#" class="text-[--color-cloud-medium] hover:text-white">Support</a></li>
-                </ul>
-            </div> -->
-        </div>
-    </footer>
+            <div class="content-area">
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const publications = [
-            { title: 'Cambrian-1: A Fully Open, Vision-Centric Exploration of Multimodal LLMs', category: 'Alignment', date: 'Jun 24, 2024', url: 'https://cambrian-mllm.github.io/' },
-        ];
-
-        const publicationList = document.getElementById('publication-list');
-        const searchInput = document.getElementById('publication-search');
-        const tabButtons = document.querySelectorAll('.tab-btn');
-        const tabPanes = document.querySelectorAll('.tab-pane');
-
-        let activeCategory = 'overview';
-
-        function renderPublications() {
-            const searchTerm = searchInput.value.toLowerCase();
-            publicationList.innerHTML = '';
-            
-            const filteredPublications = publications.filter(pub => {
-                const categories = pub.category.toLowerCase().split('·').map(s => s.trim().replace(/\s+/g, '-'));
-                const categoryMatches = activeCategory === 'overview' || categories.includes(activeCategory);
-                
-                const searchMatches = searchTerm === '' || pub.title.toLowerCase().includes(searchTerm) || pub.category.toLowerCase().includes(searchTerm);
-
-                return categoryMatches && searchMatches;
-            });
-
-            if (filteredPublications.length === 0) {
-                publicationList.innerHTML = `<p class="text-center text-gray-500 font-styrene">No results found.</p>`;
-                return;
-            }
-
-            filteredPublications.forEach(pub => {
-                const pubElement = document.createElement('a');
-                pubElement.href = pub.url; // Use the new url property
-                // Optional: To make links open in a new tab
-                pubElement.target = '_blank'; 
-                pubElement.rel = 'noopener noreferrer'; // Good practice for security
-                pubElement.className = 'publication-card block border-t border-slate-800 last:border-b border-slate-800';
-                pubElement.innerHTML = `
-                    <div class="py-6 md:py-8 grid grid-cols-12 gap-x-8 gap-y-2 items-center">
-                        <div class="col-span-12 md:col-span-10 grid grid-cols-1 md:grid-cols-9 gap-x-8 items-center">
-                            <h3 class="text-sm font-medium md:col-span-6 order-2 md:order-1">${pub.title}</h3>
-                            <div class="md:col-span-3 md:col-start-7 order-1 md:order-2 text-left md:text-right">
-                                <span class="font-styrene text-sm text-gray-600 font-medium">${pub.category}</span>
-                            </div>
-                        </div>
-                        <div class="col-span-12 md:col-span-2 text-left md:text-right">
-                            <span class="font-styrene text-sm text-gray-600 font-medium">${pub.date}</span>
-                        </div>
+                <div class="filters">
+                    <div class="tabs">
+                        <a href="#" class="filter-btn active" data-filter="all">All</a>
+                        <a href="#" class="filter-btn" data-filter="publication">Publication</a>
+                        <a href="#" class="filter-btn" data-filter="release">Release</a>
                     </div>
-                `;
-                publicationList.appendChild(pubElement);
-            });
-        }
+                </div>
 
-        searchInput.addEventListener('input', renderPublications);
+                <div class="article-list">
 
-        // Tab functionality
-        tabButtons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                e.preventDefault();
-                
-                // Update button styles
-                tabButtons.forEach(btn => {
-                    btn.classList.remove('active-tab', 'bg-gray-800', 'text-white');
-                    btn.classList.add('border-black', 'text-gray-800', 'hover:bg-gray-200');
-                });
-                button.classList.add('active-tab', 'bg-gray-800', 'text-white');
-                button.classList.remove('border-black', 'text-gray-800', 'hover:bg-gray-200');
+                    <article id="cambrians" data-category="release">
+                        <a href="#">
+                            <div class="article-meta-left">
+                                <span class="article-category">Release</span>
+                                <span class="article-date">Est., 2025</span>
+                            </div>
+                            <div class="article-content-right">
+                                <h2>Cambrian-S</h2>
+                                <p>Towards Spatial Supersensing in Video</p>
+                            </div>
+                        </a>
+                    </article>
 
-                // Update active category state and pane visibility
-                const targetTab = button.getAttribute('data-tab');
-                activeCategory = targetTab;
+                    <article id="cambrian1" data-category="publication">
+                        <a href="#">
+                            <div class="article-meta-left">
+                                <span class="article-category">Publication</span>
+                                <span class="article-date">Jun 24, 2024</span>
+                            </div>
+                            <div class="article-content-right">
+                                <h2>Cambrian-1</h2>
+                                <p>A Fully Open, Vision-Centric Exploration of Multimodal LLMs</p>
+                            </div>
+                        </a>
+                    </article>
 
-                tabPanes.forEach(pane => {
-                    if (pane.id === targetTab) {
-                        pane.classList.remove('hidden');
-                        pane.classList.add('active-pane');
-                    } else {
-                        pane.classList.add('hidden');
-                        pane.classList.remove('active-pane');
-                    }
-                });
+                    <article id="cambrian2" data-category="publication">
+                        <a href="#">
+                            <div class="article-meta-left">
+                                <span class="article-category">Publication</span>
+                                <span class="article-date">Jun 24, 2024</span>
+                            </div>
+                            <div class="article-content-right">
+                                <h2>Cambrian-2</h2>
+                                <p>A Fully Open, Vision-Centric Exploration of Multimodal LLMs</p>
+                            </div>
+                        </a>
+                    </article>
 
-                // Re-render publications with the new category filter
-                renderPublications();
-            });
-        });
-        
-        // Initial render
-        renderPublications();
+                    <article id="cambrian3" data-category="publication">
+                        <a href="#">
+                            <div class="article-meta-left">
+                                <span class="article-category">Publication</span>
+                                <span class="article-date">Jun 24, 2024</span>
+                            </div>
+                            <div class="article-content-right">
+                                <h2>Cambrian-3</h2>
+                                <p>A Fully Open, Vision-Centric Exploration of Multimodal LLMs</p>
+                            </div>
+                        </a>
+                    </article>
 
-        // On-scroll animations
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('is-inview');
-                }
-            });
-        }, {
-            threshold: 0.1
-        });
+                    <article id="cambrian4" data-category="publication">
+                        <a href="#">
+                            <div class="article-meta-left">
+                                <span class="article-category">Publication</span>
+                                <span class="article-date">Jun 24, 2024</span>
+                            </div>
+                            <div class="article-content-right">
+                                <h2>Cambrian-4</h2>
+                                <p>A Fully Open, Vision-Centric Exploration of Multimodal LLMs</p>
+                            </div>
+                        </a>
+                    </article>
 
-        document.querySelectorAll('.fade-in-up').forEach(el => {
-            observer.observe(el);
-        });
-    });
-</script>
- 
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
-
