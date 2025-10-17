@@ -2,7 +2,7 @@
 
 
 :root {
-    --paper: #000000;
+    --paper: #FAFAFA;
     --ink: #ffffff;
     --gray: #999;
     --light-gray: #444;
@@ -36,7 +36,7 @@
  
  body {
     background-color: var(--paper);
-    color: var(--ink);
+    color: var(--color-slate-dark);
     /* font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; */
     font-family: "Lato", sans-serif;
     margin: 0;
@@ -71,7 +71,7 @@
  header .logo {
     font-weight: bold;
     font-size: 1.2rem;
-    color: var(--ink);
+    color: var(--color-slate-dark);
     text-decoration: none;
  }
  
@@ -118,7 +118,7 @@ main {
  
  
  .sidebar-nav a {
-    color: var(--ink);
+    color: var(--color-slate-dark);
     text-decoration: none;
     padding: 0.5rem 0.8rem;
     border-radius: 5px;
@@ -181,8 +181,8 @@ main {
  
  
  .filters .tabs a.active, .filters .tabs a:hover {
-    color: var(--ink);
-    border-bottom: 2px solid var(--ink);
+    color: var(--color-slate-dark);
+    border-bottom: 2px solid var(--color-slate-dark);
  }
  
  
@@ -200,7 +200,7 @@ main {
  
  .article-list a {
     text-decoration: none;
-    color: var(--ink);
+    color: var(--color-slate-dark);
     display: grid;
     grid-template-columns: 180px 1fr;
     gap: 2rem;
@@ -217,7 +217,7 @@ main {
  
  
  .article-meta-left .article-category {
-    color: var(--ink);
+    color: var(--color-slate-dark);
     line-height: 1.5rem;
     margin-bottom: 0rem;
  }
