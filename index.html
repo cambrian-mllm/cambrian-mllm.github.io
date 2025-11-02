@@ -20,7 +20,7 @@
     :root {
         --paper: #FAFAFA;
         --ink: #ffffff;
-        --gray: #999;
+        --gray: #6B7280; /* <-- 修改：统一为 Tailwind gray-500 */
         --light-gray: #444;
        
         /* Banner colors from banner.html */
@@ -88,18 +88,18 @@
      }
      
     .mission-statement {
-        border-top: 1px solid #666;
-        border-bottom: 1px solid #666;
+        /* border-top: 1px solid #666; */ /* <-- 移除 */
+        /* border-bottom: 1px solid #666; */ /* <-- 移除 */
         padding: 2rem 0;
         margin-bottom: 2rem;
-        text-align: left;
+        text-align: center; /* <-- 修改 */
     }
      
-     .mission-statement h1 {
+     /* .mission-statement h1 { <-- 移除
         font-size: 2rem;
         margin-top: 0;
         margin-bottom: 1.5rem;
-     }
+     } */
      
     /* --- Main Content Layout --- */
     main {
@@ -121,7 +121,7 @@
         flex-direction: column; /* 改为垂直堆叠 */
         align-items: stretch; /* 拉伸子元素以匹配宽度 */
         margin-bottom: 2rem;
-        border-bottom: 1px solid #666;
+        /* border-bottom: 1px solid #666; */ /* <-- 移除 */
         padding-bottom: 1rem;
         gap: 1rem; /* 元素间距 */
     }
@@ -226,10 +226,8 @@
         font-family: "Manrope", "Outfit", "Space Grotesk", system-ui, sans-serif;
     }
     
-    /* 模板中的卡片悬停效果 */
-    .publication-card:hover h3 {
-        text-decoration: underline;
-    }
+    /* * 移除了 .publication-card:hover h3 规则 
+     */
 
     </style>
     
@@ -242,7 +240,9 @@
         </header>
 
         <div class="mission-statement">
-            <h1>Building Supersensing for Superintelligence</h1>
+            <!-- 修改：添加新标题并更新 H1 -->
+            <h2 class="font-styrene text-5xl md:text-6xl font-bold mb-4">Cambrian World</h2>
+            <h1 class="font-styrene text-2xl italic text-gray-500">Building Supersensing for Superintelligence</h1>
         </div>
 
         <!-- Featured Banners Section (保持不变) -->
@@ -280,7 +280,7 @@
                     <!-- 新增：搜索框 (移到顶部) -->
                     <div class="search-container">
                         <input id="publication-search" type="text" placeholder="Search articles..." 
-                               class="w-full px-4 py-2 rounded-lg border border-gray-400 focus:ring-2 focus:ring-gray-800 focus:border-transparent transition font-styrene">
+                               class="w-full px-4 py-2 rounded-lg border border-gray-300 transition font-styrene focus:outline-none focus:border-black focus:border-2">
                     </div>
 
                     <div class="tabs">
@@ -295,23 +295,23 @@
 
                     <!-- 更新：文章1 -->
                     <article data-category="release" data-title="cambrian-s towards spatial supersensing in video publication">
-                        <a href="https://vision-x-nyu.github.io/cambrian-s.github.io/" target="_blank" class="publication-card block border-t border-gray-400 last:border-b last:border-gray-400">
+                        <a href="https://vision-x-nyu.github.io/cambrian-s.github.io/" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
                             <!-- 修改：文章布局 -->
                             <div class="py-6 md:py-8 grid grid-cols-1 md:grid-cols-4 gap-x-8 gap-y-2">
                                 <!-- Row 1: Category & Title -->
                                 <div class="col-span-1">
-                                    <span class="font-styrene text-sm text-gray-600 font-medium capitalize block">Publication</span>
+                                    <span class="font-styrene text-sm text-black font-medium capitalize block">Publication</span>
                                 </div>
                                 <div class="col-span-1 md:col-span-3">
-                                    <h3 class="text-lg font-medium font-styrene text-slate-900">Cambrian-S</h3>
+                                    <h3 class="text-lg font-bold font-styrene text-black">Cambrian-S</h3>
                                 </div>
                                 
                                 <!-- Row 2: Date & Description -->
                                 <div class="col-span-1">
-                                    <span class="font-styrene text-sm text-gray-600 font-medium block">Jun 24, 2024</span>
+                                    <span class="font-styrene text-sm text-gray-500 font-medium block">Jun 24, 2024</span>
                                 </div>
                                 <div class="col-span-1 md:col-span-3">
-                                    <p class="text-base text-gray-600">Towards Spatial Supersensing in Video</p>
+                                    <p class="text-base text-black">Towards Spatial Supersensing in Video</p>
                                 </div>
                             </div>
                         </a>
@@ -319,23 +319,23 @@
 
                     <!-- 更新：文章2 -->
                     <article data-category="release" data-title="test-set stress-test benchmark designers should train on the test set to expose exploitable non-visual shortcuts publication">
-                        <a href="TBD" target="_blank" class="publication-card block border-t border-gray-400 last:border-b last:border-gray-400">
+                        <a href="TBD" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
                             <!-- 修改：文章布局 -->
                             <div class="py-6 md:py-8 grid grid-cols-1 md:grid-cols-4 gap-x-8 gap-y-2">
                                 <!-- Row 1: Category & Title -->
                                 <div class="col-span-1">
-                                    <span class="font-styrene text-sm text-gray-600 font-medium capitalize block">Publication</span>
+                                    <span class="font-styrene text-sm text-black font-medium capitalize block">Publication</span>
                                 </div>
                                 <div class="col-span-1 md:col-span-3">
-                                    <h3 class="text-lg font-medium font-styrene text-slate-900">Test-set Stress-Test</h3>
+                                    <h3 class="text-lg font-bold font-styrene text-black">Test-set Stress-Test</h3>
                                 </div>
                                 
                                 <!-- Row 2: Date & Description -->
                                 <div class="col-span-1">
-                                    <span class="font-styrene text-sm text-gray-600 font-medium block">Jun 24, 2024</span>
+                                    <span class="font-styrene text-sm text-gray-500 font-medium block">Jun 24, 2024</span>
                                 </div>
                                 <div class="col-span-1 md:col-span-3">
-                                    <p class="text-base text-gray-600">Benchmark Designers Should "Train on the Test Set" to Expose Exploitable Non-Visual Shortcuts</p>
+                                    <p class="text-base text-black">Benchmark Designers Should "Train on the Test Set" to Expose Exploitable Non-Visual Shortcuts</p>
                                 </div>
                             </div>
                         </a>
@@ -343,20 +343,20 @@
 
                     <!-- 更新：文章3 -->
                     <article data-category="release" data-title="code for cambrian-s release">
-                        <a href="https://github.com/cambrian-mllm/cambrian-s" target="_blank" class="publication-card block border-t border-gray-400 last:border-b last:border-gray-400">
+                        <a href="https://github.com/cambrian-mllm/cambrian-s" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
                             <!-- 修改：文章布局 -->
                             <div class="py-6 md:py-8 grid grid-cols-1 md:grid-cols-4 gap-x-8 gap-y-2">
                                 <!-- Row 1: Category & Title -->
                                 <div class="col-span-1">
-                                    <span class="font-styrene text-sm text-gray-600 font-medium capitalize block">Release</span>
+                                    <span class="font-styrene text-sm text-black font-medium capitalize block">Release</span>
                                 </div>
                                 <div class="col-span-1 md:col-span-3">
-                                    <h3 class="text-lg font-medium font-styrene text-slate-900">Code for Cambrian-S</h3>
+                                    <h3 class="text-lg font-bold font-styrene text-black">Code for Cambrian-S</h3>
                                 </div>
                                 
                                 <!-- Row 2: Date & Description -->
                                 <div class="col-span-1">
-                                    <span class="font-styrene text-sm text-gray-600 font-medium block">Nov 3, 2025</span>
+                                    <span class="font-styrene text-sm text-gray-500 font-medium block">Nov 3, 2025</span>
                                 </div>
                                 <div class="col-span-1 md:col-span-3">
                                     <!-- No description, empty div for alignment -->
@@ -367,20 +367,20 @@
 
                     <!-- 更新：文章4 -->
                     <article data-category="release" data-title="vsi-590k dataset release">
-                        <a href="https://huggingface.co/datasets/nyu-visionx/VSI-590K" target="_blank" class="publication-card block border-t border-gray-400 last:border-b last:border-gray-400">
+                        <a href="https://huggingface.co/datasets/nyu-visionx/VSI-590K" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
                             <!-- 修改：文章布局 -->
                             <div class="py-6 md:py-8 grid grid-cols-1 md:grid-cols-4 gap-x-8 gap-y-2">
                                 <!-- Row 1: Category & Title -->
                                 <div class="col-span-1">
-                                    <span class="font-styrene text-sm text-gray-600 font-medium capitalize block">Release</span>
+                                    <span class="font-styrene text-sm text-black font-medium capitalize block">Release</span>
                                 </div>
                                 <div class="col-span-1 md:col-span-3">
-                                    <h3 class="text-lg font-medium font-styrene text-slate-900">VSI-590K dataset</h3>
+                                    <h3 class="text-lg font-bold font-styrene text-black">VSI-590K dataset</h3>
                                 </div>
                                 
                                 <!-- Row 2: Date & Description -->
                                 <div class="col-span-1">
-                                    <span class="font-styrene text-sm text-gray-600 font-medium block">Nov 3, 2025</span>
+                                    <span class="font-styrene text-sm text-gray-500 font-medium block">Nov 3, 2025</span>
                                 </div>
                                 <div class="col-span-1 md:col-span-3">
                                     <!-- No description, empty div for alignment -->
@@ -391,20 +391,20 @@
 
                     <!-- 更新：文章5 -->
                     <article data-category="release" data-title="vsi-super benchmark release">
-                        <a href="https://huggingface.co/collections/nyu-visionx/vsi-super" target="_blank" class="publication-card block border-t border-gray-400 last:border-b last:border-gray-400">
+                        <a href="https://huggingface.co/collections/nyu-visionx/vsi-super" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
                             <!-- 修改：文章布局 -->
                             <div class="py-6 md:py-8 grid grid-cols-1 md:grid-cols-4 gap-x-8 gap-y-2">
                                 <!-- Row 1: Category & Title -->
                                 <div class="col-span-1">
-                                    <span class="font-styrene text-sm text-gray-600 font-medium capitalize block">Release</span>
+                                    <span class="font-styrene text-sm text-black font-medium capitalize block">Release</span>
                                 </div>
                                 <div class="col-span-1 md:col-span-3">
-                                    <h3 class="text-lg font-medium font-styrene text-slate-900">VSI-Super Benchmark</h3>
+                                    <h3 class="text-lg font-bold font-styrene text-black">VSI-Super Benchmark</h3>
                                 </div>
                                 
                                 <!-- Row 2: Date & Description -->
                                 <div class="col-span-1">
-                                    <span class="font-styrene text-sm text-gray-600 font-medium block">Nov 3, 2025</span>
+                                    <span class="font-styrene text-sm text-gray-500 font-medium block">Nov 3, 2025</span>
                                 </div>
                                 <div class="col-span-1 md:col-span-3">
                                     <!-- No description, empty div for alignment -->
@@ -415,20 +415,20 @@
 
                     <!-- 更新：文章6 -->
                     <article data-category="release" data-title="cambrian-s model family release">
-                        <a href="https://huggingface.co/collections/nyu-visionx/cambrian-s-models" target="_blank" class="publication-card block border-t border-gray-400 last:border-b last:border-gray-400">
+                        <a href="https://huggingface.co/collections/nyu-visionx/cambrian-s-models" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
                             <!-- 修改：文章布局 -->
                             <div class="py-6 md:py-8 grid grid-cols-1 md:grid-cols-4 gap-x-8 gap-y-2">
                                 <!-- Row 1: Category & Title -->
                                 <div class="col-span-1">
-                                    <span class="font-styrene text-sm text-gray-600 font-medium capitalize block">Release</span>
+                                    <span class="font-styrene text-sm text-black font-medium capitalize block">Release</span>
                                 </div>
                                 <div class="col-span-1 md:col-span-3">
-                                    <h3 class="text-lg font-medium font-styrene text-slate-900">Cambrian-S Model Family</h3>
+                                    <h3 class="text-lg font-bold font-styrene text-black">Cambrian-S Model Family</h3>
                                 </div>
                                 
                                 <!-- Row 2: Date & Description -->
                                 <div class="col-span-1">
-                                    <span class="font-styrene text-sm text-gray-600 font-medium block">Nov 3, 2025</span>
+                                    <span class="font-styrene text-sm text-gray-500 font-medium block">Nov 3, 2025</span>
                                 </div>
                                 <div class="col-span-1 md:col-span-3">
                                     <!-- No description, empty div for alignment -->
@@ -439,23 +439,23 @@
 
                     <!-- 更新：文章7 -->
                     <article data-category="publication" data-title="thinking in space how multimodal large language models see, remember and recall spaces publication">
-                        <a href="https://vision-x-nyu.github.io/thinking-in-space.github.io/" target="_blank" class="publication-card block border-t border-gray-400 last:border-b last:border-gray-400">
+                        <a href="https://vision-x-nyu.github.io/thinking-in-space.github.io/" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
                             <!-- 修改：文章布局 -->
                             <div class="py-6 md:py-8 grid grid-cols-1 md:grid-cols-4 gap-x-8 gap-y-2">
                                 <!-- Row 1: Category & Title -->
                                 <div class="col-span-1">
-                                    <span class="font-styrene text-sm text-gray-600 font-medium capitalize block">Publication</span>
+                                    <span class="font-styrene text-sm text-black font-medium capitalize block">Publication</span>
                                 </div>
                                 <div class="col-span-1 md:col-span-3">
-                                    <h3 class="text-lg font-medium font-styrene text-slate-900">Thinking in Space</h3>
+                                    <h3 class="text-lg font-bold font-styrene text-black">Thinking in Space</h3>
                                 </div>
                                 
                                 <!-- Row 2: Date & Description -->
                                 <div class="col-span-1">
-                                    <span class="font-styrene text-sm text-gray-600 font-medium block">Dec 18, 2024</span>
+                                    <span class="font-styrene text-sm text-gray-500 font-medium block">Dec 18, 2024</span>
                                 </div>
                                 <div class="col-span-1 md:col-span-3">
-                                    <p class="text-base text-gray-600">How Multimodal Large Language Models See, Remember and Recall Spaces</p>
+                                    <p class="text-base text-black">How Multimodal Large Language Models See, Remember and Recall Spaces</p>
                                 </div>
                             </div>
                         </a>
@@ -463,23 +463,23 @@
 
                     <!-- 更新：文章8 -->
                     <article data-category="publication" data-title="cambrian-1 a fully open, vision-centric exploration of multimodal llms publication">
-                        <a href="https://cambrian-mllm.github.io/" target="_blank" class="publication-card block border-t border-gray-400 last:border-b last:border-gray-400">
+                        <a href="https://cambrian-mllm.github.io/" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
                             <!-- 修改：文章布局 -->
                             <div class="py-6 md:py-8 grid grid-cols-1 md:grid-cols-4 gap-x-8 gap-y-2">
                                 <!-- Row 1: Category & Title -->
                                 <div class="col-span-1">
-                                    <span class="font-styrene text-sm text-gray-600 font-medium capitalize block">Publication</span>
+                                    <span class="font-styrene text-sm text-black font-medium capitalize block">Publication</span>
                                 </div>
                                 <div class="col-span-1 md:col-span-3">
-                                    <h3 class="text-lg font-medium font-styrene text-slate-900">Cambrian-1</h3>
+                                    <h3 class="text-lg font-bold font-styrene text-black">Cambrian-1</h3>
                                 </div>
                                 
                                 <!-- Row 2: Date & Description -->
                                 <div class="col-span-1">
-                                    <span class="font-styrene text-sm text-gray-600 font-medium block">Jun 24, 2024</span>
+                                    <span class="font-styrene text-sm text-gray-500 font-medium block">Jun 24, 2024</span>
                                 </div>
                                 <div class="col-span-1 md:col-span-3">
-                                    <p class="text-base text-gray-600">A Fully Open, Vision-Centric Exploration of Multimodal LLMs</p>
+                                    <p class="text-base text-black">A Fully Open, Vision-Centric Exploration of Multimodal LLMs</p>
                                 </div>
                             </div>
                         </a>
