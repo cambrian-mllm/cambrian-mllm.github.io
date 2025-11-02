@@ -5,7 +5,435 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cambrian World</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="style.css">
+    
+    <style>
+    /* --- General Body & Font Styles --- */
+
+
+    :root {
+        --paper: #FAFAFA;
+        --ink: #ffffff;
+        --gray: #999;
+        --light-gray: #444;
+       
+        /* Banner colors from banner.html */
+        --color-book-cloth:#cc785c;
+        --color-cactus:#bcd1ca;
+        --color-clay:#d97757;
+        --color-cloud-dark:#87867f;
+        --color-cloud-light:#d1cfc5;
+        --color-cloud-medium:#b0aea5;
+        --color-coral:#ebcece;
+        --color-dark:#0f0f0e;
+        --color-fig:#c46686;
+        --color-heather:#cbcadb;
+        --color-ivory-dark:#e8e6dc;
+        --color-ivory-light:#faf9f5;
+        --color-ivory-medium:#f0eee6;
+        --color-kraft:#d4a27f;
+        --color-light:#fff;
+        --color-manilla:#ebdbbc;
+        --color-manilla-light:#f1e6d0;
+        --color-oat:#e3dacc;
+        --color-olive:#788c5d;
+        --color-sky:#6a9bcc;
+        --color-slate-dark:#141413;
+        --color-slate-light:#5e5d59;
+        --color-slate-medium:#3d3d3a;
+      }
+     
+     
+     body {
+        background-color: var(--paper);
+        color: var(--color-slate-dark);
+        /* font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; */
+        font-family: "Inter", sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+     }
+     
+     
+     html {
+        scroll-behavior: smooth;
+     }
+     
+     
+     /* --- Main Container --- */
+     .container {
+        max-width: 1200px;
+        width: 100%;
+        padding: 2rem;
+     }
+     
+     
+     /* --- Header Section --- */
+     header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 2rem;
+     }
+     
+     
+     header .logo {
+        font-weight: bold;
+        font-size: 1.2rem;
+        color: var(--color-slate-dark);
+        text-decoration: none;
+     }
+     
+     
+    .mission-statement {
+        border-top: 1px solid #666;
+        border-bottom: 1px solid #666;
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+        text-align: left;
+    }
+     
+     
+     .mission-statement h1 {
+        font-size: 2rem;
+        margin-top: 0;
+        margin-bottom: 1.5rem;
+     }
+     
+     
+    /* --- Main Content Layout (Sidebar + Articles) --- */
+    main {
+        display: block;
+    }
+     
+     
+     .sidebar-nav {
+        position: relative;
+        border-right: 1px solid var(--gray);
+        min-height: 100%;
+        padding-right: 2rem;
+        padding-bottom: 2rem;
+     }
+     
+     
+     .sidebar-nav h3 {
+        font-size: 0.9rem;
+        color: var(--gray);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+     }
+     
+     
+     .sidebar-nav a {
+        color: var(--color-slate-dark);
+        text-decoration: none;
+        padding: 0.5rem 0.8rem;
+        border-radius: 5px;
+        margin-bottom: 0.25rem;
+     }
+     
+     
+     .sidebar-nav a:hover {
+        background-color: var(--light-gray);
+     }
+     
+     
+     .sidebar-nav a.active {
+        background-color: var(--gray);
+        font-weight: 600;
+     }
+     
+     
+     .sidebar-nav .sub-links {
+        padding-left: 1rem;
+        display: flex;
+        flex-direction: column;
+     }
+     
+     
+     .sidebar-nav .sub-links a {
+        color: var(--gray);
+     }
+     
+     
+    /* --- Right Content Area (Articles) --- */
+    .content-area {
+        width: 100%;
+    }
+     .content-area h1 {
+        font-size: 2.5rem;
+        margin-top: 0;
+        margin-bottom: 1.5rem;
+     }
+     
+     
+    .filters {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid #666;
+        padding-bottom: 1rem;
+    }
+     
+     
+     .filters .tabs a {
+        color: var(--gray);
+        text-decoration: none;
+        margin-right: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid transparent;
+        transition: color 0.2s, border-color 0.2s;
+     }
+     
+     
+     .filters .tabs a.active, .filters .tabs a:hover {
+        color: var(--color-slate-dark);
+        border-bottom: 2px solid var(--color-slate-dark);
+     }
+     
+     
+    /* --- Article List --- */
+    .article-list article {
+        padding: 1rem 0;
+        border-bottom: 1px solid #666;
+    }
+     
+     
+     .article-list article:last-child {
+        border-bottom: none;
+     }
+     
+     
+     .article-list a {
+        text-decoration: none;
+        color: var(--color-slate-dark);
+        display: grid;
+        grid-template-columns: 180px 1fr;
+        gap: 2rem;
+     }
+     
+     
+     .article-meta-left {
+        font-size: 0.9rem;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.75rem;
+        position: relative;
+        padding-left: 20px;
+     }
+    
+     .article-icon {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+        color: var(--color-slate-dark);
+        opacity: 0.7;
+        transition: opacity 0.3s ease;
+     }
+    
+     .article-list article:hover .article-icon {
+        opacity: 1;
+     }
+     
+     
+     .article-meta-left .article-category {
+        color: var(--color-slate-dark);
+        line-height: 1.5rem;
+        white-space: nowrap;
+     }
+    
+    
+     .article-meta-left .article-date {
+        color: var(--gray);
+        line-height: 1.5rem;
+        white-space: nowrap;
+        width: 100%;
+        flex-basis: 100%;
+     }
+     
+     
+     .article-meta-left::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(to bottom, #8A2BE2, #4169E1);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+     }
+     
+     
+     .article-list article:hover .article-meta-left::before {
+        opacity: 1;
+     }
+     
+     
+     .article-list a:hover h2 {
+        text-decoration: underline;
+     }
+     
+     
+     .article-list h2 {
+        font-size: 1rem;
+        margin: 0 0 0 0;
+        line-height: 1rem;
+        font-weight: normal;
+     }
+     
+     
+    .article-list p {
+        color: #999; /* Grey for description text */
+        line-height: 1rem;
+        margin-bottom: 0rem;
+    }
+     
+     
+     .article-meta {
+        font-size: 0.9rem;
+        color: #888;
+        margin-top: 1rem; /* Changed from margin-bottom */
+     }
+     
+     
+     @media (max-width: 768px) {
+        main {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+     
+     
+        .sidebar-nav {
+            display: none;
+        }
+     
+     
+        .content-area {
+            grid-column: 1 / -1;
+        }
+     
+     
+        .article-list a {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+     
+     
+        .article-content-right {
+            order: 1;
+        }
+     
+     
+        .article-meta-left {
+            order: 2;
+            flex-direction: row;
+            gap: 1rem;
+            padding-left: 0;
+            position: static;
+            margin-bottom: 0;
+            margin-top: 0.5rem;
+        }
+    
+        .article-icon {
+            margin-bottom: 0;
+        }
+     
+     
+        .article-meta-left .article-category,
+        .article-meta-left .article-date {
+            margin-bottom: 0;
+        }
+     
+     
+        .article-meta-left::before {
+            display: none;
+        }
+     
+     
+        .mission-statement h1 {
+            font-size: 1.5rem;
+        }
+     }
+     
+     
+     /* --- Featured Banner Cards --- */
+     .featured-banners {
+        margin-bottom: 3rem;
+        padding: 2rem 0;
+     }
+     
+     
+     .featured-card {
+        border-radius: 24px;
+        display: block;
+        height: clamp(18rem, 25vw, 24rem);
+        position: relative;
+        transition: all .3s cubic-bezier(.165,.84,.44,1);
+        overflow: hidden;
+        color: var(--color-slate-dark);
+        text-decoration: none;
+     }
+     
+     
+     .featured-card img {
+        height: 95%;
+        object-fit: contain;
+        position: absolute;
+        right: -5%;
+        top: -10%;
+        transform: scale(.75);
+        transition: transform .3s cubic-bezier(.165,.84,.44,1);
+     }
+     
+     
+     .featured-card:hover img {
+        transform: scale(.8);
+     }
+     
+     
+     .featured-card .text-container {
+        bottom: 0;
+        left: 0;
+        padding: 24px;
+        position: absolute;
+        right: 0;
+     }
+     
+     
+     .featured-card .category-label {
+        font-size: 0.875rem;
+        font-weight: 500;
+     }
+     
+     
+    .featured-card h3 {
+        font-size: 1.5rem;
+        margin-top: 0.5rem;
+        line-height: 1.3;
+    }
+    
+    .cambrian-1-card {
+        background-image: url('imgs/header.png');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+    
+    .thinking-in-space-card {
+        background-image: url('imgs/tis_spanner.png');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+    </style>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bitcount:wght@100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Lora:ital,wght@0,400..700;1,400..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -219,6 +647,34 @@
         </main>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const articles = document.querySelectorAll('.article-list article');
+     
+     
+        filterButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+               
+                const filter = e.target.getAttribute('data-filter');
+               
+                // Handle active button state
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                e.target.classList.add('active');
+               
+                // Filter articles
+                articles.forEach(article => {
+                    const category = article.getAttribute('data-category');
+                    if (filter === 'all' || filter === category) {
+                        article.style.display = 'block';
+                    } else {
+                        article.style.display = 'none';
+                    }
+                });
+            });
+        });
+     });
+    </script>
 </body>
 </html>
