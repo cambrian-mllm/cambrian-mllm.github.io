@@ -255,25 +255,25 @@
         <section class="featured-banners">
             <div class="grid grid-cols-1 md:grid-cols-10 gap-4">
                 <a href="https://vision-x-nyu.github.io/cambrian-s.github.io/" target="_blank" class="featured-card md:col-span-7" style="background-color: var(--color-book-cloth);">
-                    <img src="imgs/cambrian-s-v2.webp" alt="Cambrian-S">
+                    <img src="imgs/cambrian-s-v2.webp" alt="Cambrian-S" onerror="this.src='https://placehold.co/800x400/cc785c/ffffff?text=Cambrian-S'; this.onerror=null;">
                     <div class="text-container">
                         <h3 style="color: white; font-size: 2.5rem; font-weight: 700;">Cambrian-S</h3>
                     </div>
                 </a>
                 <a href="https://cambrian-mllm.github.io/" target="_blank" class="featured-card md:col-span-3" style="background-color: var(--color-cloud-light);">
-                    <img src="imgs/cambrian.png" alt="Cambrian-1">
+                    <img src="imgs/cambrian.png" alt="Cambrian-1" onerror="this.src='https://placehold.co/400x400/d1cfc5/ffffff?text=Cambrian-1'; this.onerror=null;">
                     <div class="text-container">
                         <h3 style="color: white; font-size: 2.5rem; font-weight: 700;">Cambrian-1</h3>
                     </div>
                 </a>
                 <a href="#" class="featured-card md:col-span-5" style="background-color: var(--color-manilla);">
-                    <img src="imgs/tst.png" alt="Test-set Training">
+                    <img src="imgs/tst.png" alt="Test-set Training" onerror="this.src='https://placehold.co/600x400/ebdbbc/ffffff?text=Expose+Non-Visual+Shortcuts'; this.onerror=null;">
                     <div class="text-container">
                         <h3 style="color: white; font-size: 2.5rem; font-weight: 700;">Expose Non-Visual Shortcuts</h3>
                     </div>
                 </a>
                 <a href="#" class="featured-card md:col-span-5" style="background-color: var(--color-sky);">
-                    <img src="imgs/thinking-in-space.png" alt="Thinking in Space">
+                    <img src="imgs/thinking-in-space.png" alt="Thinking in Space" onerror="this.src='https://placehold.co/600x400/6a9bcc/ffffff?text=Thinking+in+Space'; this.onerror=null;">
                     <div class="text-container">
                         <h3 style="color: white; font-size: 2.5rem; font-weight: 700;">Thinking in Space</h3>
                     </div>
@@ -524,8 +524,36 @@
                     </article>
                     
                 </div>
+
             </div>
+
+            <div class="contact-us-block py-12 md:py-16"> <!-- 使用 section 的 padding -->
+                
+                <!-- 两栏布局 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12 items-center">
+                    <!-- 左栏：图片 -->
+                    <div class="featured-card">
+                        <!-- 使用一个与主题相关的占位图颜色 (var(--color-cactus)) -->
+                        <img src="imgs/cambrian-s-video-cover.jpg" alt="VisionX@NYU" class="rounded-lg shadow-md w-full h-auto object-cover aspect-video md:aspect-auto">
+                    </div>
+                    
+                    <!-- 右栏：文字和按钮 -->
+                    <div class="flex flex-col justify-center text-left items-center">
+                        <h2 class="font-styrene text-4xl font-bold mb-6">Contact Us</h2>
+                        <p class="text-base md:text-lg text-gray-700 mb-8" style="line-height: 1.75;">
+                            If you are interested in our research, would like to support our lab, or explore collaboration opportunities, we would love to hear from you.
+                        </p>
+                        <!-- 按钮 -->
+                        <a href="mailto:saining.xie@nyu.edu"
+                            class="bg-[var(--paper)] text-black font-styrene font-medium py-3 px-8 rounded-lg text-base hover:bg-black hover:text-white transition-colors duration-300 border border-black"> <!-- 添加一个边框以确保在 --paper 背景上可见 -->
+                            Reach out
+                        </a>
+                    </div>
+                </div>
+            </div>
+
         </main>
+
     </div>
 
     <!-- JavaScript 逻辑 (已修改) --><script>
@@ -579,8 +607,23 @@
             runFilters();
         });
         */
+
+        // 添加 onerror 事件处理器来处理缺失的图片
+        document.querySelectorAll('img').forEach(img => {
+            img.addEventListener('error', function() {
+                // 如果图片加载失败，并且尚未设置 onerror 处理器来防止无限循环
+                if (!this.dataset.error) {
+                    this.dataset.error = true; // 标记已处理
+                    // 尝试从 alt 文本生成一个占位符
+                    const altText = this.alt ? encodeURIComponent(this.alt) : 'Image+Not+Found';
+                    // 使用一个通用的背景色
+                    this.src = `https://placehold.co/600x400/eeeeee/999999?text=${altText}`;
+                }
+            });
+        });
     });
     </script>
 </body>
 </html>
+
 
