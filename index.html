@@ -4,16 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cambrian World</title>
-    <!-- 原始 Tailwind 脚本 -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 原始 Tailwind 脚本 --><script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- 原始字体 -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <!-- 统一加载 Inter 字体 --><link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bitcount:wght@100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Lora:ital,wght@0,400..700;1,400..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    
-    <!-- 从模板添加的新字体 -->
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600&family=Outfit:wght@600&family=Space+Grotesk:wght@600&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
 
     <style>
     /* --- 原始 CSS --- */
@@ -115,14 +110,14 @@
         margin-bottom: 1.5rem;
      }
      
-    /* --- 过滤器和搜索框 --- */
+    /* --- 过滤器 --- */
     .filters {
         display: flex;
         flex-direction: column; /* 改为垂直堆叠 */
         align-items: stretch; /* 拉伸子元素以匹配宽度 */
-        margin-bottom: 1rem; /* <-- 改动：从 2rem 减小到 1rem */
+        margin-bottom: 0rem; /* <-- 改动：从 2rem 减小到 1rem */
         /* border-bottom: 1px solid #666; */ /* <-- 移除 */
-        padding-bottom: 1rem;
+        padding-bottom: 0rem;
         gap: 1rem; /* 元素间距 */
     }
      
@@ -139,7 +134,7 @@
      
      .filters .tabs a:hover {
         color: var(--color-slate-dark);
-        border-bottom: 2px solid var(--color-slate-dark); /* 保留悬停时的下划线 */
+        /* border-bottom: 2px solid var(--color-slate-dark); */ /* <-- 修改：移除悬停下划线，因为底部边框已存在 */
      }
 
      .filters .tabs a.active {
@@ -158,11 +153,8 @@
      }
      /* --- 改动 3 结束 --- */
 
-     /* 搜索框容器 */
-     .search-container {
-        width: 100%; /* 占据全部宽度 */
-     }
-
+     /* 搜索框容器 (已移除) */
+     
      /* --- Article List --- */
      /* * 样式现在将由 Tailwind CSS 控制
      */
@@ -192,17 +184,17 @@
      }
      
      .featured-card img {
-        height: 95%;
-        object-fit: contain;
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
         position: absolute;
-        right: -5%;
-        top: -10%;
-        transform: scale(.75);
         transition: transform .3s cubic-bezier(.165,.84,.44,1);
      }
      
      .featured-card:hover img {
-        transform: scale(.8);
+        /* --- 修改：居中 hover --- */
+        transform: scale(1.1);
+        /* --- 结束修改 --- */
      }
      
      .featured-card .text-container {
@@ -223,28 +215,30 @@
         margin-top: 0.5rem;
         line-height: 1.3;
     }
-    
-    .cambrian-1-card {
-        background-image: url('imgs/header.png');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-    }
-    
-    .thinking-in-space-card {
-        background-image: url('imgs/tis_spanner.png');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
+
+    .font-styrene {
+        font-family: "Inter", system-ui, sans-serif;
     }
 
-    /* --- 从模板添加的新 CSS --- */
-    .font-styrene {
-        font-family: "Manrope", "Outfit", "Space Grotesk", system-ui, sans-serif;
+    .publication-card {
+        position: relative; /* 锚定 ::before 伪元素 */
     }
-    
-    /* * 移除了 .publication-card:hover h3 规则 
-     */
+
+    .publication-card::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 20%;
+        width: 4px;
+        height: 55%;
+        background: linear-gradient(to bottom, #8A2BE2, #4169E1); 
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .publication-card:hover::before {
+        opacity: 1;
+    }
 
     </style>
     
@@ -252,35 +246,33 @@
 <body>
 
     <div class="container">
-        <!-- <header> -->
-            <!-- <a href="index.html" class="logo">Home</a> <-- 修改：移除了 Home 链接 -->
-        <!-- </header> -->
-
-        <div class="mission-statement">
+        <!-- <header> --><!-- <a href="index.html" class="logo">Home</a> <-- 修改：移除了 Home 链接 --><!-- </header> --><div class="mission-statement">
             <h2 class="font-styrene text-4xl font-bold mb-4">Building Supersensing for Superintelligence</h2>
+            <p class="text-base text-gray-500 mt-4" style="line-height: 1.75;">The world doesn't just exist around us. It flows through us, shaping what we feel and who we become. Supersensing is our mission to let machines share in that flow: to build richer world models that not only see, but anticipate, select, and organize experience, advancing multimodal intelligence that truly understands the world and creates within it.</p>
         </div>
 
-        <!-- Featured Banners Section (保持不变) -->
         <section class="featured-banners">
-            <!-- 改动：gap-8 (32px) 减小到 gap-4 (16px) -->
             <div class="grid grid-cols-1 md:grid-cols-10 gap-4">
                 <a href="https://vision-x-nyu.github.io/cambrian-s.github.io/" target="_blank" class="featured-card md:col-span-7" style="background-color: var(--color-book-cloth);">
-                    <img src="https://placehold.co/400x400/cc785c/faf9f5?text=S" alt="Cambrian-S" onerror="this.src='https://placehold.co/400x400/cc785c/faf9f5?text=S'">
+                    <img src="imgs/cambrian-s-v2.webp" alt="Cambrian-S">
                     <div class="text-container">
                         <h3 style="color: white; font-size: 2.5rem; font-weight: 700;">Cambrian-S</h3>
                     </div>
                 </a>
-                <a href="https://cambrian-mllm.github.io/" target="_blank" class="featured-card md:col-span-3 cambrian-1-card">
+                <a href="https://cambrian-mllm.github.io/" target="_blank" class="featured-card md:col-span-3" style="background-color: var(--color-cloud-light);">
+                    <img src="imgs/cambrian.png" alt="Cambrian-1">
                     <div class="text-container">
                         <h3 style="color: white; font-size: 2.5rem; font-weight: 700;">Cambrian-1</h3>
                     </div>
                 </a>
                 <a href="#" class="featured-card md:col-span-5" style="background-color: var(--color-manilla);">
+                    <img src="imgs/tst.png" alt="Test-set Training">
                     <div class="text-container">
                         <h3 style="color: white; font-size: 2.5rem; font-weight: 700;">Expose Non-Visual Shortcuts</h3>
                     </div>
                 </a>
-                <a href="#" class="featured-card md:col-span-5 thinking-in-space-card">
+                <a href="#" class="featured-card md:col-span-5" style="background-color: var(--color-sky);">
+                    <img src="imgs/thinking-in-space.png" alt="Thinking in Space">
                     <div class="text-container">
                         <h3 style="color: white; font-size: 2.5rem; font-weight: 700;">Thinking in Space</h3>
                     </div>
@@ -291,227 +283,240 @@
         <main>
             <div class="content-area">
 
-                <!-- 新增：Explore all researches 标题 -->
-                <!-- 使用 'font-styrene', 'font-bold' 和 'text-4xl' -->
-                <!-- 添加 text-center 和 mb-8 (for margin) -->
-                <div class="text-center mb-8">
-                    <h2 class="font-styrene text-4xl font-bold">Explore All Researches</h2>
+                <!-- 新增：Explore all researches 标题 --><!-- 使用 'font-styrene', 'font-bold' 和 'text-4xl' --><!-- 添加 text-center 和 mb-8 (for margin) --><div class="text-center mb-8">
+                    <h2 class="font-styrene text-4xl font-bold">Discover Our Research</h2>
                 </div>
 
-                <!-- 更新：过滤器和搜索框 -->
-                <div class="filters">
-                    <!-- 新增：搜索框 (移到顶部) -->
-                    <div class="search-container">
-                        <input id="publication-search" type="text" placeholder="Search articles..." 
-                               class="w-full px-4 py-2 rounded-lg border border-gray-300 transition font-styrene focus:outline-none focus:border-black focus:border-2">
-                    </div>
-
-                    <!-- --- 改动 2 开始 --- -->
-                    <!-- 修改：移除 flex-wrap 和 gap-y-2, 添加 flex-nowrap 和 overflow-x-auto -->
-                    <div class="tabs flex flex-nowrap gap-x-6 overflow-x-auto">
-                    <!-- --- 改动 2 结束 --- -->
-                        <a href="#" class="filter-btn active" data-filter="all">All</a>
+                <!-- 更新：过滤器 --><div class="filters">
+                    
+                    <!-- 搜索框 (已移除) --><!-- --- 改动 2 开始 --- --><!-- 修改：移除 flex-wrap 和 gap-y-2, 添加 flex-nowrap 和 overflow-x-auto --><!-- 修改：添加 border-b border-black --><div class="tabs flex flex-nowrap gap-x-6 overflow-x-auto border-b border-black">
+                    <!-- --- 改动 2 结束 --- --><a href="#" class="filter-btn active" data-filter="all">All</a>
                         <a href="#" class="filter-btn" data-filter="publication">Publication</a>
-                        <a href="#" class="filter-btn" data-filter="article">Article</a>
-                        <a href="#" class="filter-btn" data-filter="model">Model</a>
+                        <!-- <a href="#" class="filter-btn" data-filter="article">Article</a> <-- 修改：已移除 --><a href="#" class="filter-btn" data-filter="model">Model</a>
                         <a href="#" class="filter-btn" data-filter="benchmark">Benchmark</a>
                         <a href="#" class="filter-btn" data-filter="dataset">Dataset</a>
                         <a href="#" class="filter-btn" data-filter="code">Code</a>
                     </div>
                 </div>
 
-                <!-- 更新：文章列表 -->
-                <!-- 改动：mt-12 (3rem) 改为 mt-6 (1.5rem) -->
-                <div class="article-list mt-6 space-y-0">
+                <!-- 更新：文章列表 --><!-- 改动：mt-12 (3rem) 改为 mt-6 (1.5rem) --><div class="article-list mt-6 space-y-0">
 
-                    <!-- 更新：文章1 -->
-                    <article data-category="article" data-title="cambrian-s towards spatial supersensing in video publication">
+                    <!-- 更新：文章1 --><!-- 修改：data-category 和 <span> 文本 --><article data-category="publication" data-title="cambrian-s towards spatial supersensing in video publication">
                         <a href="https://vision-x-nyu.github.io/cambrian-s.github.io/" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
-                            <!-- 修改：文章布局 -->
-                            <div class="py-6 md:py-8 grid grid-cols-1 md:grid-cols-4 gap-x-8 gap-y-2">
-                                <!-- Row 1: Category & Title -->
-                                <div class="col-span-1">
-                                    <span class="font-styrene text-sm text-black font-medium capitalize block">Article</span>
+                            <!-- 修改：文章布局 (新增 px-6) (gap-x-8 改为 gap-x-4) --><div class="py-6 md:py-6 px-6 grid grid-cols-1 md:grid-cols-10 gap-x-4 gap-y-2">
+                                <!-- Row 1: Category & Title --><div class="col-span-1">
+                                    <!-- 修改：添加 flex container 和 SVG icon -->
+                                    <div class="flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-gray-700 mr-2 shrink-0">
+                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                            <polyline points="14 2 14 8 20 8"></polyline>
+                                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                                            <polyline points="10 9 9 9 8 9"></polyline>
+                                        </svg>
+                                        <span class="font-styrene text-base text-black capitalize block">Publication</span>
+                                    </div>
                                 </div>
-                                <div class="col-span-1 md:col-span-3">
-                                    <h3 class="text-lg font-bold font-styrene text-black">Cambrian-S</h3>
+                                <div class="col-span-1 md:col-span-9">
+                                    <h3 class="text-base font-styrene text-black">Cambrian-S</h3>
                                 </div>
                                 
-                                <!-- Row 2: Date & Description -->
-                                <div class="col-span-1">
-                                    <span class="font-styrene text-sm text-gray-500 font-medium block">Jun 24, 2024</span>
+                                <!-- Row 2: Date & Description --><div class="col-span-1">
+                                    <span class="font-styrene text-base text-gray-500 block">Jun 24, 2024</span>
                                 </div>
-                                <div class="col-span-1 md:col-span-3">
-                                    <p class="text-base text-black">Towards Spatial Supersensing in Video</p>
+                                <div class="col-span-1 md:col-span-9">
+                                    <p class="text-base text-gray-500">Towards Spatial Supersensing in Video</p>
                                 </div>
                             </div>
                         </a>
                     </article>
 
-                    <!-- 更新：文章2 -->
-                    <article data-category="Article" data-title="test-set stress-test benchmark designers should train on the test set to expose exploitable non-visual shortcuts publication">
+                    <!-- 更新：文章2 --><!-- 修改：data-category 和 <span> 文本 --><article data-category="publication" data-title="test-set stress-test benchmark designers should train on the test set to expose exploitable non-visual shortcuts publication">
                         <a href="TBD" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
-                            <!-- 修改：文章布局 -->
-                            <div class="py-6 md:py-8 grid grid-cols-1 md:grid-cols-4 gap-x-8 gap-y-2">
-                                <!-- Row 1: Category & Title -->
-                                <div class="col-span-1">
-                                    <span class="font-styrene text-sm text-black font-medium capitalize block">Article</span>
+                            <!-- 修改：文章布局 (新增 px-6) (gap-x-8 改为 gap-x-4) --><div class="py-6 md:py-6 px-6 grid grid-cols-1 md:grid-cols-10 gap-x-4 gap-y-2">
+                                <!-- Row 1: Category & Title --><div class="col-span-1">
+                                    <!-- 修改：添加 flex container 和 SVG icon -->
+                                    <div class="flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-gray-700 mr-2 shrink-0">
+                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                            <polyline points="14 2 14 8 20 8"></polyline>
+                                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                                            <polyline points="10 9 9 9 8 9"></polyline>
+                                        </svg>
+                                        <span class="font-styrene text-base text-black capitalize block">Publication</span>
+                                    </div>
                                 </div>
-                                <div class="col-span-1 md:col-span-3">
-                                    <h3 class="text-lg font-bold font-styrene text-black">Test-set Stress-Test</h3>
+                                <div class="col-span-1 md:col-span-9">
+                                    <h3 class="text-base font-styrene text-black">Test-set Stress-Test</h3>
                                 </div>
                                 
-                                <!-- Row 2: Date & Description -->
-                                <div class="col-span-1">
-                                    <span class="font-styrene text-sm text-gray-500 font-medium block">Jun 24, 2024</span>
+                                <!-- Row 2: Date & Description --><div class="col-span-1">
+                                    <span class="font-styrene text-base text-gray-500 block">Jun 24, 2024</span>
                                 </div>
-                                <div class="col-span-1 md:col-span-3">
-                                    <p class="text-base text-black">Benchmark Designers Should "Train on the Test Set" to Expose Exploitable Non-Visual Shortcuts</p>
+                                <div class="col-span-1 md:col-span-9">
+                                    <p class="text-base text-gray-500">Benchmark Designers Should "Train on the Test Set" to Expose Exploitable Non-Visual Shortcuts</p>
 
                                 </div>
                             </div>
                         </a>
                     </article>
 
-                    <!-- 更新：文章3 -->
-                    <article data-category="code" data-title="code for cambrian-s release">
+                    <!-- 更新：文章3 --><article data-category="code" data-title="code for cambrian-s release">
                         <a href="https://github.com/cambrian-mllm/cambrian-s" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
-                            <!-- 修改：文章布局 -->
-                            <div class="py-6 md:py-8 grid grid-cols-1 md:grid-cols-4 gap-x-8 gap-y-2">
-                                <!-- Row 1: Category & Title -->
-                                <div class="col-span-1">
-                                    <span class="font-styrene text-sm text-black font-medium capitalize block">Code</span>
+                            <!-- 修改：文章布局 (新增 px-6) (gap-x-8 改为 gap-x-4) --><div class="py-6 md:py-6 px-6 grid grid-cols-1 md:grid-cols-10 gap-x-4 gap-y-2">
+                                <!-- Row 1: Category & Title --><div class="col-span-1">
+                                    <!-- 修改：添加 flex container 和 SVG icon -->
+                                    <div class="flex items-center">
+                                        <svg class="w-5 h-5 text-gray-700 mr-2 shrink-0" aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
+                                            <path fill="currentColor" d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path>
+                                        </svg>
+                                        <span class="font-styrene text-base text-black capitalize block">Code</span>
+                                    </div>
                                 </div>
-                                <div class="col-span-1 md:col-span-3">
-                                    <h3 class="text-lg font-bold font-styrene text-black">Cambrian-S Train and Inference</h3>
+                                <div class="col-span-1 md:col-span-9">
+                                    <h3 class="text-base font-styrene text-black">Cambrian-S Train and Inference</h3>
                                 </div>
                                 
-                                <!-- Row 2: Date & Description -->
-                                <div class="col-span-1">
-                                    <span class="font-styrene text-sm text-gray-500 font-medium block">Nov 3, 2025</span>
+                                <!-- Row 2: Date & Description --><div class="col-span-1">
+                                    <span class="font-styrene text-base text-gray-500 block">Nov 3, 2025</span>
                                 </div>
-                                <div class="col-span-1 md:col-span-3">
-                                    <!-- No description, empty div for alignment -->
-                                </div>
+                                <div class="col-span-1 md:col-span-9">
+                                    <!-- No description, empty div for alignment --></div>
                             </div>
                         </a>
                     </article>
 
-                    <!-- 更新：文章4 -->
-                    <article data-category="dataset" data-title="vsi-590k dataset release">
+                    <!-- 更新：文章4 --><article data-category="dataset" data-title="vsi-590k dataset release">
                         <a href="https://huggingface.co/datasets/nyu-visionx/VSI-590K" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
-                            <!-- 修改：文章布局 -->
-                            <div class="py-6 md:py-8 grid grid-cols-1 md:grid-cols-4 gap-x-8 gap-y-2">
-                                <!-- Row 1: Category & Title -->
-                                <div class="col-span-1">
-                                    <span class="font-styrene text-sm text-black font-medium capitalize block">Dataset</span>
+                            <!-- 修改：文章布局 (新增 px-6) (gap-x-8 改为 gap-x-4) --><div class="py-6 md:py-6 px-6 grid grid-cols-1 md:grid-cols-10 gap-x-4 gap-y-2">
+                                <!-- Row 1: Category & Title --><div class="col-span-1">
+                                    <!-- 修改：添加 flex container 和 <img> icon -->
+                                    <div class="flex items-center">
+                                        <div class="article-icon w-5 h-5 text-gray-700 mr-2 shrink-0">
+                                            <img src="https://huggingface.co/front/assets/huggingface_logo-noborder.svg" alt="Hugging Face logo">
+                                        </div>
+                                        <span class="font-styrene text-base text-black capitalize block">Dataset</span>
+                                    </div>
                                 </div>
-                                <div class="col-span-1 md:col-span-3">
-                                    <h3 class="text-lg font-bold font-styrene text-black">VSI-590K</h3>
+                                <div class="col-span-1 md:col-span-9">
+                                    <h3 class="text-base font-styrene text-black">VSI-590K</h3>
                                 </div>
                                 
-                                <!-- Row 2: Date & Description -->
-                                <div class="col-span-1">
-                                    <span class="font-styrene text-sm text-gray-500 font-medium block">Nov 3, 2025</span>
+                                <!-- Row 2: Date & Description --><div class="col-span-1">
+                                    <span class="font-styrene text-base text-gray-500 block">Nov 3, 2025</span>
                                 </div>
-                                <div class="col-span-1 md:col-span-3">
-                                    <!-- No description, empty div for alignment -->
-                                </div>
+                                <div class="col-span-1 md:col-span-9">
+                                    <!-- No description, empty div for alignment --></div>
                             </div>
                         </a>
                     </article>
 
-                    <!-- 更新：文章5 -->
-                    <article data-category="benchmark" data-title="vsi-super benchmark release">
+                    <!-- 更新：文章5 --><article data-category="benchmark" data-title="vsi-super benchmark release">
                         <a href="https://huggingface.co/collections/nyu-visionx/vsi-super" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
-                            <!-- 修改：文章布局 -->
-                            <div class="py-6 md:py-8 grid grid-cols-1 md:grid-cols-4 gap-x-8 gap-y-2">
-                                <!-- Row 1: Category & Title -->
-                                <div class="col-span-1">
-                                    <span class="font-styrene text-sm text-black font-medium capitalize block">Benchmark</span>
+                            <!-- 修改：文章布局 (新增 px-6) (gap-x-8 改为 gap-x-4) --><div class="py-6 md:py-6 px-6 grid grid-cols-1 md:grid-cols-10 gap-x-4 gap-y-2">
+                                <!-- Row 1: Category & Title --><div class="col-span-1">
+                                    <!-- 修改：添加 flex container 和 <img> icon -->
+                                    <div class="flex items-center">
+                                        <div class="article-icon w-5 h-5 text-gray-700 mr-2 shrink-0">
+                                            <img src="https://huggingface.co/front/assets/huggingface_logo-noborder.svg" alt="Hugging Face logo">
+                                        </div>
+                                        <span class="font-styrene text-base text-black capitalize block">Benchmark</span>
+                                    </div>
                                 </div>
-                                <div class="col-span-1 md:col-span-3">
-                                    <h3 class="text-lg font-bold font-styrene text-black">VSI-SUPER</h3>
+                                <div class="col-span-1 md:col-span-9">
+                                    <h3 class="text-base font-styrene text-black">VSI-SUPER</h3>
                                 </div>
                                 
-                                <!-- Row 2: Date & Description -->
-                                <div class="col-span-1">
-                                    <span class="font-styrene text-sm text-gray-500 font-medium block">Nov 3, 2025</span>
+                                <!-- Row 2: Date & Description --><div class="col-span-1">
+                                    <span class="font-styrene text-base text-gray-500 block">Nov 3, 2025</span>
                                 </div>
-                                <div class="col-span-1 md:col-span-3">
-                                    <!-- No description, empty div for alignment -->
-                                </div>
+                                <div class="col-span-1 md:col-span-9">
+                                    <!-- No description, empty div for alignment --></div>
                             </div>
                         </a>
                     </article>
 
-                    <!-- 更新：文章6 -->
-                    <article data-category="model" data-title="cambrian-s model family release">
+                    <!-- 更新：文章6 --><article data-category="model" data-title="cambrian-s model family release">
                         <a href="https://huggingface.co/collections/nyu-visionx/cambrian-s-models" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
-                            <!-- 修改：文章布局 -->
-                            <div class="py-6 md:py-8 grid grid-cols-1 md:grid-cols-4 gap-x-8 gap-y-2">
-                                <!-- Row 1: Category & Title -->
-                                <div class="col-span-1">
-                                    <span class="font-styrene text-sm text-black font-medium capitalize block">Model</span>
+                            <!-- 修改：文章布局 (新增 px-6) (gap-x-8 改为 gap-x-4) --><div class="py-6 md:py-6 px-6 grid grid-cols-1 md:grid-cols-10 gap-x-4 gap-y-2">
+                                <!-- Row 1: Category & Title --><div class="col-span-1">
+                                    <!-- 修改：添加 flex container 和 <img> icon -->
+                                    <div class="flex items-center">
+                                        <div class="article-icon w-5 h-5 text-gray-700 mr-2 shrink-0">
+                                            <img src="https://huggingface.co/front/assets/huggingface_logo-noborder.svg" alt="Hugging Face logo">
+                                        </div>
+                                        <span class="font-styrene text-base text-black capitalize block">Model</span>
+                                    </div>
                                 </div>
-                                <div class="col-span-1 md:col-span-3">
-                                    <h3 class="text-lg font-bold font-styrene text-black">Cambrian-S Model Family</h3>
+                                <div class="col-span-1 md:col-span-9">
+                                    <h3 class="text-base font-styrene text-black">Cambrian-S Model Family</h3>
                                 </div>
                                 
-                                <!-- Row 2: Date & Description -->
-                                <div class="col-span-1">
-                                    <span class="font-styrene text-sm text-gray-500 font-medium block">Nov 3, 2025</span>
+                                <!-- Row 2: Date & Description --><div class="col-span-1">
+                                    <span class="font-styrene text-base text-gray-500 block">Nov 3, 2025</span>
                                 </div>
-                                <div class="col-span-1 md:col-span-3">
-                                    <!-- No description, empty div for alignment -->
-                                </div>
+                                <div class="col-span-1 md:col-span-9">
+                                    <!-- No description, empty div for alignment --></div>
                             </div>
                         </a>
                     </article>
 
-                    <!-- 更新：文章7 -->
-                    <article data-category="publication" data-title="thinking in space how multimodal large language models see, remember and recall spaces publication">
+                    <!-- 更新：文章7 --><article data-category="publication" data-title="thinking in space how multimodal large language models see, remember and recall spaces publication">
                         <a href="https://vision-x-nyu.github.io/thinking-in-space.github.io/" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
-                            <!-- 修改：文章布局 -->
-                            <div class="py-6 md:py-8 grid grid-cols-1 md:grid-cols-4 gap-x-8 gap-y-2">
-                                <!-- Row 1: Category & Title -->
-                                <div class="col-span-1">
-                                    <span class="font-styrene text-sm text-black font-medium capitalize block">Publication</span>
+                            <!-- 修改：文章布局 (新增 px-6) (gap-x-8 改为 gap-x-4) --><div class="py-6 md:py-6 px-6 grid grid-cols-1 md:grid-cols-10 gap-x-4 gap-y-2">
+                                <!-- Row 1: Category & Title --><div class="col-span-1">
+                                    <!-- 修改：添加 flex container 和 SVG icon -->
+                                    <div class="flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-gray-700 mr-2 shrink-0">
+                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                            <polyline points="14 2 14 8 20 8"></polyline>
+                                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                                            <polyline points="10 9 9 9 8 9"></polyline>
+                                        </svg>
+                                        <span class="font-styrene text-base text-black capitalize block">Publication</span>
+                                    </div>
                                 </div>
-                                <div class="col-span-1 md:col-span-3">
-                                    <h3 class="text-lg font-bold font-styrene text-black">Thinking in Space</h3>
+                                <div class="col-span-1 md:col-span-9">
+                                    <h3 class="text-base font-styrene text-black">Thinking in Space</h3>
                                 </div>
                                 
-                                <!-- Row 2: Date & Description -->
-                                <div class="col-span-1">
-                                    <span class="font-styrene text-sm text-gray-500 font-medium block">Dec 18, 2024</span>
+                                <!-- Row 2: Date & Description --><div class="col-span-1">
+                                    <span class="font-styrene text-base text-gray-500 block">Dec 18, 2024</span>
                                 </div>
-                                <div class="col-span-1 md:col-span-3">
-                                    <p class="text-base text-black">How Multimodal Large Language Models See, Remember and Recall Spaces</p>
+                                <div class="col-span-1 md:col-span-9">
+                                    <p class="text-base text-gray-500">How Multimodal Large Language Models See, Remember and Recall Spaces</p>
                                 </div>
                             </div>
                         </a>
                     </article>
 
-                    <!-- 更新：文章8 -->
-                    <article data-category="publication" data-title="cambrian-1 a fully open, vision-centric exploration of multimodal llms publication">
+                    <!-- 更新：文章8 --><article data-category="publication" data-title="cambrian-1 a fully open, vision-centric exploration of multimodal llms publication">
                         <a href="https://cambrian-mllm.github.io/" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
-                            <!-- 修改：文章布局 -->
-                            <div class="py-6 md:py-8 grid grid-cols-1 md:grid-cols-4 gap-x-8 gap-y-2">
-                                <!-- Row 1: Category & Title -->
-                                <div class="col-span-1">
-                                    <span class="font-styrene text-sm text-black font-medium capitalize block">Publication</span>
+                            <!-- 修改：文章布局 (新增 px-6) (gap-x-8 改为 gap-x-4) --><div class="py-6 md:py-6 px-6 grid grid-cols-1 md:grid-cols-10 gap-x-4 gap-y-2">
+                                <!-- Row 1: Category & Title --><div class="col-span-1">
+                                    <!-- 修改：添加 flex container 和 SVG icon -->
+                                    <div class="flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-gray-700 mr-2 shrink-0">
+                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                            <polyline points="14 2 14 8 20 8"></polyline>
+                                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                                            <polyline points="10 9 9 9 8 9"></polyline>
+                                        </svg>
+                                        <span class="font-styrene text-base text-black capitalize block">Publication</span>
+                                    </div>
                                 </div>
-                                <div class="col-span-1 md:col-span-3">
-                                    <h3 class="text-lg font-bold font-styrene text-black">Cambrian-1</h3>
+                                <div class="col-span-1 md:col-span-9">
+                                    <h3 class="text-base font-styrene text-black">Cambrian-1</h3>
                                 </div>
                                 
-                                <!-- Row 2: Date & Description -->
-                                <div class="col-span-1">
-                                    <span class="font-styrene text-sm text-gray-500 font-medium block">Jun 24, 2024</span>
+                                <!-- Row 2: Date & Description --><div class="col-span-1">
+                                    <span class="font-styrene text-base text-gray-500 block">Jun 24, 2024</span>
                                 </div>
-                                <div class="col-span-1 md:col-span-3">
-                                    <p class="text-base text-black">A Fully Open, Vision-Centric Exploration of Multimodal LLMs</p>
+                                <div class="col-span-1 md:col-span-9">
+                                    <p class="text-base text-gray-500">A Fully Open, Vision-Centric Exploration of Multimodal LLMs</p>
                                 </div>
                             </div>
                         </a>
@@ -522,29 +527,28 @@
         </main>
     </div>
 
-    <!-- JavaScript 逻辑 (保持不变) -->
-    <script>
+    <!-- JavaScript 逻辑 (已修改) --><script>
     document.addEventListener('DOMContentLoaded', () => {
         const filterButtons = document.querySelectorAll('.filter-btn');
-        const searchInput = document.getElementById('publication-search');
+        // const searchInput = document.getElementById('publication-search'); // <-- 修改：已移除
         const articles = document.querySelectorAll('.article-list article');
         let currentFilter = 'all'; // 跟踪当前的分类过滤器
 
         // 统一的过滤函数
         function runFilters() {
-            const searchTerm = searchInput.value.toLowerCase(); // 获取搜索词
+            // const searchTerm = searchInput.value.toLowerCase(); // <-- 修改：已移除
 
             articles.forEach(article => {
                 const category = article.getAttribute('data-category');
                 // 从 data-title 获取用于搜索的文本
-                const titleData = article.getAttribute('data-title').toLowerCase();
+                // const titleData = article.getAttribute('data-title').toLowerCase(); // <-- 修改：已移除
                 
                 // 检查是否匹配
                 const categoryMatch = (currentFilter === 'all' || currentFilter === category);
-                const searchMatch = (searchTerm === '' || titleData.includes(searchTerm));
+                // const searchMatch = (searchTerm === '' || titleData.includes(searchTerm)); // <-- 修改：已移除
 
                 // 必须同时满足两个条件
-                if (categoryMatch && searchMatch) {
+                if (categoryMatch) { // <-- 修改：只检查 categoryMatch
                     article.style.display = 'block';
                 } else {
                     article.style.display = 'none';
@@ -567,11 +571,13 @@
             });
         });
 
-        // 2. 绑定搜索框的输入事件
+        // 2. 绑定搜索框的输入事件 (已移除)
+        /*
         searchInput.addEventListener('input', () => {
             // 每次输入时都运行过滤器
             runFilters();
         });
+        */
     });
     </script>
 </body>
