@@ -304,8 +304,12 @@
 
                     <!-- 更新：文章1 --><!-- 修改：data-category 和 <span> 文本 --><article data-category="publication" data-title="cambrian-s towards spatial supersensing in video publication">
                         <a href="https://vision-x-nyu.github.io/cambrian-s.github.io/" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
-                            <!-- 修改：文章布局 (新增 px-6) (gap-x-8 改为 gap-x-4) --><div class="py-6 md:py-6 px-6 grid grid-cols-1 md:grid-cols-10 gap-x-4 gap-y-2">
-                                <!-- Row 1: Category & Title --><div class="col-span-1">
+                            <!-- 修改：文章布局 (新增 px-6) (gap-x-8 改为 gap-x-4) -->
+                            <!-- ★ 修改：将 'grid grid-cols-1' 替换为 'flex flex-col' 以便在移动端使用 order -->
+                            <div class="py-6 md:py-6 px-6 flex flex-col md:grid md:grid-cols-5 gap-x-4 gap-y-2">
+                                <!-- Row 1: Category & Title -->
+                                <!-- ★ 修改：添加 order-1 和 md:order-none -->
+                                <div class="col-span-1 order-1 md:order-none">
                                     <!-- 修改：添加 flex container 和 SVG icon -->
                                     <div class="flex items-center">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-gray-700 mr-2 shrink-0">
@@ -318,14 +322,18 @@
                                         <span class="font-styrene text-base text-black capitalize block">Publication</span>
                                     </div>
                                 </div>
-                                <div class="col-span-1 md:col-span-9">
+                                <!-- ★ 修改：添加 order-3 (排在 Date 之后) 和 md:order-none -->
+                                <div class="col-span-1 md:col-span-4 order-3 md:order-none">
                                     <h3 class="text-base font-styrene text-black">Cambrian-S</h3>
                                 </div>
                                 
-                                <!-- Row 2: Date & Description --><div class="col-span-1">
+                                <!-- Row 2: Date & Description -->
+                                <!-- ★ 修改：添加 order-2 (排在 Title 之前) 和 md:order-none -->
+                                <div class="col-span-1 order-2 md:order-none">
                                     <span class="font-styrene text-base text-gray-500 block">Jun 24, 2024</span>
                                 </div>
-                                <div class="col-span-1 md:col-span-9">
+                                <!-- ★ 修改：添加 order-4 和 md:order-none -->
+                                <div class="col-span-1 md:col-span-4 order-4 md:order-none">
                                     <p class="text-base text-gray-500">Towards Spatial Supersensing in Video</p>
                                 </div>
                             </div>
@@ -334,8 +342,11 @@
 
                     <!-- 更新：文章2 --><!-- 修改：data-category 和 <span> 文本 --><article data-category="publication" data-title="test-set stress-test benchmark designers should train on the test set to expose exploitable non-visual shortcuts publication">
                         <a href="TBD" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
-                            <!-- 修改：文章布局 (新增 px-6) (gap-x-8 改为 gap-x-4) --><div class="py-6 md:py-6 px-6 grid grid-cols-1 md:grid-cols-10 gap-x-4 gap-y-2">
-                                <!-- Row 1: Category & Title --><div class="col-span-1">
+                            <!-- ★ 修改：将 'grid grid-cols-1' 替换为 'flex flex-col' -->
+                            <div class="py-6 md:py-6 px-6 flex flex-col md:grid md:grid-cols-5 gap-x-4 gap-y-2">
+                                <!-- Row 1: Category & Title -->
+                                <!-- ★ 修改：添加 order-1 和 md:order-none -->
+                                <div class="col-span-1 order-1 md:order-none">
                                     <!-- 修改：添加 flex container 和 SVG icon -->
                                     <div class="flex items-center">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-gray-700 mr-2 shrink-0">
@@ -348,14 +359,18 @@
                                         <span class="font-styrene text-base text-black capitalize block">Publication</span>
                                     </div>
                                 </div>
-                                <div class="col-span-1 md:col-span-9">
+                                <!-- ★ 修改：添加 order-3 和 md:order-none -->
+                                <div class="col-span-1 md:col-span-4 order-3 md:order-none">
                                     <h3 class="text-base font-styrene text-black">Test-set Stress-Test</h3>
                                 </div>
                                 
-                                <!-- Row 2: Date & Description --><div class="col-span-1">
+                                <!-- Row 2: Date & Description -->
+                                <!-- ★ 修改：添加 order-2 和 md:order-none -->
+                                <div class="col-span-1 order-2 md:order-none">
                                     <span class="font-styrene text-base text-gray-500 block">Jun 24, 2024</span>
                                 </div>
-                                <div class="col-span-1 md:col-span-9">
+                                <!-- ★ 修改：添加 order-4 和 md:order-none -->
+                                <div class="col-span-1 md:col-span-4 order-4 md:order-none">
                                     <p class="text-base text-gray-500">Benchmark Designers Should "Train on the Test Set" to Expose Exploitable Non-Visual Shortcuts</p>
 
                                 </div>
@@ -365,8 +380,11 @@
 
                     <!-- 更新：文章3 --><article data-category="code" data-title="code for cambrian-s release">
                         <a href="https://github.com/cambrian-mllm/cambrian-s" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
-                            <!-- 修改：文章布局 (新增 px-6) (gap-x-8 改为 gap-x-4) --><div class="py-6 md:py-6 px-6 grid grid-cols-1 md:grid-cols-10 gap-x-4 gap-y-2">
-                                <!-- Row 1: Category & Title --><div class="col-span-1">
+                            <!-- ★ 修改：将 'grid grid-cols-1' 替换为 'flex flex-col' -->
+                            <div class="py-6 md:py-6 px-6 flex flex-col md:grid md:grid-cols-5 gap-x-4 gap-y-2">
+                                <!-- Row 1: Category & Title -->
+                                <!-- ★ 修改：添加 order-1 和 md:order-none -->
+                                <div class="col-span-1 order-1 md:order-none">
                                     <!-- 修改：添加 flex container 和 SVG icon -->
                                     <div class="flex items-center">
                                         <svg class="w-5 h-5 text-gray-700 mr-2 shrink-0" aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
@@ -375,14 +393,18 @@
                                         <span class="font-styrene text-base text-black capitalize block">Code</span>
                                     </div>
                                 </div>
-                                <div class="col-span-1 md:col-span-9">
+                                <!-- ★ 修改：添加 order-3 和 md:order-none -->
+                                <div class="col-span-1 md:col-span-4 order-3 md:order-none">
                                     <h3 class="text-base font-styrene text-black">Cambrian-S Train and Inference</h3>
                                 </div>
                                 
-                                <!-- Row 2: Date & Description --><div class="col-span-1">
+                                <!-- Row 2: Date & Description -->
+                                <!-- ★ 修改：添加 order-2 和 md:order-none -->
+                                <div class="col-span-1 order-2 md:order-none">
                                     <span class="font-styrene text-base text-gray-500 block">Nov 3, 2025</span>
                                 </div>
-                                <div class="col-span-1 md:col-span-9">
+                                <!-- ★ 修改：添加 order-4 和 md:order-none -->
+                                <div class="col-span-1 md:col-span-4 order-4 md:order-none">
                                     <!-- No description, empty div for alignment --></div>
                             </div>
                         </a>
@@ -390,8 +412,11 @@
 
                     <!-- 更新：文章4 --><article data-category="dataset" data-title="vsi-590k dataset release">
                         <a href="https://huggingface.co/datasets/nyu-visionx/VSI-590K" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
-                            <!-- 修改：文章布局 (新增 px-6) (gap-x-8 改为 gap-x-4) --><div class="py-6 md:py-6 px-6 grid grid-cols-1 md:grid-cols-10 gap-x-4 gap-y-2">
-                                <!-- Row 1: Category & Title --><div class="col-span-1">
+                            <!-- ★ 修改：将 'grid grid-cols-1' 替换为 'flex flex-col' -->
+                            <div class="py-6 md:py-6 px-6 flex flex-col md:grid md:grid-cols-5 gap-x-4 gap-y-2">
+                                <!-- Row 1: Category & Title -->
+                                <!-- ★ 修改：添加 order-1 和 md:order-none -->
+                                <div class="col-span-1 order-1 md:order-none">
                                     <!-- 修改：添加 flex container 和 <img> icon -->
                                     <div class="flex items-center">
                                         <div class="article-icon w-5 h-5 text-gray-700 mr-2 shrink-0">
@@ -400,14 +425,18 @@
                                         <span class="font-styrene text-base text-black capitalize block">Dataset</span>
                                     </div>
                                 </div>
-                                <div class="col-span-1 md:col-span-9">
+                                <!-- ★ 修改：添加 order-3 和 md:order-none -->
+                                <div class="col-span-1 md:col-span-4 order-3 md:order-none">
                                     <h3 class="text-base font-styrene text-black">VSI-590K</h3>
                                 </div>
                                 
-                                <!-- Row 2: Date & Description --><div class="col-span-1">
+                                <!-- Row 2: Date & Description -->
+                                <!-- ★ 修改：添加 order-2 和 md:order-none -->
+                                <div class="col-span-1 order-2 md:order-none">
                                     <span class="font-styrene text-base text-gray-500 block">Nov 3, 2025</span>
                                 </div>
-                                <div class="col-span-1 md:col-span-9">
+                                <!-- ★ 修改：添加 order-4 和 md:order-none -->
+                                <div class="col-span-1 md:col-span-4 order-4 md:order-none">
                                     <!-- No description, empty div for alignment --></div>
                             </div>
                         </a>
@@ -415,8 +444,11 @@
 
                     <!-- 更新：文章5 --><article data-category="benchmark" data-title="vsi-super benchmark release">
                         <a href="https://huggingface.co/collections/nyu-visionx/vsi-super" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
-                            <!-- 修改：文章布局 (新增 px-6) (gap-x-8 改为 gap-x-4) --><div class="py-6 md:py-6 px-6 grid grid-cols-1 md:grid-cols-10 gap-x-4 gap-y-2">
-                                <!-- Row 1: Category & Title --><div class="col-span-1">
+                            <!-- ★ 修改：将 'grid grid-cols-1' 替换为 'flex flex-col' -->
+                            <div class="py-6 md:py-6 px-6 flex flex-col md:grid md:grid-cols-5 gap-x-4 gap-y-2">
+                                <!-- Row 1: Category & Title -->
+                                <!-- ★ 修改：添加 order-1 和 md:order-none -->
+                                <div class="col-span-1 order-1 md:order-none">
                                     <!-- 修改：添加 flex container 和 <img> icon -->
                                     <div class="flex items-center">
                                         <div class="article-icon w-5 h-5 text-gray-700 mr-2 shrink-0">
@@ -425,14 +457,18 @@
                                         <span class="font-styrene text-base text-black capitalize block">Benchmark</span>
                                     </div>
                                 </div>
-                                <div class="col-span-1 md:col-span-9">
+                                <!-- ★ 修改：添加 order-3 和 md:order-none -->
+                                <div class="col-span-1 md:col-span-4 order-3 md:order-none">
                                     <h3 class="text-base font-styrene text-black">VSI-SUPER</h3>
                                 </div>
                                 
-                                <!-- Row 2: Date & Description --><div class="col-span-1">
+                                <!-- Row 2: Date & Description -->
+                                <!-- ★ 修改：添加 order-2 和 md:order-none -->
+                                <div class="col-span-1 order-2 md:order-none">
                                     <span class="font-styrene text-base text-gray-500 block">Nov 3, 2025</span>
                                 </div>
-                                <div class="col-span-1 md:col-span-9">
+                                <!-- ★ 修改：添加 order-4 和 md:order-none -->
+                                <div class="col-span-1 md:col-span-4 order-4 md:order-none">
                                     <!-- No description, empty div for alignment --></div>
                             </div>
                         </a>
@@ -440,8 +476,11 @@
 
                     <!-- 更新：文章6 --><article data-category="model" data-title="cambrian-s model family release">
                         <a href="https://huggingface.co/collections/nyu-visionx/cambrian-s-models" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
-                            <!-- 修改：文章布局 (新增 px-6) (gap-x-8 改为 gap-x-4) --><div class="py-6 md:py-6 px-6 grid grid-cols-1 md:grid-cols-10 gap-x-4 gap-y-2">
-                                <!-- Row 1: Category & Title --><div class="col-span-1">
+                            <!-- ★ 修改：将 'grid grid-cols-1' 替换为 'flex flex-col' -->
+                            <div class="py-6 md:py-6 px-6 flex flex-col md:grid md:grid-cols-5 gap-x-4 gap-y-2">
+                                <!-- Row 1: Category & Title -->
+                                <!-- ★ 修改：添加 order-1 和 md:order-none -->
+                                <div class="col-span-1 order-1 md:order-none">
                                     <!-- 修改：添加 flex container 和 <img> icon -->
                                     <div class="flex items-center">
                                         <div class="article-icon w-5 h-5 text-gray-700 mr-2 shrink-0">
@@ -450,14 +489,18 @@
                                         <span class="font-styrene text-base text-black capitalize block">Model</span>
                                     </div>
                                 </div>
-                                <div class="col-span-1 md:col-span-9">
+                                <!-- ★ 修改：添加 order-3 和 md:order-none -->
+                                <div class="col-span-1 md:col-span-4 order-3 md:order-none">
                                     <h3 class="text-base font-styrene text-black">Cambrian-S Model Family</h3>
                                 </div>
                                 
-                                <!-- Row 2: Date & Description --><div class="col-span-1">
+                                <!-- Row 2: Date & Description -->
+                                <!-- ★ 修改：添加 order-2 和 md:order-none -->
+                                <div class="col-span-1 order-2 md:order-none">
                                     <span class="font-styrene text-base text-gray-500 block">Nov 3, 2025</span>
                                 </div>
-                                <div class="col-span-1 md:col-span-9">
+                                <!-- ★ 修改：添加 order-4 和 md:order-none -->
+                                <div class="col-span-1 md:col-span-4 order-4 md:order-none">
                                     <!-- No description, empty div for alignment --></div>
                             </div>
                         </a>
@@ -465,8 +508,11 @@
 
                     <!-- 更新：文章7 --><article data-category="publication" data-title="thinking in space how multimodal large language models see, remember and recall spaces publication">
                         <a href="https://vision-x-nyu.github.io/thinking-in-space.github.io/" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
-                            <!-- 修改：文章布局 (新增 px-6) (gap-x-8 改为 gap-x-4) --><div class="py-6 md:py-6 px-6 grid grid-cols-1 md:grid-cols-10 gap-x-4 gap-y-2">
-                                <!-- Row 1: Category & Title --><div class="col-span-1">
+                            <!-- ★ 修改：将 'grid grid-cols-1' 替换为 'flex flex-col' -->
+                            <div class="py-6 md:py-6 px-6 flex flex-col md:grid md:grid-cols-5 gap-x-4 gap-y-2">
+                                <!-- Row 1: Category & Title -->
+                                <!-- ★ 修改：添加 order-1 和 md:order-none -->
+                                <div class="col-span-1 order-1 md:order-none">
                                     <!-- 修改：添加 flex container 和 SVG icon -->
                                     <div class="flex items-center">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-gray-700 mr-2 shrink-0">
@@ -479,14 +525,18 @@
                                         <span class="font-styrene text-base text-black capitalize block">Publication</span>
                                     </div>
                                 </div>
-                                <div class="col-span-1 md:col-span-9">
+                                <!-- ★ 修改：添加 order-3 和 md:order-none -->
+                                <div class="col-span-1 md:col-span-4 order-3 md:order-none">
                                     <h3 class="text-base font-styrene text-black">Thinking in Space</h3>
                                 </div>
                                 
-                                <!-- Row 2: Date & Description --><div class="col-span-1">
+                                <!-- Row 2: Date & Description -->
+                                <!-- ★ 修改：添加 order-2 和 md:order-none -->
+                                <div class="col-span-1 order-2 md:order-none">
                                     <span class="font-styrene text-base text-gray-500 block">Dec 18, 2024</span>
                                 </div>
-                                <div class="col-span-1 md:col-span-9">
+                                <!-- ★ 修改：添加 order-4 和 md:order-none -->
+                                <div class="col-span-1 md:col-span-4 order-4 md:order-none">
                                     <p class="text-base text-gray-500">How Multimodal Large Language Models See, Remember and Recall Spaces</p>
                                 </div>
                             </div>
@@ -495,8 +545,11 @@
 
                     <!-- 更新：文章8 --><article data-category="publication" data-title="cambrian-1 a fully open, vision-centric exploration of multimodal llms publication">
                         <a href="https://cambrian-mllm.github.io/" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
-                            <!-- 修改：文章布局 (新增 px-6) (gap-x-8 改为 gap-x-4) --><div class="py-6 md:py-6 px-6 grid grid-cols-1 md:grid-cols-10 gap-x-4 gap-y-2">
-                                <!-- Row 1: Category & Title --><div class="col-span-1">
+                            <!-- ★ 修改：将 'grid grid-cols-1' 替换为 'flex flex-col' -->
+                            <div class="py-6 md:py-6 px-6 flex flex-col md:grid md:grid-cols-5 gap-x-4 gap-y-2">
+                                <!-- Row 1: Category & Title -->
+                                <!-- ★ 修改：添加 order-1 和 md:order-none -->
+                                <div class="col-span-1 order-1 md:order-none">
                                     <!-- 修改：添加 flex container 和 SVG icon -->
                                     <div class="flex items-center">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-gray-700 mr-2 shrink-0">
@@ -509,14 +562,18 @@
                                         <span class="font-styrene text-base text-black capitalize block">Publication</span>
                                     </div>
                                 </div>
-                                <div class="col-span-1 md:col-span-9">
+                                <!-- ★ 修改：添加 order-3 和 md:order-none -->
+                                <div class="col-span-1 md:col-span-4 order-3 md:order-none">
                                     <h3 class="text-base font-styrene text-black">Cambrian-1</h3>
                                 </div>
                                 
-                                <!-- Row 2: Date & Description --><div class="col-span-1">
+                                <!-- Row 2: Date & Description -->
+                                <!-- ★ 修改：添加 order-2 和 md:order-none -->
+                                <div class="col-span-1 order-2 md:order-none">
                                     <span class="font-styrene text-base text-gray-500 block">Jun 24, 2024</span>
                                 </div>
-                                <div class="col-span-1 md:col-span-9">
+                                <!-- ★ 修改：添加 order-4 和 md:order-none -->
+                                <div class="col-span-1 md:col-span-4 order-4 md:order-none">
                                     <p class="text-base text-gray-500">A Fully Open, Vision-Centric Exploration of Multimodal LLMs</p>
                                 </div>
                             </div>
@@ -625,4 +682,3 @@
     </script>
 </body>
 </html>
-
