@@ -31,7 +31,12 @@
     <!-- Set theme before page renders to prevent flash -->
     <script>
         (function() {
-            const theme = localStorage.getItem('theme') || 'light';
+            // Check localStorage first, then fall back to system preference
+            let theme = localStorage.getItem('theme');
+            if (!theme) {
+                // Auto-detect from system preference
+                theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
             document.documentElement.setAttribute('data-theme', theme);
         })();
     </script>
@@ -161,6 +166,18 @@
      [data-theme="dark"] .theme-toggle .fa-moon {
         opacity: 1;
         transform: rotate(0deg);
+     }
+
+     .header-right {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+     }
+
+     .header-divider {
+        width: 1px;
+        height: 1.5rem;
+        background-color: var(--border-color);
      }
      
     .mission-statement {
@@ -443,14 +460,15 @@
 
     <div class="container">
         <header>
-            <div style="display: flex; gap: 2rem;">
-                <a href="#" class="logo">Cambrian</a>
+            <a href="#" class="logo" style="font-size: 1.5rem;">Cambrian</a>
+            <div class="header-right">
                 <a href="#" class="logo">VISIONx @ NYU</a>
+                <div class="header-divider"></div>
+                <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-sun"></i>
+                    <i class="fas fa-moon"></i>
+                </button>
             </div>
-            <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
-                <i class="fas fa-sun"></i>
-                <i class="fas fa-moon"></i>
-            </button>
         </header>
         <div class="mission-statement">
             <h2 class="font-styrene text-4xl font-bold mb-4">Building Supersensing for Superintelligence</h2>
@@ -730,9 +748,9 @@
             <div class="contact-us-block py-12 md:py-16">
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12 items-center">
-                    <div class="featured-card">
+                    <a href="https://x.com/sainingxie/status/1986685042332958925" target="_blank" class="featured-card block">
                         <img src="imgs/cambrian-s-video-cover.jpg" alt="VisionX@NYU" class="rounded-lg shadow-md w-full h-auto object-cover aspect-video md:aspect-auto">
-                    </div>
+                    </a>
                     
                     <div class="flex flex-col justify-center text-left items-start">
                         <h2 class="font-styrene text-4xl font-bold mb-6">Let's Connect</h2>
@@ -757,8 +775,12 @@
         const themeToggle = document.getElementById('theme-toggle');
         const htmlElement = document.documentElement;
         
-        // Check for saved theme preference or default to light mode
-        const currentTheme = localStorage.getItem('theme') || 'light';
+        // Check for saved theme preference or auto-detect from system
+        let currentTheme = localStorage.getItem('theme');
+        if (!currentTheme) {
+            // Auto-detect from system preference
+            currentTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
         htmlElement.setAttribute('data-theme', currentTheme);
         
         // Toggle theme
@@ -768,6 +790,14 @@
             
             htmlElement.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
+        });
+
+        // Listen for system theme changes (optional: auto-switch if user hasn't set preference)
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+            // Only auto-switch if user hasn't manually set a preference
+            if (!localStorage.getItem('theme')) {
+                htmlElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+            }
         });
 
         // Filter functionality
