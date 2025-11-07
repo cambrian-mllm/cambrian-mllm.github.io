@@ -24,13 +24,30 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Set theme before page renders to prevent flash -->
+    <script>
+        (function() {
+            const theme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
 
     <style>
     :root {
+        /* Light mode colors */
         --paper: #FAFAFA;
         --ink: #ffffff;
         --gray: #6B7280;
         --light-gray: #444;
+        --text-primary: #141413;
+        --text-secondary: #6B7280;
+        --border-color: #666;
+        --card-border: #d1d5db;
+        --card-border-hover: #000;
        
         --color-book-cloth:#cc785c;
         --color-cactus:#bcd1ca;
@@ -56,15 +73,26 @@
         --color-slate-light:#5e5d59;
         --color-slate-medium:#3d3d3a;
     }
+
+    [data-theme="dark"] {
+        /* Dark mode colors */
+        --paper: #0a0a0a;
+        --text-primary: #e8e6dc;
+        --text-secondary: #9ca3af;
+        --border-color: #444;
+        --card-border: #374151;
+        --card-border-hover: #fff;
+    }
      
      body {
         background-color: var(--paper);
-        color: var(--color-slate-dark);
+        color: var(--text-primary);
         font-family: "Inter", sans-serif;
         margin: 0;
         padding: 0;
         display: flex;
         justify-content: center;
+        transition: background-color 0.3s ease, color 0.3s ease;
      }
      
      html {
@@ -88,13 +116,56 @@
      header .logo {
         font-weight: bold;
         font-size: 1.2rem;
-        color: var(--color-slate-dark);
+        color: var(--text-primary);
         text-decoration: none;
+     }
+
+     .theme-toggle {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--text-primary);
+        padding: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.3s ease, color 0.3s ease;
+        position: relative;
+     }
+
+     .theme-toggle:hover {
+        transform: scale(1.1);
+     }
+
+     .theme-toggle i {
+        position: absolute;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+     }
+
+     .theme-toggle .fa-sun {
+        opacity: 1;
+        transform: rotate(0deg);
+     }
+
+     .theme-toggle .fa-moon {
+        opacity: 0;
+        transform: rotate(180deg);
+     }
+
+     [data-theme="dark"] .theme-toggle .fa-sun {
+        opacity: 0;
+        transform: rotate(180deg);
+     }
+
+     [data-theme="dark"] .theme-toggle .fa-moon {
+        opacity: 1;
+        transform: rotate(0deg);
      }
      
     .mission-statement {
-        border-top: 1px solid #666;
-        border-bottom: 1px solid #666;
+        border-top: 1px solid var(--border-color);
+        border-bottom: 1px solid var(--border-color);
         padding: 2rem 0;
         margin-bottom: 1rem;
         text-align: left;
@@ -132,11 +203,11 @@
      }
      
      .filters .tabs a:hover {
-        color: var(--color-slate-dark);
+        color: var(--text-primary);
      }
 
      .filters .tabs a.active {
-        color: var(--color-slate-dark);
+        color: var(--text-primary);
         border-bottom: 2px solid transparent;
      }
      
@@ -167,7 +238,7 @@
         position: relative;
         transition: all .3s cubic-bezier(.165,.84,.44,1);
         overflow: hidden;
-        color: var(--color-slate-dark);
+        color: var(--text-primary);
         text-decoration: none;
      }
      
@@ -322,7 +393,7 @@
     .category-label {
         font-family: "Inter", system-ui, sans-serif;
         font-size: 0.875rem;
-        color: black;
+        color: var(--text-primary);
         text-transform: capitalize;
         display: block;
     }
@@ -330,19 +401,39 @@
     .date-label {
         font-family: "Inter", system-ui, sans-serif;
         font-size: 0.875rem;
-        color: var(--gray);
+        color: var(--text-secondary);
         display: block;
     }
 
     .article-title {
         font-size: 1rem;
         font-family: "Inter", system-ui, sans-serif;
-        color: black;
+        color: var(--text-primary);
     }
 
     .article-desc {
         font-size: 0.875rem;
-        color: var(--gray);
+        color: var(--text-secondary);
+    }
+
+    .publication-card {
+        border-bottom: 1px solid var(--card-border);
+        transition: border-color 0.3s ease;
+    }
+
+    .publication-card:hover {
+        border-color: var(--card-border-hover);
+    }
+
+    .contact-button {
+        background-color: var(--paper);
+        color: var(--text-primary);
+        border: 1px solid var(--text-primary);
+    }
+
+    .contact-button:hover {
+        background-color: var(--text-primary);
+        color: var(--paper);
     }
 
     </style>
@@ -351,10 +442,19 @@
 <body>
 
     <div class="container">
-        <header><a href="#" class="logo">Cambrian</a><a href="#" class="logo">VISIONx @ NYU</a></header>
+        <header>
+            <div style="display: flex; gap: 2rem;">
+                <a href="#" class="logo">Cambrian</a>
+                <a href="#" class="logo">VISIONx @ NYU</a>
+            </div>
+            <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+                <i class="fas fa-sun"></i>
+                <i class="fas fa-moon"></i>
+            </button>
+        </header>
         <div class="mission-statement">
             <h2 class="font-styrene text-4xl font-bold mb-4">Building Supersensing for Superintelligence</h2>
-            <p class="text-base text-gray-500 mt-4 line-height-relaxed">The world doesn't just exist around us. It flows through us, shaping what we feel and who we become. Supersensing is our mission to let machines share in that flow: to build richer world models that not only see, but anticipate, select, and organize experience, advancing multimodal intelligence that truly understands the world and creates within it.</p>
+            <p class="text-base mt-4 line-height-relaxed" style="color: var(--text-secondary);">The world doesn't just exist around us. It flows through us, shaping what we feel and who we become. Supersensing is our mission to let machines share in that flow: to build richer world models that not only see, but anticipate, select, and organize experience, advancing multimodal intelligence that truly understands the world and creates within it.</p>
         </div>
 
         <section class="featured-banners">
@@ -395,7 +495,7 @@
 
                 <div class="filters">
                     
-                    <div class="tabs flex flex-nowrap gap-x-6 overflow-x-auto border-b border-black">
+                    <div class="tabs flex flex-nowrap gap-x-6 overflow-x-auto" style="border-bottom: 1px solid var(--text-primary);">
                     <a href="#" class="filter-btn active" data-filter="all">All</a>
                         <a href="#" class="filter-btn" data-filter="publication">Publication</a>
                         <a href="#" class="filter-btn" data-filter="model">Model</a>
@@ -408,7 +508,7 @@
                 <div class="article-list mt-6 space-y-0">
 
                     <article data-category="publication" data-title="cambrian-s towards spatial supersensing in video publication">
-                        <a href="https://arxiv.org/abs/2511.04670" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
+                        <a href="https://arxiv.org/abs/2511.04670" target="_blank" class="publication-card block">
                             <div class="article-container">
                                 <div class="article-category">
                                     <div class="flex items-center">
@@ -432,7 +532,7 @@
                     </article>
 
                     <article data-category="publication" data-title="test-set stress-test benchmark designers should train on the test set to expose exploitable non-visual shortcuts publication">
-                        <a href="https://arxiv.org/abs/2511.04655" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
+                        <a href="https://arxiv.org/abs/2511.04655" target="_blank" class="publication-card block">
                             <div class="article-container">
                                 <div class="article-category">
                                     <div class="flex items-center">
@@ -456,7 +556,7 @@
                     </article>
 
                     <article data-category="publication" data-title="simsv simulated instruction-tuning for spatial video understanding">
-                        <a href="https://arxiv.org/abs/2511.04668" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
+                        <a href="https://arxiv.org/abs/2511.04668" target="_blank" class="publication-card block">
                             <div class="article-container">
                                 <div class="article-category">
                                     <div class="flex items-center">
@@ -480,7 +580,7 @@
                     </article>
 
                     <article data-category="code" data-title="code for cambrian-s release">
-                        <a href="https://github.com/cambrian-mllm/cambrian-s" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
+                        <a href="https://github.com/cambrian-mllm/cambrian-s" target="_blank" class="publication-card block">
                             <div class="article-container">
                                 <div class="article-category">
                                     <div class="flex items-center">
@@ -504,7 +604,7 @@
                     </article>
 
                     <article data-category="dataset" data-title="vsi-590k dataset release">
-                        <a href="https://huggingface.co/datasets/nyu-visionx/VSI-590K" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
+                        <a href="https://huggingface.co/datasets/nyu-visionx/VSI-590K" target="_blank" class="publication-card block">
                             <div class="article-container">
                                 <div class="article-category">
                                     <div class="flex items-center">
@@ -528,7 +628,7 @@
                     </article>
 
                     <article data-category="benchmark" data-title="vsi-super benchmark release">
-                        <a href="https://huggingface.co/collections/nyu-visionx/vsi-super" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
+                        <a href="https://huggingface.co/collections/nyu-visionx/vsi-super" target="_blank" class="publication-card block">
                             <div class="article-container">
                                 <div class="article-category">
                                     <div class="flex items-center">
@@ -552,7 +652,7 @@
                     </article>
 
                     <article data-category="model" data-title="cambrian-s model family release">
-                        <a href="https://huggingface.co/collections/nyu-visionx/cambrian-s-models" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
+                        <a href="https://huggingface.co/collections/nyu-visionx/cambrian-s-models" target="_blank" class="publication-card block">
                             <div class="article-container">
                                 <div class="article-category">
                                     <div class="flex items-center">
@@ -576,7 +676,7 @@
                     </article>
 
                     <article data-category="publication" data-title="thinking in space how multimodal large language models see, remember and recall spaces publication">
-                        <a href="https://arxiv.org/abs/2412.14171" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
+                        <a href="https://arxiv.org/abs/2412.14171" target="_blank" class="publication-card block">
                             <div class="article-container">
                                 <div class="article-category">
                                     <div class="flex items-center">
@@ -600,7 +700,7 @@
                     </article>
 
                     <article data-category="publication" data-title="cambrian-1 a fully open, vision-centric exploration of multimodal llms publication">
-                        <a href="https://arxiv.org/abs/2406.16860" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
+                        <a href="https://arxiv.org/abs/2406.16860" target="_blank" class="publication-card block">
                             <div class="article-container">
                                 <div class="article-category">
                                     <div class="flex items-center">
@@ -636,11 +736,11 @@
                     
                     <div class="flex flex-col justify-center text-left items-start">
                         <h2 class="font-styrene text-4xl font-bold mb-6">Let's Connect</h2>
-                        <p class="text-base md:text-lg text-gray-700 mb-8 line-height-relaxed">
+                        <p class="text-base md:text-lg mb-8 line-height-relaxed" style="color: var(--text-secondary);">
                             If you are interested in our research, would like to support our lab, or explore collaboration opportunities, we would love to hear from you.
                         </p>
                         <a href="mailto:saining.xie@nyu.edu"
-                            class="bg-[var(--paper)] text-black font-styrene font-medium py-3 px-8 rounded-lg text-base hover:bg-black hover:text-white transition-colors duration-300 border border-black">
+                            class="contact-button font-styrene font-medium py-3 px-8 rounded-lg text-base transition-colors duration-300">
                             Contact Us
                         </a>
                     </div>
@@ -653,6 +753,24 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
+        // Dark mode toggle functionality
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        
+        // Check for saved theme preference or default to light mode
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        htmlElement.setAttribute('data-theme', currentTheme);
+        
+        // Toggle theme
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            htmlElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+
+        // Filter functionality
         const filterButtons = document.querySelectorAll('.filter-btn');
         const articles = document.querySelectorAll('.article-list article');
         let currentFilter = 'all';
