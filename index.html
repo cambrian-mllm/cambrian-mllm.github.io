@@ -258,6 +258,93 @@
         background-color: var(--color-sky);
     }
 
+    /* Article card layout classes */
+    .article-container {
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem 1rem;
+    }
+
+    @media (min-width: 768px) {
+        .article-container {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+        }
+    }
+
+    .article-category {
+        grid-column: span 1 / span 1;
+        order: 1;
+    }
+
+    @media (min-width: 768px) {
+        .article-category {
+            order: 0;
+        }
+    }
+
+    .article-title-cell {
+        grid-column: span 1 / span 1;
+        order: 3;
+    }
+
+    @media (min-width: 768px) {
+        .article-title-cell {
+            grid-column: span 4 / span 4;
+            order: 0;
+        }
+    }
+
+    .article-date {
+        grid-column: span 1 / span 1;
+        order: 2;
+    }
+
+    @media (min-width: 768px) {
+        .article-date {
+            order: 0;
+        }
+    }
+
+    .article-description {
+        grid-column: span 1 / span 1;
+        order: 4;
+    }
+
+    @media (min-width: 768px) {
+        .article-description {
+            grid-column: span 4 / span 4;
+            order: 0;
+        }
+    }
+
+    .category-label {
+        font-family: "Inter", system-ui, sans-serif;
+        font-size: 0.875rem;
+        color: black;
+        text-transform: capitalize;
+        display: block;
+    }
+
+    .date-label {
+        font-family: "Inter", system-ui, sans-serif;
+        font-size: 0.875rem;
+        color: var(--gray);
+        display: block;
+    }
+
+    .article-title {
+        font-size: 1rem;
+        font-family: "Inter", system-ui, sans-serif;
+        color: black;
+    }
+
+    .article-desc {
+        font-size: 0.875rem;
+        color: var(--gray);
+    }
+
     </style>
     
 </head>
@@ -322,24 +409,23 @@
 
                     <article data-category="publication" data-title="cambrian-s towards spatial supersensing in video publication">
                         <a href="https://arxiv.org/abs/2511.04670" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
-                            <div class="py-6 md:py-6 px-6 flex flex-col md:grid md:grid-cols-5 gap-x-4 gap-y-2">
-                                <div class="col-span-1 order-1 md:order-none">
+                            <div class="article-container">
+                                <div class="article-category">
                                     <div class="flex items-center">
                                         <div class="article-icon w-5 h-5 text-gray-700 mr-2 shrink-0">
                                             <img src="imgs/arxiv-logo.svg" alt="arXiv logo" class="icon-small">
                                         </div>
-                                        <span class="font-styrene text-sm text-black capitalize block">Publication</span>
+                                        <span class="category-label">Publication</span>
                                     </div>
                                 </div>
-                                <div class="col-span-1 md:col-span-4 order-3 md:order-none">
-                                    <h3 class="text-base font-styrene text-black">Cambrian-S</h3>
+                                <div class="article-title-cell">
+                                    <h3 class="article-title">Cambrian-S</h3>
                                 </div>
-                                
-                                <div class="col-span-1 order-2 md:order-none">
-                                    <span class="font-styrene text-sm text-gray-500 block">Nov 7, 2025</span>
+                                <div class="article-date">
+                                    <span class="date-label">Nov 7, 2025</span>
                                 </div>
-                                <div class="col-span-1 md:col-span-4 order-4 md:order-none">
-                                    <p class="text-sm text-gray-500">Towards Spatial Supersensing in Video</p>
+                                <div class="article-description">
+                                    <p class="article-desc">Towards Spatial Supersensing in Video</p>
                                 </div>
                             </div>
                         </a>
@@ -347,25 +433,23 @@
 
                     <article data-category="publication" data-title="test-set stress-test benchmark designers should train on the test set to expose exploitable non-visual shortcuts publication">
                         <a href="https://arxiv.org/abs/2511.04655" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
-                            <div class="py-6 md:py-6 px-6 flex flex-col md:grid md:grid-cols-5 gap-x-4 gap-y-2">
-                                <div class="col-span-1 order-1 md:order-none">
+                            <div class="article-container">
+                                <div class="article-category">
                                     <div class="flex items-center">
                                         <div class="article-icon w-5 h-5 text-gray-700 mr-2 shrink-0">
                                             <img src="imgs/arxiv-logo.svg" alt="arXiv logo" class="icon-small">
                                         </div>
-                                        <span class="font-styrene text-sm text-black capitalize block">Publication</span>
+                                        <span class="category-label">Publication</span>
                                     </div>
                                 </div>
-                                <div class="col-span-1 md:col-span-4 order-3 md:order-none">
-                                    <h3 class="text-base font-styrene text-black">Test-set Stress-Test</h3>
+                                <div class="article-title-cell">
+                                    <h3 class="article-title">Test-set Stress-Test</h3>
                                 </div>
-                                
-                                <div class="col-span-1 order-2 md:order-none">
-                                    <span class="font-styrene text-sm text-gray-500 block">Nov 7, 2025</span>
+                                <div class="article-date">
+                                    <span class="date-label">Nov 7, 2025</span>
                                 </div>
-                                <div class="col-span-1 md:col-span-4 order-4 md:order-none">
-                                    <p class="text-sm text-gray-500">Benchmark Designers Should "Train on the Test Set" to Expose Exploitable Non-Visual Shortcuts</p>
-
+                                <div class="article-description">
+                                    <p class="article-desc">Benchmark Designers Should "Train on the Test Set" to Expose Exploitable Non-Visual Shortcuts</p>
                                 </div>
                             </div>
                         </a>
@@ -373,25 +457,23 @@
 
                     <article data-category="publication" data-title="simsv simulated instruction-tuning for spatial video understanding">
                         <a href="https://arxiv.org/abs/2511.04668" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
-                            <div class="py-6 md:py-6 px-6 flex flex-col md:grid md:grid-cols-5 gap-x-4 gap-y-2">
-                                <div class="col-span-1 order-1 md:order-none">
+                            <div class="article-container">
+                                <div class="article-category">
                                     <div class="flex items-center">
                                         <div class="article-icon w-5 h-5 text-gray-700 mr-2 shrink-0">
                                             <img src="imgs/arxiv-logo.svg" alt="arXiv logo" class="icon-small">
                                         </div>
-                                        <span class="font-styrene text-sm text-black capitalize block">Publication</span>
+                                        <span class="category-label">Publication</span>
                                     </div>
                                 </div>
-                                <div class="col-span-1 md:col-span-4 order-3 md:order-none">
-                                    <h3 class="text-base font-styrene text-black">SIMS-V</h3>
+                                <div class="article-title-cell">
+                                    <h3 class="article-title">SIMS-V</h3>
                                 </div>
-                                
-                                <div class="col-span-1 order-2 md:order-none">
-                                    <span class="font-styrene text-sm text-gray-500 block">Nov 7, 2025</span>
+                                <div class="article-date">
+                                    <span class="date-label">Nov 7, 2025</span>
                                 </div>
-                                <div class="col-span-1 md:col-span-4 order-4 md:order-none">
-                                    <p class="text-sm text-gray-500">Simulated Instruction-Tuning for Spatial Video Understanding</p>
-
+                                <div class="article-description">
+                                    <p class="article-desc">Simulated Instruction-Tuning for Spatial Video Understanding</p>
                                 </div>
                             </div>
                         </a>
@@ -399,121 +481,119 @@
 
                     <article data-category="code" data-title="code for cambrian-s release">
                         <a href="https://github.com/cambrian-mllm/cambrian-s" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
-                            <div class="py-6 md:py-6 px-6 flex flex-col md:grid md:grid-cols-5 gap-x-4 gap-y-2">
-                                <div class="col-span-1 order-1 md:order-none">
+                            <div class="article-container">
+                                <div class="article-category">
                                     <div class="flex items-center">
                                         <svg class="w-5 h-5 text-gray-700 mr-2 shrink-0" aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
                                             <path fill="currentColor" d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path>
                                         </svg>
-                                        <span class="font-styrene text-sm text-black capitalize block">Code</span>
+                                        <span class="category-label">Code</span>
                                     </div>
                                 </div>
-                                <div class="col-span-1 md:col-span-4 order-3 md:order-none">
-                                    <h3 class="text-base font-styrene text-black">Cambrian-S Code</h3>
+                                <div class="article-title-cell">
+                                    <h3 class="article-title">Cambrian-S Code</h3>
                                 </div>
-                                
-                                <div class="col-span-1 order-2 md:order-none">
-                                    <span class="font-styrene text-sm text-gray-500 block">Nov 7, 2025</span>
+                                <div class="article-date">
+                                    <span class="date-label">Nov 7, 2025</span>
                                 </div>
-                                <div class="col-span-1 md:col-span-4 order-4 md:order-none">
-                                    <p class="text-sm text-gray-500">Train and Evaluation Toolkits for Cambrian-S Models</p>
-                                    </div>
+                                <div class="article-description">
+                                    <p class="article-desc">Train and Evaluation Toolkits for Cambrian-S Models</p>
+                                </div>
                             </div>
                         </a>
                     </article>
 
                     <article data-category="dataset" data-title="vsi-590k dataset release">
                         <a href="https://huggingface.co/datasets/nyu-visionx/VSI-590K" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
-                            <div class="py-6 md:py-6 px-6 flex flex-col md:grid md:grid-cols-5 gap-x-4 gap-y-2">
-                                <div class="col-span-1 order-1 md:order-none">
+                            <div class="article-container">
+                                <div class="article-category">
                                     <div class="flex items-center">
                                         <div class="article-icon w-5 h-5 text-gray-700 mr-2 shrink-0">
                                             <img src="https://huggingface.co/front/assets/huggingface_logo-noborder.svg" alt="Hugging Face logo">
                                         </div>
-                                        <span class="font-styrene text-sm text-black capitalize block">Dataset</span>
+                                        <span class="category-label">Dataset</span>
                                     </div>
                                 </div>
-                                <div class="col-span-1 md:col-span-4 order-3 md:order-none">
-                                    <h3 class="text-base font-styrene text-black">VSI-590K</h3>
+                                <div class="article-title-cell">
+                                    <h3 class="article-title">VSI-590K</h3>
                                 </div>
-                                
-                                <div class="col-span-1 order-2 md:order-none">
-                                    <span class="font-styrene text-sm text-gray-500 block">Nov 7, 2025</span>
+                                <div class="article-date">
+                                    <span class="date-label">Nov 7, 2025</span>
                                 </div>
-                                <div class="col-span-1 md:col-span-4 order-4 md:order-none">
-                                    <p class="text-sm text-gray-500">Large-Scale Instruction Tuning Dataset for Spatial Sensing</p></div>
+                                <div class="article-description">
+                                    <p class="article-desc">Large-Scale Instruction Tuning Dataset for Spatial Sensing</p>
+                                </div>
                             </div>
                         </a>
                     </article>
 
                     <article data-category="benchmark" data-title="vsi-super benchmark release">
                         <a href="https://huggingface.co/collections/nyu-visionx/vsi-super" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
-                            <div class="py-6 md:py-6 px-6 flex flex-col md:grid md:grid-cols-5 gap-x-4 gap-y-2">
-                                <div class="col-span-1 order-1 md:order-none">
+                            <div class="article-container">
+                                <div class="article-category">
                                     <div class="flex items-center">
                                         <div class="article-icon w-5 h-5 text-gray-700 mr-2 shrink-0">
                                             <img src="https://huggingface.co/front/assets/huggingface_logo-noborder.svg" alt="Hugging Face logo">
                                         </div>
-                                        <span class="font-styrene text-sm text-black capitalize block">Benchmark</span>
+                                        <span class="category-label">Benchmark</span>
                                     </div>
                                 </div>
-                                <div class="col-span-1 md:col-span-4 order-3 md:order-none">
-                                    <h3 class="text-base font-styrene text-black">VSI-SUPER</h3>
+                                <div class="article-title-cell">
+                                    <h3 class="article-title">VSI-SUPER</h3>
                                 </div>
-                                
-                                <div class="col-span-1 order-2 md:order-none">
-                                    <span class="font-styrene text-sm text-gray-500 block">Nov 7, 2025</span>
+                                <div class="article-date">
+                                    <span class="date-label">Nov 7, 2025</span>
                                 </div>
-                                <div class="col-span-1 md:col-span-4 order-4 md:order-none">
-                                    <p class="text-sm text-gray-500">Two-part Benchmark for Spatial Supersensing, including VSI-SUPER Recall (VSR) and VSI-SUPER Count (VSC)</div>
+                                <div class="article-description">
+                                    <p class="article-desc">Two-part Benchmark for Spatial Supersensing, including VSI-SUPER Recall (VSR) and VSI-SUPER Count (VSC)</p>
+                                </div>
                             </div>
                         </a>
                     </article>
 
                     <article data-category="model" data-title="cambrian-s model family release">
                         <a href="https://huggingface.co/collections/nyu-visionx/cambrian-s-models" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
-                            <div class="py-6 md:py-6 px-6 flex flex-col md:grid md:grid-cols-5 gap-x-4 gap-y-2">
-                                <div class="col-span-1 order-1 md:order-none">
+                            <div class="article-container">
+                                <div class="article-category">
                                     <div class="flex items-center">
                                         <div class="article-icon w-5 h-5 text-gray-700 mr-2 shrink-0">
                                             <img src="https://huggingface.co/front/assets/huggingface_logo-noborder.svg" alt="Hugging Face logo">
                                         </div>
-                                        <span class="font-styrene text-sm text-black capitalize block">Model</span>
+                                        <span class="category-label">Model</span>
                                     </div>
                                 </div>
-                                <div class="col-span-1 md:col-span-4 order-3 md:order-none">
-                                    <h3 class="text-base font-styrene text-black">Cambrian-S Model Family</h3>
+                                <div class="article-title-cell">
+                                    <h3 class="article-title">Cambrian-S Model Family</h3>
                                 </div>
-                                
-                                <div class="col-span-1 order-2 md:order-none">
-                                    <span class="font-styrene text-sm text-gray-500 block">Nov 7, 2025</span>
+                                <div class="article-date">
+                                    <span class="date-label">Nov 7, 2025</span>
                                 </div>
-                                <div class="col-span-1 md:col-span-4 order-4 md:order-none">
-                                    <p class="text-sm text-gray-500">Our Spatially-grounded Multimodal Large Language Models</div>
+                                <div class="article-description">
+                                    <p class="article-desc">Our Spatially-grounded Multimodal Large Language Models</p>
+                                </div>
                             </div>
                         </a>
                     </article>
 
                     <article data-category="publication" data-title="thinking in space how multimodal large language models see, remember and recall spaces publication">
                         <a href="https://arxiv.org/abs/2412.14171" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
-                            <div class="py-6 md:py-6 px-6 flex flex-col md:grid md:grid-cols-5 gap-x-4 gap-y-2">
-                                <div class="col-span-1 order-1 md:order-none">
+                            <div class="article-container">
+                                <div class="article-category">
                                     <div class="flex items-center">
                                         <div class="article-icon w-5 h-5 text-gray-700 mr-2 shrink-0">
                                             <img src="imgs/arxiv-logo.svg" alt="arXiv logo" class="icon-small">
                                         </div>
-                                        <span class="font-styrene text-sm text-black capitalize block">Publication</span>
+                                        <span class="category-label">Publication</span>
                                     </div>
                                 </div>
-                                <div class="col-span-1 md:col-span-4 order-3 md:order-none">
-                                    <h3 class="text-base font-styrene text-black">Thinking in Space</h3>
+                                <div class="article-title-cell">
+                                    <h3 class="article-title">Thinking in Space</h3>
                                 </div>
-                                
-                                <div class="col-span-1 order-2 md:order-none">
-                                    <span class="font-styrene text-sm text-gray-500 block">Dec 18, 2024</span>
+                                <div class="article-date">
+                                    <span class="date-label">Dec 18, 2024</span>
                                 </div>
-                                <div class="col-span-1 md:col-span-4 order-4 md:order-none">
-                                    <p class="text-sm text-gray-500">How Multimodal Large Language Models See, Remember and Recall Spaces</p>
+                                <div class="article-description">
+                                    <p class="article-desc">How Multimodal Large Language Models See, Remember and Recall Spaces</p>
                                 </div>
                             </div>
                         </a>
@@ -521,24 +601,23 @@
 
                     <article data-category="publication" data-title="cambrian-1 a fully open, vision-centric exploration of multimodal llms publication">
                         <a href="https://arxiv.org/abs/2406.16860" target="_blank" class="publication-card block border-b border-gray-300 hover:border-black">
-                            <div class="py-6 md:py-6 px-6 flex flex-col md:grid md:grid-cols-5 gap-x-4 gap-y-2">
-                                <div class="col-span-1 order-1 md:order-none">
+                            <div class="article-container">
+                                <div class="article-category">
                                     <div class="flex items-center">
                                         <div class="article-icon w-5 h-5 text-gray-700 mr-2 shrink-0">
                                             <img src="imgs/arxiv-logo.svg" alt="arXiv logo" class="icon-small">
                                         </div>
-                                        <span class="font-styrene text-sm text-black capitalize block">Publication</span>
+                                        <span class="category-label">Publication</span>
                                     </div>
                                 </div>
-                                <div class="col-span-1 md:col-span-4 order-3 md:order-none">
-                                    <h3 class="text-base font-styrene text-black">Cambrian-1</h3>
+                                <div class="article-title-cell">
+                                    <h3 class="article-title">Cambrian-1</h3>
                                 </div>
-                                
-                                <div class="col-span-1 order-2 md:order-none">
-                                    <span class="font-styrene text-sm text-gray-500 block">Jun 24, 2024</span>
+                                <div class="article-date">
+                                    <span class="date-label">Jun 24, 2024</span>
                                 </div>
-                                <div class="col-span-1 md:col-span-4 order-4 md:order-none">
-                                    <p class="text-sm text-gray-500">A Fully Open, Vision-Centric Exploration of Multimodal LLMs</p>
+                                <div class="article-description">
+                                    <p class="article-desc">A Fully Open, Vision-Centric Exploration of Multimodal LLMs</p>
                                 </div>
                             </div>
                         </a>
@@ -617,3 +696,6 @@
     </script>
 </body>
 </html>
+
+
+
