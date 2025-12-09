@@ -94,9 +94,74 @@
             gap: 8px;
         }
 
-        /* Content */
-        article {
+        /* Content Layout */
+        .content-wrapper {
+            display: flex;
+            gap: 60px;
             margin-bottom: 80px;
+            position: relative;
+        }
+
+        /* Sidebar TOC */
+        .toc-sidebar {
+            width: 200px;
+            flex-shrink: 0;
+            display: none; /* Hidden on mobile by default */
+        }
+
+        @media (min-width: 1024px) {
+            .toc-sidebar {
+                display: block;
+            }
+            
+            .container {
+                max-width: 1000px; /* Increased to accommodate sidebar */
+            }
+        }
+
+        .toc-sticky {
+            position: sticky;
+            top: 40px;
+        }
+
+        .toc-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        .toc-list {
+            list-style: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+        }
+
+        .toc-list li {
+            margin-bottom: 10px;
+        }
+
+        .toc-list a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.2s;
+            display: block;
+            line-height: 1.4;
+        }
+
+        .toc-list a:hover {
+            color: var(--accent-color);
+        }
+
+        /* Article content adjustments */
+        article {
+            flex-grow: 1;
+            max-width: 700px; /* Keep reading width optimal */
+            min-width: 0; /* Prevent flex overflow */
+            margin-bottom: 0;
         }
 
         article h2 {
@@ -237,91 +302,116 @@
             </div>
         </header>
 
-        <article>
-            <p>
-                Training large foundation models in academia presents a unique set of challenges. Unlike industry labs with 
-                dedicated infrastructure teamspute, academic research often requires us to be our own 
-                DevOps engineers, kernel optimizers, and distributed systems architects.
-            </p>
+        <div class="content-wrapper">
+            <aside class="toc-sidebar">
+                <div class="toc-sticky">
+                    <div class="toc-title">Contents</div>
+                    <ul class="toc-list">
+                        <li><a href="#why-tpus">Why TPUs?</a></li>
+                        <li><a href="#why-torchxla">Why TorchXLA?</a></li>
+                        <li><a href="#transition">From Torch To TorchXLA</a></li>
+                        <li><a href="#distributed-strategies">Distributed Strategies</a></li>
+                        <li><a href="#portability">Does LLM Code Work?</a></li>
+                        <li><a href="#data-bottleneck">The Data Bottleneck</a></li>
+                        <li><a href="#citation">Citation</a></li>
+                    </ul>
+                </div>
+            </aside>
 
-            <p>
-                Over the past two years, we've spent thousands of hours debugging,and training 
-                runs on TPUs (v3 through v6e). This post distills the hard-earned lessons from that journey.
-            </p>
+            <article>
+                <p>
+                    Training large foundation models in academia presents a unique set of challenges. Unlike industry labs with 
+                    dedicated infrastructure teams and infinite compute, academic research often requires us to be our own 
+                    DevOps engineers, kernel optimizers, and distributed systems architects.
+                </p>
 
-            <h2>Why TPUs?</h2>
-            <p>
-                [Why did you choose TPUs over GPUs? Cost effectiveness (TRC program)? Performance per dollar? Discuss the availability of high-bandwidth memory (HBM) and interconnects in TPU pods.]
-            </p>
+                <p>
+                    Over the past two years, we've spent thousands of hours debugging, profiling, and optimizing training 
+                    runs on TPUs (v3 through v6e). This post distills the hard-earned lessons from that journey.
+                </p>
 
-            <h2>Why TorchXLA?</h2>
-            <p>
-                [Why stick with PyTorch instead of moving to JAX? The ecosystem, existing codebase, or familiarity? Discuss the trade-offs of using the XLA compiler backend with PyTorch semantics.]
-            </p>
+                <h2 id="why-tpus">Why TPUs?</h2>
+                <p>
+                    With the recent developments in Generative AI (LLMs, diffusion models, etc.), it is getting more and more expensive to do 
+                    impactful research. Training state-of-the-art models often requires massive amounts of compute, but in academia, 
+                    most students simply cannot access that scale of hardware.
+                </p>
+                <p>
+                    However, we still want to do good research and train large models. This is where the 
+                    <a href="https://sites.research.google/trc/about/" target="_blank">TPU Research Cloud (TRC)</a> program comes in. 
+                    We want to sincerely thank TRC for sponsoring free Cloud TPUs, which has empowered us and many other students 
+                    to tackle ambitious research problems that would otherwise be impossible.
+                </p>
 
-            <h2>From Torch To TorchXLA: The Transition</h2>
-            <p>
-                Migrating a standard PyTorch training loop to run efficiently on TPUs isn't just a one-line change. It requires understanding how XLA compiles your graph.
-            </p>
+                <h2 id="why-torchxla">Why TorchXLA?</h2>
+                <p>
+                    [Why stick with PyTorch instead of moving to JAX? The ecosystem, existing codebase, or familiarity? Discuss the trade-offs of using the XLA compiler backend with PyTorch semantics.]
+                </p>
 
-            <h3>Static Shape! Static Shape! Static Shape!</h3>
-            <p>
-                [This is the most critical lesson. Explain why dynamic shapes kill performance on XLA (recompilation overhead). 
-                Discuss techniques to pad batches, handle variable length sequences, and avoid graph breaks.]
-            </p>
+                <h2 id="transition">From Torch To TorchXLA: The Transition</h2>
+                <p>
+                    Migrating a standard PyTorch training loop to run efficiently on TPUs isn't just a one-line change. It requires understanding how XLA compiles your graph.
+                </p>
 
-            <h2>Distributed Training Strategies</h2>
-            <p>
-                [Discuss the evolution of parallelism on TPUs:
-                <ul>
-                    <li><strong>DDP (Distributed Data Parallel):</strong> The starting point.</li>
-                    <li><strong>FSDP (Fully Sharded Data Parallel):</strong> Scaling model size.</li>
-                    <li><strong>SPMD (Single Program Multiple Data):</strong> The GSPMD approach and advanced sharding.</li>
-                </ul>
-                Compare their complexity vs. performance gains.]
-            </p>
+                <h3>Static Shape! Static Shape! Static Shape!</h3>
+                <p>
+                    [This is the most critical lesson. Explain why dynamic shapes kill performance on XLA (recompilation overhead). 
+                    Discuss techniques to pad batches, handle variable length sequences, and avoid graph breaks.]
+                </p>
 
-            <h2>Does LLMs Code Just Work?</h2>
-            <p>
-                [Discuss the portability of standard LLM libraries (like Hugging Face or custom implementations). 
-                What usually breaks? (e.g., specific custom CUDA kernels, dynamic control flow, flash attention compatibility). 
-                How mature is the ecosystem now compared to 2 years ago?]
-            </p>
+                <h2 id="distributed-strategies">Distributed Training Strategies</h2>
+                <p>
+                    [Discuss the evolution of parallelism on TPUs:
+                    <ul>
+                        <li><strong>DDP (Distributed Data Parallel):</strong> The starting point.</li>
+                        <li><strong>FSDP (Fully Sharded Data Parallel):</strong> Scaling model size.</li>
+                        <li><strong>SPMD (Single Program Multiple Data):</strong> The GSPMD approach and advanced sharding.</li>
+                    </ul>
+                    Compare their complexity vs. performance gains.]
+                </p>
 
-            <h2>The Data Bottleneck</h2>
-            <p>
-                [Compute is often not the bottleneck—data is.
-                <ul>
-                    <li><strong>Storage:</strong> Using GCS buckets effectively.</li>
-                    <li><strong>Transfer:</strong> The latency of pulling data to TPU VMs.</li>
-                    <li><strong>Loading:</strong> CPU bottlenecks in data preprocessing/tokenization while TPUs wait.</li>
-                </ul>
-                Tips on pre-tokenizing and efficient data streaming.]
-            </p>
+                <h2 id="portability">Does LLMs Code Just Work?</h2>
+                <p>
+                    [Discuss the portability of standard LLM libraries (like Hugging Face or custom implementations). 
+                    What usually breaks? (e.g., specific custom CUDA kernels, dynamic control flow, flash attention compatibility). 
+                    How mature is the ecosystem now compared to 2 years ago?]
+                </p>
 
-            <h2>Conclusion</h2>
-            <p>
-                Despite the initial friction, mastering the TPU stack has allowed us to train models like Cambrian-1 
-                at a scale that competes with industry baselines. The ecosystem is maturing, and the gap between 
-                "research code" and "production training" is narrowing.
-            </p>
+                <h2 id="data-bottleneck">The Data Bottleneck</h2>
+                <p>
+                    [Compute is often not the bottleneck—data is.
+                    <ul>
+                        <li><strong>Storage:</strong> Using GCS buckets effectively.</li>
+                        <li><strong>Transfer:</strong> The latency of pulling data to TPU VMs.</li>
+                        <li><strong>Loading:</strong> CPU bottlenecks in data preprocessing/tokenization while TPUs wait.</li>
+                    </ul>
+                    Tips on pre-tokenizing and efficient data streaming.]
+                </p>
 
-            <div class="citation-section">
-                <h3 class="sans-serif" style="font-size: 1.2rem; margin-top: 0;">Citation</h3>
-                <p style="font-size: 0.95rem; color: #666; margin-bottom: 10px;">Please cite this work as:</p>
-                
-                <div class="citation-box">Shengbang Tong and Boyang Zheng, "Lessons from Two Years of TPU Training in Academia",
+                <h2 id="conclusion">Conclusion</h2>
+                <p>
+                    Despite the initial friction, mastering the TPU stack has allowed us to train models like Cambrian-1 
+                    at a scale that competes with industry baselines. The ecosystem is maturing, and the gap between 
+                    "research code" and "production training" is narrowing.
+                </p>
+
+                <div class="citation-section" id="citation">
+                    <h3 class="sans-serif" style="font-size: 1.2rem; margin-top: 0;">Citation</h3>
+                    <p style="font-size: 0.95rem; color: #666; margin-bottom: 10px;">Please cite this work as:</p>
+                    
+                    <div class="citation-box">Shengbang Tong and Boyang Zheng, "Lessons from Two Years of TPU Training in Academia",
 Cambrian Blog, Dec 2025.</div>
 
-                <div class="citation-box">@article{tong2025tpu,
+                    <div class="citation-box">@article{tong2025tpu,
   author = {Shengbang Tong and Boyang Zheng},
   title = {Lessons from Two Years of TPU Training in Academia},
   journal = {Cambrian Blog},
   year = {2025},
   note = {https://cambrian-mllm.github.io/blog/tpu-training-experiments.html}
 }</div>
-            </div>
-        </article>
+                </div>
+            </article>
+        </div>
 
         <footer class="site-footer">
             <div>Cambrian Lab © 2025</div>
