@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TPU Training Experiments | Cambrian</title>
+    <link rel="icon" type="image/x-icon" href="../imgs/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --text-primary: #111;
+            --text-secondary: #555;
+            --accent-color: #000;
+            --link-color: #0066cc;
+            --bg-main: #ffffff;
+            --bg-secondary: #f9f9f9;
+            --border-color: #eee;
+            --code-bg: #f5f5f5;
+        }
+
+        body {
+            font-family: 'Lora', serif; /* Use serif for body text like many academic blogs */
+            line-height: 1.8;
+            color: var(--text-primary);
+            background-color: var(--bg-main);
+            font-size: 19px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, h2, h3, h4, h5, h6, .sans-serif {
+            font-family: 'Inter', sans-serif;
+            color: #000;
+        }
+
+        .container {
+            max-width: 740px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Top Navigation */
+        .site-nav {
+            padding: 20px 0;
+            border-bottom: 1px solid transparent;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 40px;
+        }
+
+        .site-nav a {
+            color: #000;
+            text-decoration: none;
+            margin-right: 20px;
+        }
+        
+        .site-nav .brand {
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        /* Header */
+        header {
+            padding: 20px 0 40px;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+        }
+
+        .meta-info {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-secondary);
+            font-size: 15px;
+            margin-bottom: 30px;
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Content */
+        article {
+            margin-bottom: 80px;
+        }
+
+        article h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-top: 50px;
+            margin-bottom: 20px;
+            letter-spacing: -0.02em;
+        }
+
+        article h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-top: 40px;
+            margin-bottom: 16px;
+            letter-spacing: -0.01em;
+        }
+
+        article p {
+            margin-bottom: 24px;
+            font-weight: 400;
+        }
+
+        article a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+        article a:hover {
+            text-decoration: underline;
+        }
+
+        /* Code Blocks - Light theme like Thinking Machines */
+        code {
+            background: rgba(0, 0, 0, 0.05);
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Courier New', monospace;
+            font-size: 0.85em;
+        }
+
+        pre {
+            background: var(--code-bg);
+            padding: 20px;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 30px 0;
+            border: 1px solid var(--border-color);
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            font-size: 14px;
+            color: #333;
+        }
+
+        /* Math */
+        .katex-display {
+            margin: 30px 0;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+        }
+
+        th {
+            text-align: left;
+            border-bottom: 2px solid #ddd;
+            padding: 10px;
+            font-weight: 600;
+        }
+
+        td {
+            border-bottom: 1px solid #eee;
+            padding: 10px;
+        }
+
+        /* Citation Box */
+        .citation-section {
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .citation-box {
+            background: #f4f4f4;
+            padding: 20px;
+            font-family: 'SF Mono', 'Monaco', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            white-space: pre;
+            border-radius: 4px;
+            margin-top: 10px;
+            color: #444;
+        }
+
+        /* Footer */
+        .site-footer {
+            border-top: 1px solid var(--border-color);
+            padding: 30px 0;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            color: var(--text-secondary);
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .footer-links a {
+            color: var(--text-secondary);
+            margin-left: 15px;
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            header h1 { font-size: 2.2rem; }
+            body { font-size: 18px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="site-nav">
+            <a href="../index.html" class="brand">Cambrian World</a>
+        </nav>
+
+        <header>
+            <h1>Lessons from Two Years of TPU Training in Academia</h1>
+            <div class="meta-info">
+                Shengbang Tong, Boyang Zheng · Dec 2025
+            </div>
+        </header>
+
+        <article>
+            <p>
+                Training large foundation models in academia presents a unique set of challenges. Unlike industry labs with 
+                dedicated infrastructure teamspute, academic research often requires us to be our own 
+                DevOps engineers, kernel optimizers, and distributed systems architects.
+            </p>
+
+            <p>
+                Over the past two years, we've spent thousands of hours debugging,and training 
+                runs on TPUs (v3 through v6e). This post distills the hard-earned lessons from that journey.
+            </p>
+
+            <h2>Why TPUs?</h2>
+            <p>
+                [Why did you choose TPUs over GPUs? Cost effectiveness (TRC program)? Performance per dollar? Discuss the availability of high-bandwidth memory (HBM) and interconnects in TPU pods.]
+            </p>
+
+            <h2>Why TorchXLA?</h2>
+            <p>
+                [Why stick with PyTorch instead of moving to JAX? The ecosystem, existing codebase, or familiarity? Discuss the trade-offs of using the XLA compiler backend with PyTorch semantics.]
+            </p>
+
+            <h2>From Torch To TorchXLA: The Transition</h2>
+            <p>
+                Migrating a standard PyTorch training loop to run efficiently on TPUs isn't just a one-line change. It requires understanding how XLA compiles your graph.
+            </p>
+
+            <h3>Static Shape! Static Shape! Static Shape!</h3>
+            <p>
+                [This is the most critical lesson. Explain why dynamic shapes kill performance on XLA (recompilation overhead). 
+                Discuss techniques to pad batches, handle variable length sequences, and avoid graph breaks.]
+            </p>
+
+            <h2>Distributed Training Strategies</h2>
+            <p>
+                [Discuss the evolution of parallelism on TPUs:
+                <ul>
+                    <li><strong>DDP (Distributed Data Parallel):</strong> The starting point.</li>
+                    <li><strong>FSDP (Fully Sharded Data Parallel):</strong> Scaling model size.</li>
+                    <li><strong>SPMD (Single Program Multiple Data):</strong> The GSPMD approach and advanced sharding.</li>
+                </ul>
+                Compare their complexity vs. performance gains.]
+            </p>
+
+            <h2>Does LLMs Code Just Work?</h2>
+            <p>
+                [Discuss the portability of standard LLM libraries (like Hugging Face or custom implementations). 
+                What usually breaks? (e.g., specific custom CUDA kernels, dynamic control flow, flash attention compatibility). 
+                How mature is the ecosystem now compared to 2 years ago?]
+            </p>
+
+            <h2>The Data Bottleneck</h2>
+            <p>
+                [Compute is often not the bottleneck—data is.
+                <ul>
+                    <li><strong>Storage:</strong> Using GCS buckets effectively.</li>
+                    <li><strong>Transfer:</strong> The latency of pulling data to TPU VMs.</li>
+                    <li><strong>Loading:</strong> CPU bottlenecks in data preprocessing/tokenization while TPUs wait.</li>
+                </ul>
+                Tips on pre-tokenizing and efficient data streaming.]
+            </p>
+
+            <h2>Conclusion</h2>
+            <p>
+                Despite the initial friction, mastering the TPU stack has allowed us to train models like Cambrian-1 
+                at a scale that competes with industry baselines. The ecosystem is maturing, and the gap between 
+                "research code" and "production training" is narrowing.
+            </p>
+
+            <div class="citation-section">
+                <h3 class="sans-serif" style="font-size: 1.2rem; margin-top: 0;">Citation</h3>
+                <p style="font-size: 0.95rem; color: #666; margin-bottom: 10px;">Please cite this work as:</p>
+                
+                <div class="citation-box">Shengbang Tong and Boyang Zheng, "Lessons from Two Years of TPU Training in Academia",
+Cambrian Blog, Dec 2025.</div>
+
+                <div class="citation-box">@article{tong2025tpu,
+  author = {Shengbang Tong and Boyang Zheng},
+  title = {Lessons from Two Years of TPU Training in Academia},
+  journal = {Cambrian Blog},
+  year = {2025},
+  note = {https://cambrian-mllm.github.io/blog/tpu-training-experiments.html}
+}</div>
+            </div>
+        </article>
+
+        <footer class="site-footer">
+            <div>Cambrian Lab © 2025</div>
+            <div class="footer-links">
+                <a href="#">Terms of service</a>
+                <a href="#">Privacy notice</a>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
+
