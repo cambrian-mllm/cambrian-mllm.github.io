@@ -298,7 +298,7 @@
         <header>
             <h1>Lessons from Two Years of TPU Training in Academia</h1>
             <div class="meta-info">
-                Shengbang Tong, Boyang Zheng · Dec 2025
+                Dec 2025
             </div>
         </header>
 
@@ -319,6 +319,11 @@
             </aside>
 
             <article>
+                <figure style="margin-top: 0; margin-bottom: 40px;">
+                    <img src="assets/images/teaser.png" alt="A comic showing two researchers awake at 5 AM debugging TPU errors" style="width: 100%; border-radius: 8px; border: 1px solid #eee;">
+                    <figcaption>The shared reality of TPU debugging: 5 AM messages and shared pain.</figcaption>
+                </figure>
+
                 <p>
                     Training large foundation models in academia presents a unique set of challenges. Unlike industry labs with 
                     dedicated infrastructure teams and infinite compute, academic research often requires us to be our own 
@@ -355,8 +360,93 @@
 
                 <h3>Static Shape! Static Shape! Static Shape!</h3>
                 <p>
-                    [This is the most critical lesson. Explain why dynamic shapes kill performance on XLA (recompilation overhead). 
-                    Discuss techniques to pad batches, handle variable length sequences, and avoid graph breaks.]
+                    If there is one mantra to memorize before touching a TPU, it is this: <strong>Dynamic shapes are the enemy.</strong>
+                </p>
+                <p>
+                    PyTorch allows us to pass tensors of varying sizes 
+                    through our model, and CUDA kernels handle it gracefully. On TPUs, however, the execution model is different. 
+                    The XLA compiler traces your computation graph and compiles it into a static executable. 
+                </p>
+                <p>
+                    Every time the input shape changes, XLA must <strong>recompile</strong> the entire graph. This recompilation 
+                    can take minutes. If your batch size or sequence length changes every step, your training will spend 99% of its 
+                    time compiling and 1% computing.
+                </p>
+
+                <h4>A Simple Example</h4>
+                <p>
+                    Consider a simple function that processes a batch of sentences. In standard PyTorch, we might just pass 
+                    the list of sentences directly.
+                </p>
+                
+                <pre><code class="language-python"># ❌ BAD: Dynamic Shapes
+# If 'batch' has different lengths each time, XLA recompiles every step!
+def forward(batch_of_tokens):
+    # shape: [B, dynamic_seq_len]
+    return model(batch_of_tokens)</code></pre>
+
+                <p>
+                    To fix this, we must ensure every tensor has a fixed, known size at compile time. This usually means 
+                    padding everything to a maximum length.
+                </p>
+
+                <pre><code class="language-python"># ✅ GOOD: Static Shapes
+# Pad everything to a fixed max_length (e.g., 2048)
+def forward(batch_of_tokens_padded):
+    # shape: [B, 2048] <- Always the same!
+    return model(batch_of_tokens_padded)</code></pre>
+
+                <h4>A Real-World Nightmare: The Cambrian Experience</h4>
+                <p>
+                    When we started developing <a href="https://cambrian-mllm.github.io/">Cambrian-1</a>, we spent the first month struggling to adapt the LLaVA codebase to run on TPUs. The symptoms were baffling: training would start, but it was excruciatingly slow. We were seeing step times measured in minutes rather than seconds.
+                </p>
+                <p>
+                    The demon hiding in the details was <strong>dynamic shapes</strong>.
+                </p>
+                <p>
+                    In multimodal LLM training, data is naturally "ragged." One sample might be a text-only conversation (0 images). The next might describe a single photo (1 image). Another might compare three different charts (3 images).
+                </p>
+                <p>
+                    In standard PyTorch/CUDA, you just loop through the images you have. But on TPU, this variation is catastrophic:
+                </p>
+                <ul>
+                    <li><strong>Batch 1:</strong> Max 2 images → Shape <code>[B, 2, C, H, W]</code> → <em>Compile!</em></li>
+                    <li><strong>Batch 2:</strong> Max 5 images → Shape <code>[B, 5, C, H, W]</code> → <em>Recompile!</em></li>
+                    <li><strong>Batch 3:</strong> Text only → Shape <code>[B, 0]</code> → <em>Recompile!</em></li>
+                </ul>
+                <p>
+                    The XLA compiler was recompiling the vision encoder and projector for nearly every single batch.
+                </p>
+                
+                <h4>The Solution: Padding with Dummy Images</h4>
+                <p>
+                    To fix this, we had to standardize the data shape at the dataloader level. We defined a fixed "max images" budget (e.g., 5 images per sample).
+                </p>
+                <p>
+                    If a sample has fewer images, we pad it with <strong>dummy black images</strong> up to the max count. We then use a boolean mask to ensure the model ignores these dummy images during the forward pass.
+                </p>
+
+                <pre><code class="language-python"># Simplified fix for static multimodal batches
+MAX_IMAGES = 5
+
+def collate_fn(batch):
+    # 1. Pad image tensors to [B, MAX_IMAGES, C, H, W]
+    # 2. Create an attention mask for valid images
+    
+    padded_images = torch.zeros(batch_size, MAX_IMAGES, 3, 336, 336)
+    image_masks = torch.zeros(batch_size, MAX_IMAGES, dtype=torch.bool)
+    
+    for i, sample in enumerate(batch):
+        n_imgs = len(sample['images'])
+        # Fill valid images
+        padded_images[i, :n_imgs] = sample['images']
+        image_masks[i, :n_imgs] = True
+        # Remaining slots are zeros (dummy images)
+        
+    return padded_images, image_masks</code></pre>
+                
+                <p>
+                    Once we implemented this, our step times dropped instantly from minutes to milliseconds. The graph compiled once, and the TPU could finally fly.
                 </p>
 
                 <h2 id="distributed-strategies">Distributed Training Strategies</h2>
@@ -426,11 +516,10 @@
                     <h3 class="sans-serif" style="font-size: 1.2rem; margin-top: 0;">Citation</h3>
                     <p style="font-size: 0.95rem; color: #666; margin-bottom: 10px;">Please cite this work as:</p>
                     
-                    <div class="citation-box">Shengbang Tong and Boyang Zheng, "Lessons from Two Years of TPU Training in Academia",
+                <div class="citation-box">"Lessons from Two Years of TPU Training in Academia",
 Cambrian Blog, Dec 2025.</div>
 
-                    <div class="citation-box">@article{tong2025tpu,
-  author = {Shengbang Tong and Boyang Zheng},
+                <div class="citation-box">@article{cambrian2025tpu,
   title = {Lessons from Two Years of TPU Training in Academia},
   journal = {Cambrian Blog},
   year = {2025},
