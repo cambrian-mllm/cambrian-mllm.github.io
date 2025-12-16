@@ -370,11 +370,38 @@
                     Compare their complexity vs. performance gains.]
                 </p>
 
-                <h2 id="portability">Does LLMs Code Just Work?</h2>
+                <h2 id="portability">Can LLMs Write TPU Code?</h2>
                 <p>
-                    [Discuss the portability of standard LLM libraries (like Hugging Face or custom implementations). 
-                    What usually breaks? (e.g., specific custom CUDA kernels, dynamic control flow, flash attention compatibility). 
-                    How mature is the ecosystem now compared to 2 years ago?]
+                    For many researchers, "vibe-coding" or LLM-assisted coding has become a de-facto practice when starting new projects. 
+                    But do LLMs actually understand the nuances of TPU and TorchXLA development? Over the past two years, especially with 
+                    the introduction of reasoning models, our experience has been a mix of impressive capabilities and frustrating hallucinations.
+                </p>
+
+                <h3>What Works Well</h3>
+                <p>
+                    <ul>
+                        <li>
+                            <strong>Infrastructure Management:</strong> LLMs have mastered most TPU CLI commands. Since many TRC TPUs are preemptible, 
+                            having LLMs write scripts to create, inspect, and auto-restart TPUs is a huge time-saver.
+                        </li>
+                    </ul>
+                </p>
+
+                <h3>What Breaks & How to Fix It</h3>
+                <p>
+                    <ul>
+                        <li>
+                            <strong>Outdated TPU APIs.</strong> TPU commands change frequently. LLMs are often stuck on older versions, leading to code that is either deprecated or pure hallucination.
+                            <br><em>Fix:</em> When prompting, explicitly paste the latest API documentation (or web link) or error logs.
+                        </li>
+                        <br>
+                        <li>
+                            <strong>TorchXLA Codes.</strong> TorchXLA looks deceptively similar to standard PyTorch. LLMs often default to writing standard PyTorch code (like using `.cuda()` or code with dynamic shapes) that is catastrophic for XLA performance. 
+                            TorchXLA APIs also change quite frequently, so LLMs generation can be full of hallucinations. Overall this makes TorchXLA codes very fragile and hard to maintain with LLMs. 
+                            <br><em>Fix:</em> Unfortunately there is no good way to fix this. On the bright side, we have been (forced) to learn about the fundamentals of many code, like sharding, model resuming, etc. This is a motivation to 
+                            learn more about the fundamentals of the code. Some tips that might help: try using the best model, turn the max reasoning and tell the model explicitly this is TPU codee, TorchXLA code, please reason your best instead of relying on pre-existing knowledge. 
+                        </li>
+                    </ul>
                 </p>
 
                 <h2 id="data-bottleneck">The Data Bottleneck</h2>
