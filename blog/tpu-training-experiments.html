@@ -396,9 +396,9 @@ def forward(batch_of_tokens_padded):
     # shape: [B, 2048] <- Always the same!
     return model(batch_of_tokens_padded)</code></pre>
 
-                <h4>A Real-World Nightmare: The Cambrian Experience</h4>
+                <h4>A Real-World Example: The Cambrian Experience</h4>
                 <p>
-                    When we started developing <a href="https://cambrian-mllm.github.io/">Cambrian-1</a>, we spent the first month struggling to adapt the LLaVA codebase to run on TPUs. The symptoms were baffling: training would start, but it was excruciatingly slow. We were seeing step times measured in minutes rather than seconds.
+                    When we started developing <a href="https://cambrian-mllm.github.io/">Cambrian-1</a>, we adapted the LLaVA codebase to run on TPUs. Initially, training would start, but it was much slower than expected. We were seeing step times measured in minutes rather than seconds.
                 </p>
                 <p>
                     The demon hiding in the details was <strong>dynamic shapes</strong>.
@@ -415,7 +415,7 @@ def forward(batch_of_tokens_padded):
                     <li><strong>Batch 3:</strong> Text only → Shape <code>[B, 0]</code> → <em>Recompile!</em></li>
                 </ul>
                 <p>
-                    The XLA compiler was recompiling the vision encoder and projector for nearly every single batch.
+                    The XLA compiler was recompiling the training graph for nearly every single batch.
                 </p>
                 
                 <h4>The Solution: Padding with Dummy Images</h4>
@@ -439,6 +439,7 @@ def collate_fn(batch):
     for i, sample in enumerate(batch):
         n_imgs = len(sample['images'])
         # Fill valid images
+        # Spoiler Alert: This kind of indexing operation will also fail in SPMD TorchXLA :(
         padded_images[i, :n_imgs] = sample['images']
         image_masks[i, :n_imgs] = True
         # Remaining slots are zeros (dummy images)
@@ -496,13 +497,63 @@ def collate_fn(batch):
 
                 <h2 id="data-bottleneck">The Data Bottleneck</h2>
                 <p>
-                    [Compute is often not the bottleneck—data is.
-                    <ul>
-                        <li><strong>Storage:</strong> Using GCS buckets effectively.</li>
-                        <li><strong>Transfer:</strong> The latency of pulling data to TPU VMs.</li>
-                        <li><strong>Loading:</strong> CPU bottlenecks in data preprocessing/tokenization while TPUs wait.</li>
-                    </ul>
-                    Tips on pre-tokenizing and efficient data streaming.]
+                    In academic clusters, we often take shared filesystems (NFS/GPFS) for granted. On Cloud TPUs, storage requires more deliberate planning. 
+                    We primarily rely on two options: <strong>Google Cloud Storage (Buckets)</strong> and <strong>Persistent Disks (PD)</strong>.
+                </p>
+
+                <h3>Persistent Disks (PD): The "Normal" Filesystem</h3>
+                <p>
+                    <strong>Persistent Disks</strong> behave like a standard filesystem. They are reliable and less prone to random failures compared to network mounts. 
+                    However, they come with significant caveats, especially when moving between TPU generations:
+                </p>
+                <ul>
+                    <li>
+                        <strong>Cost on v6:</strong> While PDs work well on v4/v5, we found that on newer v6 TPUs, the associated storage costs can become prohibitively expensive.
+                    </li>
+                    <li>
+                        <strong>The Read-Write vs. Parallelism Conflict:</strong> On a parallel TPU pod (e.g., v4-256), disks <strong>must</strong> be mounted in <em>read-only</em> mode to be attached to multiple VMs simultaneously. 
+                        <strong>Read-Write</strong> access is restricted to a single VM (like a v4-8). This means it is impossible to save checkpoints or logs back to the disk during a large distributed run.
+                    </li>
+                    <li>
+                        <strong>Mutual Exclusion:</strong> A disk cannot be mounted as Read-Only and Read-Write simultaneously. This means you cannot "hot-fix" your code 
+                        or update your dataset on the disk while a training run is reading from it.
+                    </li>
+                </ul>
+
+                <h4>The "Clone & Scale" Workflow</h4>
+                <p>
+                    To navigate the PD limitations, we adopted a staged workflow that separates development from production training.
+                </p>
+
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 30px 0; text-align: center; border: 1px dashed #ccc;">
+                    <em>[Insert Diagram Here: Dev (RW) -> Clone -> Train (RO)]</em><br>
+                    <span style="font-size: 0.9em; color: #666;">
+                        (Prompt for T2I: "A technical schematic. Left: A single server labeled 'v4-8' connected with a two-way arrow to a hard drive labeled 'Master Disk'. 
+                        Middle: An arrow labeled 'Clone' points from Master Disk to a second drive labeled 'Cloned Disk'. 
+                        Right: A large grid of servers labeled 'v4-256 Pod' with arrows reading from 'Cloned Disk'. 
+                        Style: Clean, minimal, blueprint style, blue and white.")
+                    </span>
+                </div>
+
+                <ol>
+                    <li>
+                        <strong>Develop on -8:</strong> We maintain a small TPU node (e.g., v4-8) with a <strong>Read-Write</strong> disk. This is our "dev box" where we write code, debug, and cook data.
+                    </li>
+                    <li>
+                        <strong>Snapshot & Clone:</strong> Once the code and data are ready, we create a disk snapshot/clone.
+                    </li>
+                    <li>
+                        <strong>Train on Pod:</strong> We mount this cloned disk as <strong>Read-Only</strong> on the large training pod (e.g., v4-256). 
+                        This ensures data consistency and allows the large pod to scale without lock contention.
+                    </li>
+                    <li>
+                        <strong>Iterate:</strong> If we need to change the data, we go back to step 1, modify the RW disk, and create a new clone for the next run.
+                    </li>
+                </ol>
+
+                <h3>Google Cloud Storage (Buckets)</h3>
+                <p>
+                    [Placeholder for GCS experience...]
                 </p>
 
                 <h2 id="conclusion">Conclusion</h2>
