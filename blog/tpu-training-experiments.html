@@ -457,8 +457,17 @@ def collate_fn(batch):
                         <li><strong>DDP (Distributed Data Parallel):</strong> The starting point.</li>
                         <li><strong>FSDP (Fully Sharded Data Parallel):</strong> Scaling model size.</li>
                         <li><strong>SPMD (Single Program Multiple Data):</strong> The GSPMD approach and advanced sharding.</li>
-                    </ul>
-                    Compare their complexity vs. performance gains.]
+                    </ul>[Compare their complexity vs. performance gains.]
+
+
+                    <h3 id="DDP">DDP</h3>
+                    <li>
+                    A typical starting point for distributed training is Distributed Data Parallel (DDP). As of 2025, TorchXLA supports DDP via <code>xmp.spawn()</code>. The more commonly used <code>torch.nn.parallel.DistributedDataParallel</code> has considerably worse performance on TPUs and is not fixed before torchXLA 2.5, as far as we know.
+                    </li>
+
+                    <li>
+                    <strong>Mark Step:</strong> A major difference between torchXLA and torch CUDA is the need to call <code>xm.mark_step()</code> at the end of each loop step. This signals to the XLA compiler that the computation for this step is complete and allows it to optimize execution. Otherwise, the compiler will try to unroll the loop into a single giant graph (which could be millions times larger than expected) and lead to an infinite compiling time. Although many wrappers in FSDP/SPMD handle this internally, on DDP we have much less abstraction and everything is probably done manually, so forgetting to call <code>xm.mark_step()</code> can be a common pitfall.
+                    </li>
                 </p>
 
                 <h2 id="portability">Can LLMs Write TPU Code?</h2>
@@ -508,7 +517,8 @@ def collate_fn(batch):
                 </p>
                 <ul>
                     <li>
-                        <strong>Cost on v6:</strong> While PDs work well on v4/v5, we found that on newer v6 TPUs, the associated storage costs can become prohibitively expensive.
+                        <strong>Cost on v6:</strong> While normal PDs work well on v4 pods. On v5 pods, only balanced PD (2x expensive than normal PDs) is allowed, and only allowed to be attached to a single pod or a maximum of 10 TPU VMs. On v6 pods, only hyperdisk ML Disks (4x expensive than normal PDs) are allowed and shares the same attachment limitation as v5 pods.
+                        <!-- , we found that on newer v6 TPUs, the associated storage costs can become prohibitively expensive. -->
                     </li>
                     <li>
                         <strong>The Read-Write vs. Parallelism Conflict:</strong> On a parallel TPU pod (e.g., v4-256), disks <strong>must</strong> be mounted in <em>read-only</em> mode to be attached to multiple VMs simultaneously. 
@@ -553,7 +563,27 @@ def collate_fn(batch):
 
                 <h3>Google Cloud Storage (Buckets)</h3>
                 <p>
-                    [Placeholder for GCS experience...]
+                    <!-- [Placeholder for GCS experience...] -->
+                    <strong>Google Cloud Storage (GCS) Buckets</strong> offer a flexible alternative to Persistent Disks. They provide virtually unlimited cloud storage and can be accessed concurrently by multiple TPU VMs without the read-write restrictions of PDs.
+                    
+                    <li>
+                        <strong>Network Mount:</strong> GCS buckets can be mounted as a normal filesystem to TPU VMs via <code>gcsfuse</code>. This allows seamless read and write access across all VMs in a pod without the need for writing GCS-dependent read and write code.
+                    </li>
+
+                    <li>
+                        <strong>Speed:</strong> If the TPU VM is located within the same region as the GCS bucket, read and write speeds can be quite fast, often comparable or even exceeding those of Persistent Disks. In our use case, it's common to see read speeds of 2-4 GB/s per bucket under training workloads. However, as any networked storage, the error rate can be high and possibly affect latency sensitive training jobs.
+                    </li>
+                    
+                    <li>
+                        <strong>Cost-Effective:</strong> GCS storage costs are generally lower than Persistent Disks and are charged based on actual storage size. This can lead to significant savings, especially for large datasets that do not require the high IOPS of PDs.
+                    </li>
+                    
+                    <li>
+                        <strong>Data Consistency:</strong> <code>GCSFuse</code> provides multi-level of consistency by introducing a `ttl-secs` parameter that controls how long file metadata and directory listings are cached. Setting this parameter to 0 ensures the strongest consistency, where all read and write operations reflect the most recent changes. But this may introduce latency overhead and large amount of cost due to frequent metadata operations. For training workloads where data is mostly read-only, a higher `ttl-secs` (e.g., 60 seconds) can be used to improve performance and reduce costs, while still maintaining reasonable consistency.
+                    </li>
+                    <li>    
+                        <strong>Data Chunking:</strong> As any network storage, it's not encourage to read many small files from GCS buckets (for example, 1 Million JPEGs from ImageNet). Instead, it's better to chunk small files into larger tars/TFRecords to reduce the number of read operations and improve throughput. For GCS, it also gives very high cost for write/read operations, so reducing the number of operations is also critical to reduce cost.
+                    </li>
                 </p>
 
                 <h2 id="conclusion">Conclusion</h2>
