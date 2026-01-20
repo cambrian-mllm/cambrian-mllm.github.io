@@ -298,7 +298,7 @@
         <header>
             <h1>Lessons from Two Years of TPU Training in Academia</h1>
             <div class="meta-info">
-                Dec 2025
+                Shengbang Tong, Boyang Zheng · Jan 2026
             </div>
         </header>
 
@@ -350,8 +350,24 @@
 
                 <h2 id="why-torchxla">Why TorchXLA?</h2>
                 <p>
-                    [Why stick with PyTorch instead of moving to JAX? The ecosystem, existing codebase, or familiarity? Discuss the trade-offs of using the XLA compiler backend with PyTorch semantics.]
+                    When we first got access to TPUs, a natural question arose: should we rewrite everything in JAX?
                 </p>
+                <p>
+                    The answer, for us, was a pragmatic <strong>no</strong>. We're almost always 
+                    building on top of existing work. The model architectures we wanted to study, the training recipes we wanted to adapt, 
+                    the community codebases we wanted to extend—nearly all of them were written in PyTorch. Rewriting a complex codebase 
+                    from scratch in a new framework is a months-long endeavor with a high risk of introducing subtle bugs.
+                </p>
+                <p>
+                    <a href="https://github.com/pytorch/xla" target="_blank">TorchXLA</a> offered us the best of both worlds: 
+                    the ability to keep our familiar PyTorch code while compiling it to run efficiently on TPU hardware via the XLA compiler. 
+                </p>
+                <p>
+                    Of course, the reality is more nuanced (as you'll see in the next section), but the barrier to entry is 
+                 lower than a full framework migration. We could take a working LLaVA training script, 
+                    make targeted modifications, and have it running on a TPU pod within weeks rather than months.
+                </p>
+
 
                 <h2 id="transition">From Torch To TorchXLA: The Transition</h2>
                 <p>
@@ -450,25 +466,391 @@ def collate_fn(batch):
                     Once we implemented this, our step times dropped instantly from minutes to milliseconds. The graph compiled once, and the TPU could finally fly.
                 </p>
 
+                <h3>Gradient Checkpointing Compatibility</h3>
+                <p>
+                    Another common pitfall when adapting existing codebases: <strong>gradient checkpointing</strong>. 
+                    Many PyTorch codebases use <code>torch.utils.checkpoint.checkpoint</code> for memory-efficient training. 
+                    However, this doesn't play well with TorchXLA's compilation model.
+                </p>
+                <p>
+                    You need to replace it with the XLA-native version: <code>torch_xla.utils.checkpoint.checkpoint</code>. 
+                    Here's an example of monkey-patching a model's forward pass:
+                </p>
+
+                <pre><code class="language-python"># Replace torch gradient checkpointing with XLA-compatible version
+from torch_xla.utils.checkpoint import checkpoint as xla_checkpoint
+
+def patched_forward(self, sample):
+    sample = self.conv_in(sample)
+    
+    if self.training and self.gradient_checkpointing:
+        # Use XLA checkpoint instead of torch.utils.checkpoint
+        for down_block in self.down_blocks:
+            sample = xla_checkpoint(down_block, sample)
+        sample = xla_checkpoint(self.mid_block, sample)
+    else:
+        for down_block in self.down_blocks:
+            sample = down_block(sample)
+        sample = self.mid_block(sample)
+    
+    sample = self.conv_norm_out(sample)
+    sample = self.conv_act(sample)
+    sample = self.conv_out(sample)
+    return sample
+
+# Apply the patch
+import types
+model.encoder.forward = types.MethodType(patched_forward, model.encoder)</code></pre>
+                
+                <p>
+                    This pattern of "find-and-replace" for XLA compatibility is unfortunately common. 
+                    Grep your codebase for <code>torch.utils.checkpoint</code> and replace accordingly.
+                </p>
+
+                <h3>Scaled Dot-Product Attention (SDPA)</h3>
+                <p>
+                    Another silent killer: <code>F.scaled_dot_product_attention</code>. This is the efficient fused attention 
+                    implementation introduced in PyTorch 2.0, and it's used extensively in modern pretrained models and libraries 
+                    like HuggingFace Diffusers.
+                </p>
+                <p>
+                    The problem? <strong>It silently fails on TorchXLA.</strong> Your code will crash with no clear error message, 
+                    leaving you debugging for hours. The fix is to replace SDPA with a manual attention implementation:
+                </p>
+
+                <pre><code class="language-python"># ❌ BAD: F.scaled_dot_product_attention crashes on TPU
+hidden_states = F.scaled_dot_product_attention(
+    query, key, value, attn_mask=attention_mask, dropout_p=0.0, is_causal=False
+)
+
+# ✅ GOOD: Manual attention implementation
+import math
+scale = 1.0 / math.sqrt(query.shape[-1])
+attn_scores = torch.matmul(query * scale, key.transpose(-2, -1))
+if attention_mask is not None:
+    attn_scores = attn_scores + attention_mask
+attn_probs = attn_scores.softmax(dim=-1)
+hidden_states = torch.matmul(attn_probs, value)</code></pre>
+
+                <p>
+                    The tricky part is that SDPA is often buried deep inside library code. For example, when training 
+                    diffusion models with the Flux VAE, we had to monkey-patch the <code>AttnProcessor2_0</code> class 
+                    from HuggingFace Diffusers:
+                </p>
+
+                <pre><code class="language-python"># Monkey-patch Diffusers attention for XLA compatibility
+if IS_XLA_AVAILABLE:
+    from diffusers.models.attention_processor import AttnProcessor2_0
+    import math
+    
+    def xla_compatible_attention(self, attn, hidden_states, 
+                                  encoder_hidden_states=None, 
+                                  attention_mask=None, temb=None, *args, **kwargs):
+        # ... setup code ...
+        
+        query = attn.to_q(hidden_states)
+        key = attn.to_k(encoder_hidden_states)
+        value = attn.to_v(encoder_hidden_states)
+        
+        # Reshape for multi-head attention
+        query = query.view(batch_size, -1, attn.heads, head_dim).transpose(1, 2)
+        key = key.view(batch_size, -1, attn.heads, head_dim).transpose(1, 2)
+        value = value.view(batch_size, -1, attn.heads, head_dim).transpose(1, 2)
+        
+        # Manual attention instead of F.scaled_dot_product_attention
+        scale = 1.0 / math.sqrt(query.shape[-1])
+        attn_scores = torch.matmul(query * scale, key.transpose(-2, -1))
+        if attention_mask is not None:
+            attn_scores = attn_scores + attention_mask
+        attn_probs = attn_scores.softmax(dim=-1)
+        hidden_states = torch.matmul(attn_probs, value)
+        
+        # ... rest of forward pass ...
+        return hidden_states
+    
+    AttnProcessor2_0.__call__ = xla_compatible_attention</code></pre>
+
+                <div style="background: #e7f3ff; border-left: 4px solid #2196F3; padding: 16px 20px; margin: 24px 0; border-radius: 0 4px 4px 0;">
+                    <strong style="color: #1565C0;">💡 Debugging Tip:</strong>
+                    <span style="color: #1565C0;">If your training mysteriously crashes with no helpful error message, grep for <code style="background: rgba(0,0,0,0.08);">scaled_dot_product_attention</code> in both your code AND your dependencies (e.g., <code style="background: rgba(0,0,0,0.08);">site-packages/diffusers/</code>).</span>
+                </div>
+
                 <h2 id="distributed-strategies">Distributed Training Strategies</h2>
                 <p>
-                    [Discuss the evolution of parallelism on TPUs:
-                    <ul>
-                        <li><strong>DDP (Distributed Data Parallel):</strong> The starting point.</li>
-                        <li><strong>FSDP (Fully Sharded Data Parallel):</strong> Scaling model size.</li>
-                        <li><strong>SPMD (Single Program Multiple Data):</strong> The GSPMD approach and advanced sharding.</li>
-                    </ul>[Compare their complexity vs. performance gains.]
+                    As models grow larger, you'll quickly outgrow what fits on a single TPU chip. Here's the evolution of parallelism strategies we've used on TPUs, roughly in order of increasing complexity:
+                </p>
+                <ul>
+                    <li><strong>DDP (Distributed Data Parallel):</strong> The starting point—replicate the model, shard the data.</li>
+                    <li><strong>FSDP (Fully Sharded Data Parallel):</strong> Shard model parameters across devices to fit larger models.</li>
+                    <li><strong>SPMD (Single Program Multiple Data):</strong> Fine-grained tensor-level sharding with explicit mesh control.</li>
+                </ul>
 
 
                     <h3 id="DDP">DDP</h3>
-                    <li>
-                    A typical starting point for distributed training is Distributed Data Parallel (DDP). As of 2025, TorchXLA supports DDP via <code>xmp.spawn()</code>. The more commonly used <code>torch.nn.parallel.DistributedDataParallel</code> has considerably worse performance on TPUs and is not fixed before torchXLA 2.5, as far as we know.
-                    </li>
+                    <p>
+                    A typical starting point for distributed training is Distributed Data Parallel (DDP). As of 2025, TorchXLA supports DDP via <code>xmp.spawn()</code>. 
+                    </p>
+                    
+                    <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 16px 20px; margin: 24px 0; border-radius: 0 4px 4px 0;">
+                        <strong style="color: #856404;">⚠️ Known Bug:</strong>
+                        <span style="color: #856404;">The more commonly used <code style="background: rgba(0,0,0,0.08);">torch.nn.parallel.DistributedDataParallel</code> has <strong>considerably worse performance</strong> on TPUs and is not fixed before TorchXLA 2.5, as far as we know. Use <code style="background: rgba(0,0,0,0.08);">xmp.spawn()</code> instead.</span>
+                    </div>
 
-                    <li>
-                    <strong>Mark Step:</strong> A major difference between torchXLA and torch CUDA is the need to call <code>xm.mark_step()</code> at the end of each loop step. This signals to the XLA compiler that the computation for this step is complete and allows it to optimize execution. Otherwise, the compiler will try to unroll the loop into a single giant graph (which could be millions times larger than expected) and lead to an infinite compiling time. Although many wrappers in FSDP/SPMD handle this internally, on DDP we have much less abstraction and everything is probably done manually, so forgetting to call <code>xm.mark_step()</code> can be a common pitfall.
-                    </li>
-                </p>
+                    <p>
+                    <strong>Mark Step:</strong> A major difference between TorchXLA and torch CUDA is the need to call <code>xm.mark_step()</code> at the end of each training step. This signals to the XLA compiler that the computation for this step is complete and allows it to optimize execution. Otherwise, the compiler will try to unroll the loop into a single giant graph (which could be millions of times larger than expected) and lead to infinite compiling time. Although many wrappers in FSDP/SPMD handle this internally, on DDP we have much less abstraction and everything is done manually, so forgetting to call <code>xm.mark_step()</code> can be a common pitfall.
+                    </p>
+
+                    <h3 id="FSDP">FSDP</h3>
+                    <p>
+                        When your model no longer fits in memory on a single device, <strong>Fully Sharded Data Parallel (FSDP)</strong> becomes essential. 
+                        FSDP shards model parameters, gradients, and optimizer states across devices, only gathering them when needed for computation.
+                    </p>
+                    <p>
+                        If you're looking for a reference implementation, we highly recommend studying the 
+                        <a href="https://github.com/huggingface/transformers/blob/314f10929a2215b74c2ad6ecf7b2f380c9b7468a/src/transformers/trainer.py#L1953" target="_blank">HuggingFace Transformers Trainer</a>. 
+                        The <code>_wrap_model</code> method around line 1953 is an excellent starting point for understanding how FSDP wrapping is configured for TorchXLA. 
+                        The Trainer handles many edge cases and provides a battle-tested template for your own implementations.
+                    </p>
+
+                    <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 16px 20px; margin: 24px 0; border-radius: 0 4px 4px 0;">
+                        <strong style="color: #856404;">⚠️ Known Bug — OOM Before Sharding:</strong>
+                        <p style="color: #856404; margin: 8px 0 0 0;">
+                            In TorchXLA FSDP, each device first loads its own copy of the full model in <strong>fp32</strong>, and <em>then</em> applies sharding. 
+                            Each TPU device typically has ~100GB of RAM. This means if your model exceeds roughly <strong>~25-30B parameters</strong>, 
+                            the codebase will crash with an OOM error <em>before sharding even begins</em>. 
+                        </p>
+                        <p style="color: #856404; margin: 8px 0 0 0;">
+                            <strong>Workarounds we tried:</strong>
+                        </p>
+                        <ul style="color: #856404; margin: 8px 0 0 0;">
+                            <li><strong>Meta device initialization:</strong> Does <em>not</em> work with TorchXLA FSDP as of our testing.</li>
+                            <li><strong>Loading in bf16:</strong> This works, but requires <strong>significant code changes</strong> in the TorchXLA library itself. 
+                                See our <a href="https://github.com/cambrian-mllm/cambrian/blob/539ffc3254bba004e5d012b65c0ad6cb308897c5/cambrian/train/train_fsdp.py#L1278" target="_blank" style="color: #856404;">Cambrian train_fsdp.py</a> for a reference implementation.</li>
+                        </ul>
+                    </div>
+
+                    <h3 id="SPMD">SPMD</h3>
+                    <p>
+                        <strong>SPMD (Single Program Multiple Data)</strong> is Google's approach to distributed training, offering fine-grained 
+                        control over how tensors are sharded across devices. In theory, it's the most efficient way to train on TPUs. 
+                        In practice, it requires <em>significant</em> debugging.
+                    </p>
+                    <p>
+                        Based on our experience, we <strong>never got arbitrary SPMD sharding to work well</strong>. By "work," we mean 
+                        both efficiency and effectiveness—the code would run, but it didn't beat FSDP v1 in practice.
+                    </p>
+                    <p>
+                        <strong>However!</strong> After months of debugging, we got <strong>FSDP via SPMD</strong> working. This hybrid approach 
+                        uses SPMD's infrastructure with FSDP-style sharding semantics. Our <a href="https://github.com/cambrian-mllm/cambrian-s" target="_blank">Cambrian-S</a> 
+                        codebase is built on FSDP via SPMD, and it delivers real improvements in both speed and numerical precision 
+                        (since SPMD allows higher precision training more easily).
+                    </p>
+                    <p>
+                        But it comes with its own set of bugs. Here's what we've encountered:
+                    </p>
+
+                    <h4>Bug #1: The Indexing Problem</h4>
+                    <p>
+                        Indexing is fundamental to AI coding. Operations like <code>a[b] = c</code> are everywhere—inserting image tokens 
+                        into text sequences, gathering embeddings, scatter operations. <strong>In TorchXLA SPMD, this triggers an implicit 
+                        <code>all_gather</code>.</strong>
+                    </p>
+                    <p>
+                        When your tensors <code>a</code>, <code>b</code>, and <code>c</code> become large, the code crashes immediately 
+                        with an OOM error. You've just lost all the benefits of sharding.
+                    </p>
+
+                    <div style="background: #ffebee; border-left: 4px solid #f44336; padding: 16px 20px; margin: 24px 0; border-radius: 0 4px 4px 0;">
+                        <strong style="color: #c62828;">🚨 Critical Bug:</strong>
+                        <span style="color: #c62828;">Standard indexing operations like <code style="background: rgba(0,0,0,0.08);">embeddings[indices] = values</code> 
+                        trigger implicit all-gathers in SPMD, causing OOM crashes on large tensors. This silently defeats the purpose of sharding.</span>
+                    </div>
+
+                    <p>
+                        <strong>The Fix:</strong> We had to write custom scatter kernels that explicitly handle the sharding. 
+                        This involves manually enabling/disabling sharding around the operation:
+                    </p>
+
+                    <pre><code class="language-python">import torch_xla.distributed.spmd as xs
+
+class CustomScatterKernel(torch.autograd.Function):
+    """Custom kernel to avoid implicit all_gather in SPMD indexing."""
+    
+    @staticmethod
+    def forward(ctx, input_embeds, img_embeds, token_indices):
+        ctx.full_input_shape = input_embeds.shape
+        ctx.full_img_shape = img_embeds.shape
+        ctx.dtype = input_embeds.dtype
+        
+        # Manually handle sharding to avoid implicit all_gather
+        sharded_input = xs.enable_manual_sharding(
+            input_embeds, ("fsdp", None, None)).global_tensor
+        sharded_img = xs.enable_manual_sharding(
+            img_embeds, ("fsdp", None, None)).global_tensor
+        sharded_indices = xs.enable_manual_sharding(
+            token_indices, ("fsdp", None)).global_tensor
+
+        # Concatenate and gather on sharded tensors
+        sharded_embeds = torch.cat([sharded_input, sharded_img], dim=1)
+        sharded_embeds = torch.gather(
+            sharded_embeds, 1, 
+            sharded_indices.unsqueeze(-1).expand(-1, -1, sharded_embeds.size(-1))
+        )
+        
+        # Restore automatic sharding
+        output = xs.disable_manual_sharding(
+            sharded_embeds, ("fsdp", None, None), 
+            input_embeds.shape, mesh=xs.get_global_mesh()
+        ).global_tensor
+
+        ctx.save_for_backward(token_indices)
+        return output
+
+    @staticmethod
+    def backward(ctx, grad_output):
+        # Similar manual sharding logic for backward pass
+        token_indices, = ctx.saved_tensors
+        # ... scatter_add with manual sharding ...
+        return grad_input, grad_img, None</code></pre>
+
+                    <p>
+                        You then carefully prepare your embeddings (remember: <strong>static shapes!</strong>) and use the custom kernel:
+                    </p>
+
+                    <pre><code class="language-python"># Instead of: input_embeds[vision_token_indices] = image_features  ❌
+# Use the custom kernel:
+input_embeds = CustomScatterKernel.apply(
+    input_embeds, image_features, vision_token_indices
+)  # ✅</code></pre>
+
+                    <p>
+                        The logic is complicated, but the pattern is: wrap indexing operations with manual sharding control 
+                        to prevent the XLA compiler from inserting expensive all-gathers.
+                    </p>
+
+                    <h4>Bug #2: The Initialization Problem</h4>
+                    <p>
+                        PyTorch's <code>nn.init.*</code> functions (like <code>xavier_uniform_</code>, <code>normal_</code>, etc.) 
+                        sometimes produce <strong>unexpected results on TorchXLA</strong>. We've seen cases where initialization 
+                        produces values that are orders of magnitude off from expected. <strong>If your training immediately produces 
+                        NaN losses, diverges within the first few steps, or your initial loss value is astronomically large—this 
+                        initialization bug is likely the culprit.</strong>
+                    </p>
+
+                    <figure style="margin: 30px 0;">
+                        <img src="assets/images/initialization_bug.png" alt="Screenshot showing abnormal weight initialization values on TPU" style="width: 100%; border-radius: 4px; border: 1px solid #ddd;">
+                        <figcaption style="font-size: 0.9em; color: #666; margin-top: 8px;">
+                            Xavier initialization gone wrong: expected std ~0.028, got values in the billions. 
+                            This silent corruption can cause training to diverge immediately.
+                        </figcaption>
+                    </figure>
+
+                    <p>
+                        <strong>The Fix:</strong> Write manual initialization functions that explicitly control the random number 
+                        generation and tensor operations. We maintain separate initialization paths for GPU vs TPU:
+                    </p>
+
+                    <pre><code class="language-python">if IS_XLA_AVAILABLE:
+    self.initialize_weights_tpu()  # Manual TPU-friendly init
+else:
+    self.initialize_weights_gpu()  # Standard nn.init.* calls</code></pre>
+
+                    <p>
+                        The TPU-friendly version manually implements each initialization:
+                    </p>
+
+                    <pre><code class="language-python">@torch.no_grad()
+def manual_xavier_uniform(tensor):
+    """TPU-friendly xavier_uniform_ implementation."""
+    fan_in, fan_out = nn.init._calculate_fan_in_and_fan_out(tensor)
+    bound = math.sqrt(6.0 / (fan_in + fan_out))
+    
+    # Generate uniform values and scale to [-bound, bound]
+    random_tensor = torch.empty_like(tensor, dtype=torch.float32).uniform_(0, 1)
+    random_tensor = random_tensor * (2 * bound) - bound
+    
+    # Use copy_ for reliable TPU behavior
+    tensor.data.copy_(random_tensor.to(tensor.dtype))
+    return tensor
+
+@torch.no_grad()
+def manual_normal_(tensor, mean=0.0, std=1.0):
+    """TPU-friendly normal_ implementation."""
+    normal_tensor = torch.zeros_like(tensor, dtype=torch.float32)
+    normal_tensor.normal_(mean=mean, std=std)
+    tensor.data.copy_(normal_tensor.to(tensor.dtype))
+    return tensor</code></pre>
+
+                    <p>
+                        You then apply these manual functions instead of the standard <code>nn.init.*</code> calls, 
+                        with <code>xm.mark_step()</code> calls between initialization phases to force synchronization:
+                    </p>
+
+                    <pre><code class="language-python">def initialize_weights_tpu(self):
+    """Robust TPU-friendly initialization."""
+    
+    # Initialize linear layers with manual xavier
+    for name, module in self.named_modules():
+        if isinstance(module, nn.Linear):
+            manual_xavier_uniform(module.weight)
+            if module.bias is not None:
+                module.bias.data.fill_(0.0)
+    
+    # Force synchronization after each phase
+    xm.mark_step()
+    
+    # Zero-init specific layers (e.g., adaLN modulation)
+    for block in self.transformer_blocks:
+        block.adaLN_modulation[-1].weight.data.fill_(0.0)
+        block.adaLN_modulation[-1].bias.data.fill_(0.0)
+    
+    xm.mark_step()
+    
+    # Validate initialization
+    self._check_weight_statistics()</code></pre>
+
+                    <div style="background: #e7f3ff; border-left: 4px solid #2196F3; padding: 16px 20px; margin: 24px 0; border-radius: 0 4px 4px 0;">
+                        <strong style="color: #1565C0;">💡 Pro Tip:</strong>
+                        <span style="color: #1565C0;">Always add validation checks after initialization on TPU. Print weight statistics (max, mean, std) 
+                        and check for abnormal values. Silent initialization bugs can waste days of debugging diverged training runs.</span>
+                    </div>
+
+                    <h4>Bug #3: The Compiler Gets It Wrong</h4>
+                    <p>
+                        Sometimes you've written everything correctly—static shapes, no implicit all-gathers, proper initialization—but 
+                        you <em>still</em> get unexpected OOM errors. In these cases, the XLA compiler itself may be making incorrect 
+                        sharding decisions.
+                    </p>
+                    <p>
+                        The SPMD compiler tries to infer optimal sharding for intermediate tensors, but it doesn't always get it right. 
+                        A tensor that <em>should</em> stay sharded might get unexpectedly replicated, causing memory to explode.
+                    </p>
+                    <p>
+                        <strong>The Fix:</strong> Manually remind the compiler how tensors should be sharded using <code>xs.mark_sharding()</code>:
+                    </p>
+
+                    <pre><code class="language-python"># When the compiler makes wrong sharding decisions, 
+# explicitly mark how tensors should be sharded
+import torch_xla.distributed.spmd as xs
+
+# After operations that might confuse the compiler
+xs.mark_sharding(tensor, xs.get_global_mesh(), ("fsdp", None))
+
+# Example in practice:
+def forward(self, x):
+    # ... some computation ...
+    output = self.layer(x)
+    
+    # Remind compiler this should stay sharded on first dim
+    xs.mark_sharding(output, xs.get_global_mesh(), ("fsdp", None))
+    
+    return output</code></pre>
+
+                    <p>
+                        This is essentially "hinting" to the compiler: "I know what I'm doing—keep this tensor sharded this way." 
+                        It's frustrating to debug, but sprinkling <code>mark_sharding</code> calls at strategic points can 
+                        turn an OOM crash into a working training run.
+                    </p>
 
                 <h2 id="portability">Can LLMs Write TPU Code?</h2>
                 <p>
@@ -535,14 +917,46 @@ def collate_fn(batch):
                     To navigate the PD limitations, we adopted a staged workflow that separates development from production training.
                 </p>
 
-                <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 30px 0; text-align: center; border: 1px dashed #ccc;">
-                    <em>[Insert Diagram Here: Dev (RW) -> Clone -> Train (RO)]</em><br>
-                    <span style="font-size: 0.9em; color: #666;">
-                        (Prompt for T2I: "A technical schematic. Left: A single server labeled 'v4-8' connected with a two-way arrow to a hard drive labeled 'Master Disk'. 
-                        Middle: An arrow labeled 'Clone' points from Master Disk to a second drive labeled 'Cloned Disk'. 
-                        Right: A large grid of servers labeled 'v4-256 Pod' with arrows reading from 'Cloned Disk'. 
-                        Style: Clean, minimal, blueprint style, blue and white.")
-                    </span>
+                <div style="display: flex; align-items: center; justify-content: center; gap: 16px; margin: 30px 0; padding: 30px 20px; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 12px; flex-wrap: wrap;">
+                    <!-- Dev Box -->
+                    <div style="text-align: center;">
+                        <div style="background: #fff; border: 2px solid #4CAF50; border-radius: 8px; padding: 16px 20px; min-width: 120px;">
+                            <div style="font-family: 'Inter', sans-serif; font-weight: 600; font-size: 14px; color: #2e7d32;">v4-8</div>
+                            <div style="font-family: 'Inter', sans-serif; font-size: 11px; color: #666; margin-top: 4px;">Dev Box</div>
+                        </div>
+                        <div style="margin-top: 8px; font-size: 20px;">↕️</div>
+                        <div style="background: #fff; border: 2px solid #4CAF50; border-radius: 8px; padding: 12px 16px; margin-top: 8px;">
+                            <div style="font-family: 'Inter', sans-serif; font-weight: 600; font-size: 12px; color: #2e7d32;">💾 Master Disk</div>
+                            <div style="font-family: 'Inter', sans-serif; font-size: 10px; color: #4CAF50; margin-top: 2px;">Read-Write</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Arrow 1 -->
+                    <div style="font-size: 24px; color: #666;">→</div>
+                    
+                    <!-- Clone Step -->
+                    <div style="text-align: center;">
+                        <div style="background: #fff3e0; border: 2px dashed #ff9800; border-radius: 8px; padding: 16px 20px;">
+                            <div style="font-family: 'Inter', sans-serif; font-weight: 600; font-size: 13px; color: #e65100;">📋 Snapshot</div>
+                            <div style="font-family: 'Inter', sans-serif; font-size: 11px; color: #666; margin-top: 4px;">& Clone</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Arrow 2 -->
+                    <div style="font-size: 24px; color: #666;">→</div>
+                    
+                    <!-- Training Pod -->
+                    <div style="text-align: center;">
+                        <div style="background: #fff; border: 2px solid #2196F3; border-radius: 8px; padding: 16px 20px; min-width: 120px;">
+                            <div style="font-family: 'Inter', sans-serif; font-weight: 600; font-size: 14px; color: #1565c0;">v4-256 Pod</div>
+                            <div style="font-family: 'Inter', sans-serif; font-size: 11px; color: #666; margin-top: 4px;">Training</div>
+                        </div>
+                        <div style="margin-top: 8px; font-size: 20px;">⬇️</div>
+                        <div style="background: #fff; border: 2px solid #2196F3; border-radius: 8px; padding: 12px 16px; margin-top: 8px;">
+                            <div style="font-family: 'Inter', sans-serif; font-weight: 600; font-size: 12px; color: #1565c0;">💾 Cloned Disk</div>
+                            <div style="font-family: 'Inter', sans-serif; font-size: 10px; color: #2196F3; margin-top: 2px;">Read-Only</div>
+                        </div>
+                    </div>
                 </div>
 
                 <ol>
@@ -563,7 +977,6 @@ def collate_fn(batch):
 
                 <h3>Google Cloud Storage (Buckets)</h3>
                 <p>
-                    <!-- [Placeholder for GCS experience...] -->
                     <strong>Google Cloud Storage (GCS) Buckets</strong> offer a flexible alternative to Persistent Disks. They provide virtually unlimited cloud storage and can be accessed concurrently by multiple TPU VMs without the read-write restrictions of PDs.
                     
                     <li>
@@ -588,30 +1001,36 @@ def collate_fn(batch):
 
                 <h2 id="conclusion">Conclusion</h2>
                 <p>
-                    Despite the initial friction, mastering the TPU stack has allowed us to train models like Cambrian-1 
-                    at a scale that competes with industry baselines. The ecosystem is maturing, and the gap between 
-                    "research code" and "production training" is narrowing.
+                    Despite the initial friction, mastering the TPU stack has allowed us to train models like Cambrian-1, Cambrian-S, RAE, and scaled-RAE 
+                    at scale. The ecosystem is maturing, and we hope this post helps you avoid some of the pitfalls we encountered.
+                </p>
+                <p>
+                    If you have comments, suggestions, or want to share your own TPU debugging war stories, please reach out to 
+                    <a href="https://tsb0601.github.io/" target="_blank">Shengbang Tong</a> or 
+                    <a href="https://bytetriper.github.io/" target="_blank">Boyang Zheng</a>.
                 </p>
 
                 <div class="citation-section" id="citation">
                     <h3 class="sans-serif" style="font-size: 1.2rem; margin-top: 0;">Citation</h3>
                     <p style="font-size: 0.95rem; color: #666; margin-bottom: 10px;">Please cite this work as:</p>
                     
-                <div class="citation-box">"Lessons from Two Years of TPU Training in Academia",
-Cambrian Blog, Dec 2025.</div>
+                <div class="citation-box">Tong, Shengbang and Zheng, Boyang. "Lessons from Two Years of TPU Training in Academia."
+Cambrian Blog, Jan 2026.
+https://cambrian-mllm.github.io/blog/tpu-training-experiments.html</div>
 
-                <div class="citation-box">@article{cambrian2025tpu,
+                <div class="citation-box">@article{tong2026tpu,
+  author = {Tong, Shengbang and Zheng, Boyang},
   title = {Lessons from Two Years of TPU Training in Academia},
   journal = {Cambrian Blog},
-  year = {2025},
-  note = {https://cambrian-mllm.github.io/blog/tpu-training-experiments.html}
+  year = {2026},
+  url = {https://cambrian-mllm.github.io/blog/tpu-training-experiments.html}
 }</div>
                 </div>
             </article>
         </div>
 
         <footer class="site-footer">
-            <div>Cambrian Lab © 2025</div>
+            <div>Cambrian Lab © 2026</div>
             <div class="footer-links">
                 <a href="#">Terms of service</a>
                 <a href="#">Privacy notice</a>
