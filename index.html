@@ -350,6 +350,10 @@
         background-color: var(--color-sky);
     }
 
+    .bg-kraft {
+        background-color: var(--color-kraft);
+    }
+
     /* Article card layout classes */
     .article-container {
         padding: 1.5rem;
@@ -481,7 +485,13 @@
 
         <section class="featured-banners">
             <div class="grid grid-cols-1 md:grid-cols-10 gap-4">
-                <a href="cambrian-s" target="_blank" class="featured-card md:col-span-7 bg-book-cloth">
+                <a href="https://cambrian-mllm.github.io/cambrian-p" target="_blank" class="featured-card md:col-span-3 bg-kraft">
+                    <img src="imgs/cambrian-p.png" alt="Cambrian-P" onerror="this.src='https://placehold.co/400x400/d4a27f/ffffff?text=Cambrian-P'; this.onerror=null;">
+                    <div class="text-container">
+                        <h3 class="featured-title">Cambrian-P</h3>
+                    </div>
+                </a>
+                <a href="cambrian-s" target="_blank" class="featured-card md:col-span-4 bg-book-cloth">
                     <img src="imgs/cambrian-s-v2.webp" alt="Cambrian-S" onerror="this.src='https://placehold.co/800x400/cc785c/ffffff?text=Cambrian-S'; this.onerror=null;">
                     <div class="text-container">
                         <h3 class="featured-title">Cambrian-S</h3>
@@ -528,6 +538,78 @@
                 </div>
 
                 <div class="article-list mt-6 space-y-0">
+
+                    <article data-category="model" data-title="cambrian-p model family release">
+                        <a href="https://huggingface.co/collections/nyu-visionx/cambrian-p-models" target="_blank" class="publication-card block">
+                            <div class="article-container">
+                                <div class="article-category">
+                                    <div class="flex items-center">
+                                        <div class="article-icon w-5 h-5 text-gray-700 mr-2 shrink-0">
+                                            <img src="https://huggingface.co/front/assets/huggingface_logo-noborder.svg" alt="Hugging Face logo">
+                                        </div>
+                                        <span class="category-label">Model</span>
+                                    </div>
+                                </div>
+                                <div class="article-title-cell">
+                                    <h3 class="article-title">Cambrian-P Model Family</h3>
+                                </div>
+                                <div class="article-date">
+                                    <span class="date-label">May 21, 2026</span>
+                                </div>
+                                <div class="article-description">
+                                    <p class="article-desc">Our Pose-Grounded Multimodal Large Language Models</p>
+                                </div>
+                            </div>
+                        </a>
+                    </article>
+
+                    <article data-category="dataset" data-title="cambrian-p-data dataset release">
+                        <a href="https://huggingface.co/datasets/nyu-visionx/Cambrian-P-Data" target="_blank" class="publication-card block">
+                            <div class="article-container">
+                                <div class="article-category">
+                                    <div class="flex items-center">
+                                        <div class="article-icon w-5 h-5 text-gray-700 mr-2 shrink-0">
+                                            <img src="https://huggingface.co/front/assets/huggingface_logo-noborder.svg" alt="Hugging Face logo">
+                                        </div>
+                                        <span class="category-label">Dataset</span>
+                                    </div>
+                                </div>
+                                <div class="article-title-cell">
+                                    <h3 class="article-title">nyu-visionx/<strong>Cambrian-P-Data</strong></h3>
+                                </div>
+                                <div class="article-date">
+                                    <span class="date-label">May 21, 2026</span>
+                                </div>
+                                <div class="article-description">
+                                    <p class="article-desc">Annotated Pose Dataset for Pose-Grounded Video Understanding</p>
+                                </div>
+                            </div>
+                        </a>
+                    </article>
+
+                    <article data-category="code" data-title="code for cambrian-p release">
+                        <a href="https://github.com/cambrian-mllm/cambrian-p" target="_blank" class="publication-card block">
+                            <div class="article-container">
+                                <div class="article-category">
+                                    <div class="flex items-center">
+                                        <svg class="w-5 h-5 text-gray-700 mr-2 shrink-0" aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
+                                            <path fill="currentColor" d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path>
+                                        </svg>
+                                        <span class="category-label">Code</span>
+                                    </div>
+                                </div>
+                                <div class="article-title-cell">
+                                    <h3 class="article-title">cambrian-mllm/<strong>cambrian-p</strong></h3>
+                                </div>
+                                <div class="article-date">
+                                    <span class="date-label">May 21, 2026</span>
+                                </div>
+                                <div class="article-description">
+                                    <p class="article-desc">Train and Evaluation Toolkits for Cambrian-P Models</p>
+                                </div>
+                            </div>
+                        </a>
+                    </article>
 
                     <article data-category="publication" data-title="cambrian-s towards spatial supersensing in video publication">
                         <a href="https://arxiv.org/abs/2511.04670" target="_blank" class="publication-card block">
