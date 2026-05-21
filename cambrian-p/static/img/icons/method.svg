@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+  <!-- video frame -->
+  <rect x="8" y="14" width="48" height="36" rx="3" stroke="#FBBC04"/>
+  <!-- camera pose axes anchored inside the frame -->
+  <circle cx="32" cy="34" r="2.5" fill="#2d3748" stroke="none"/>
+  <line x1="32" y1="34" x2="32" y2="20" stroke="#2ecc71"/>
+  <line x1="32" y1="34" x2="48" y2="34" stroke="#e74c3c"/>
+  <line x1="32" y1="34" x2="22" y2="44" stroke="#ff6b35"/>
+</svg>

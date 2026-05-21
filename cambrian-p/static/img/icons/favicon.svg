@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- rounded badge -->
+  <rect x="2" y="2" width="60" height="60" rx="12" fill="#FBBC04"/>
+  <!-- stylized 'P' whose bowl is a camera frustum -->
+  <g fill="none" stroke="#ffffff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <!-- P stem -->
+    <line x1="20" y1="14" x2="20" y2="52"/>
+    <!-- P bowl as camera frustum: optical center on stem at y=22, image plane on right -->
+    <line x1="20" y1="22" x2="42" y2="12"/>
+    <line x1="20" y1="22" x2="42" y2="32"/>
+    <line x1="42" y1="12" x2="42" y2="32"/>
+  </g>
+  <!-- optical-center dot -->
+  <circle cx="20" cy="22" r="3" fill="#ffffff"/>
+</svg>

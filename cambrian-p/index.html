@@ -1,0 +1,741 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <style>
+            pre, code {
+                font-size: 16px;
+            }
+        </style>
+
+        <title>Cambrian-P: Pose-Grounded Video Understanding</title>
+        <link rel="icon" type="image/svg+xml" href="./static/img/icons/favicon.svg">
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Open Graph -->
+        <meta property="og:url" content="https://cambrian-mllm.github.io" />
+        <meta property="og:image" content="./static/img/preview.png" />
+        <meta property="og:title" content="Cambrian-P: Pose-Grounded Video Understanding" />
+
+        <!-- Twitter -->
+        <meta property="og:description" content="Cambrian-P augments video MLLMs with per-frame learnable camera tokens and a pose regression head, achieving 4.5–6.5% gains on spatial reasoning benchmarks and state-of-the-art streaming pose estimation on ScanNet." />
+        <meta name="twitter:url" content="https://cambrian-mllm.github.io" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:image" content="./static/img/preview.png" />
+        <meta name="twitter:title" content="Cambrian-P: Pose-Grounded Video Understanding" />
+        <meta name="twitter:description" content="Cambrian-P augments video MLLMs with per-frame learnable camera tokens and a pose regression head, achieving 4.5–6.5% gains on spatial reasoning benchmarks and state-of-the-art streaming pose estimation on ScanNet." />
+
+        <!-- JS Libraries -->
+        <script src="./static/js/distill_template.v2.js"></script>
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+        <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+        <script defer="" src="./static/js/hider.js"></script>
+
+        <!-- Stylesheets -->
+        <link rel="stylesheet" href="./static/css/style.css">
+        <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+
+        <!-- KaTeX -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css" integrity="sha384-yFRtMMDnQtDRO8rLpMIKrtPCD5jdktao2TV19YiZYWMDkUR5GQZR/NOVTdquEx1j" crossorigin="anonymous">
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.js" integrity="sha384-9Nhn55MVVN0/4OFx7EE5kpFBPsEMZxKTCnA+4fqDmg12eCTqGi6+BB2LjY8brQxJ" crossorigin="anonymous"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+
+        <!-- FontAwesome -->
+        <script defer src="./static/js/fontawesome.all.min.js"></script>
+
+        <!-- Medium Zoom -->
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+        <script defer src="./static/js/medium-zoom.min.js"></script>
+        <script defer src="./static/js/zoom.js"></script>
+
+        <style>
+        /* --- Author byline (Cambrian-S style) --- */
+        .authors a,
+        .authors a * {
+            text-decoration: none !important;
+            border-bottom: none !important;
+            color: inherit !important;
+        }
+        .authors a:hover,
+        .authors a:hover * {
+            color: #007bff !important;
+            text-decoration: underline !important;
+        }
+        .authors .author-row {
+            margin-bottom: 0.4rem;
+        }
+        .authors .author-name {
+            font-size: 1.05rem;
+        }
+        /* Breathing room between the grey byline dividers and the author content */
+        .byline {
+            padding-top: 2rem !important;
+            padding-bottom: 2rem !important;
+        }
+
+        /* --- Result tables (Cambrian-S style) --- */
+        /* Match .text (width:150%; margin-left:-20%) so tables & figures align with paragraph text */
+        .table-wrapper {
+            display: block;
+            width: 150%;
+            margin: 1.5rem 0 2rem -20%;
+        }
+        /* Figures use distill's default grid-column: page (wider than text, centered).
+           Override the existing margin-left: 0 so the figure image itself centers. */
+        d-article d-figure figure,
+        d-article > figure {
+            width: 100%;
+            margin: 0 auto;
+            text-align: center;
+        }
+        /* Enlarge #fig-sampling and #fig-teaser to match .text geometry (150% of text column, −20% left shift) */
+        d-article #fig-sampling,
+        d-article #fig-teaser,
+        d-article #fig-arch {
+            grid-column: text !important;
+        }
+        d-article #fig-sampling figure,
+        d-article #fig-teaser figure,
+        d-article #fig-arch figure {
+            width: 150%;
+            max-width: none;
+            margin-left: -20%;
+            margin-right: 0;
+        }
+        /* Tables: same width as .text paragraphs, matching their left-shift so headings line up with table rows */
+        .table-wrapper {
+            width: 150%;
+            margin: 1.5rem 0 2rem -20%;
+        }
+        .table-container {
+            overflow-x: auto;
+            overflow-y: hidden;
+            width: 100%;
+            max-width: 100%;
+            -webkit-overflow-scrolling: touch;
+        }
+        /* Force figures to fit the text column */
+        d-article figure img,
+        d-article figure .pdf-figure {
+            width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+        .data-table {
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 0 auto;
+            font-size: 13px;
+            min-width: 100%;
+            line-height: 1.3;
+            font-variant-numeric: tabular-nums;
+            font-feature-settings: 'tnum';
+        }
+        .data-table thead th {
+            background: #f2f2f2;
+            font-weight: 700;
+            text-align: center;
+            padding: 0.5em 0.6em;
+            border-bottom: 2px solid #333;
+            color: #2d3748;
+            white-space: nowrap;
+        }
+        .data-table td {
+            padding: 0.35em 0.6em;
+            text-align: center;
+            border-bottom: 1px solid #ececec;
+            color: #4a5568;
+        }
+        .data-table td:first-child,
+        .data-table th:first-child {
+            text-align: left;
+            font-weight: 600;
+            color: #2d3748;
+            padding-left: 0.75em;
+            white-space: nowrap;
+        }
+        .data-table tbody tr:hover { background-color: #fafcff; }
+        .data-table tr.group-header td {
+            background: #eaf2fb;
+            font-style: italic;
+            font-weight: 700;
+            text-align: left;
+            color: #2d3748;
+            padding: 0.45em 0.75em;
+        }
+        .data-table tr.ours td {
+            background: #eafaf1;
+            font-weight: 700;
+            color: #14532d;
+        }
+        .data-table .best { font-weight: 700; }
+        .table-wrapper figcaption {
+            text-align: center;
+            width: 100%;
+            font-size: 0.95rem;
+            color: #555;
+            margin-top: 0.6rem;
+        }
+
+        @media (max-width: 768px) {
+            .data-table { font-size: 11px; }
+            .data-table thead th,
+            .data-table td { padding: 0.3em 0.4em; }
+        }
+
+        /* --- Live interactive viewer --- */
+        .viewer-wrapper {
+            width: 150%;
+            margin: 1.5rem 0 2rem -20%;
+        }
+        .viewer-frame {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 10;
+            min-height: 520px;
+            background: #f7f8fa;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            box-shadow: 0 6px 22px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        .viewer-frame iframe {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+            display: block;
+            background: #f7f8fa;
+        }
+        .viewer-frame .viewer-loading {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6em;
+            color: #6b7280;
+            font-size: 0.95rem;
+            pointer-events: none;
+            transition: opacity 0.4s;
+        }
+        .viewer-frame .viewer-loading.hidden { opacity: 0; }
+        .viewer-spinner {
+            width: 28px; height: 28px;
+            border: 3px solid #d6eefb;
+            border-top-color: #508af6;
+            border-radius: 50%;
+            animation: viewer-spin 0.9s linear infinite;
+        }
+        @keyframes viewer-spin { to { transform: rotate(360deg); } }
+        .viewer-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-top: 0.8rem;
+            flex-wrap: wrap;
+        }
+        .viewer-action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45em;
+            padding: 0.5em 1em;
+            background: #508af6;
+            color: #ffffff !important;
+            text-decoration: none !important;
+            border-radius: 6px;
+            font-size: 0.92rem;
+            font-weight: 600;
+            border: 2px solid #508af6;
+            transition: background 0.15s, border-color 0.15s;
+        }
+        .viewer-action-btn:hover {
+            background: #2d6ee0;
+            border-color: #2d6ee0;
+        }
+        .viewer-tip {
+            font-size: 0.85rem;
+            color: #6b7280;
+            line-height: 1.4;
+        }
+        .viewer-caption {
+            text-align: center;
+            font-size: 0.95rem;
+            color: #555;
+            margin-top: 0.6rem;
+        }
+        @media (max-width: 768px) {
+            .viewer-wrapper { width: 100%; margin-left: 0; margin-right: 0; }
+            .viewer-frame { min-height: 420px; aspect-ratio: auto; height: 75vh; }
+            .viewer-actions { justify-content: center; text-align: center; }
+        }
+        </style>
+    </head>
+
+    <body>
+        <div class="header-wrapper">
+            <div class="header-container" id="header-container">
+                <div class="header-content">
+                    <h1 style="margin-top: 0px"><i>Cambrian-<i>P</i></i></h1>
+                    <div class="responsive-header">
+                        <h2>Pose-Grounded Video Understanding</h2>
+                    </div>
+
+                    <div class="icon-container">
+                        <div class="icon-item">
+                            <img src="./static/img/icons/method.svg" alt="Method Icon">
+                            <div><strong>Pose-Grounded MLLM</strong>: We introduce per-frame learnable camera tokens and a lightweight pose head that regress 6-DoF pose from the LLM's hidden states.</div>
+                        </div>
+                        <div class="icon-item">
+                            <img src="./static/img/icons/training.svg" alt="Training Icon">
+                            <div><strong>Interleaved Training</strong>: Pose estimation and Video Query Answering disagree on how to sample and augment frames. We interleave pose-only batches with jittered VQA batches, balancing gradients from both objectives in a single training run.</div>
+                        </div>
+                        <div class="icon-item">
+                            <img src="./static/img/icons/vqa.svg" alt="VQA Icon">
+                            <div><strong>Spatial VQA</strong>: 4.5–6.5% gains on VSI-Bench and VSTI-Bench, plus consistent improvements across eight OOD spatial and general video benchmarks.</div>
+                        </div>
+                        <div class="icon-item">
+                            <img src="./static/img/icons/pose.svg" alt="Pose Icon">
+                            <div><strong>Streaming Pose Estimation</strong>: State-of-the-art camera pose accuracy on ScanNet, surpassing specialist reconstruction models.</div>
+                        </div>
+                    </div>
+
+                    <div class="button-container">
+                        <a href="https://arxiv.org/abs/2412.14171" class="button paper-link" target="_blank">
+                            <span class="icon is-small">
+                                <i class="ai ai-arxiv"></i>
+                            </span>
+                            arXiv
+                        </a>
+                        <a href="https://arxiv.org/abs/2412.14171" class="button paper-link" target="_blank">
+                            <span class="icon is-small">
+                                <i class="fas fa-file-pdf"></i>
+                            </span>
+                            <span>PDF</span>
+                        </a>
+                        <a href="https://github.com/cambrian-mllm/cambrian-p" class="button" target="_blank">
+                            <span class="icon is-small">
+                                <i class="fab fa-github"></i>
+                            </span>
+                            <span>Code</span>
+                        </a>
+                        <a href="https://huggingface.co/collections/nyu-visionx/cambrian-p-models" class="button" target="_blank">
+                            <span>Models</span>
+                        </a>
+                        <a href="https://huggingface.co/datasets/nyu-visionx/Cambrian-P-Data" class="button" target="_blank">
+                            <span>Data</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="header-image">
+                    <img draggable="false" src="static/img/preview.png" alt="Teaser Image" class="teaser-image">
+                </div>
+            </div>
+        </div>
+    <d-article>
+
+
+        <div class="byline">
+            <div class="byline-container" style="max-width: 1100px; display: block;">
+                <div class="authors" style="text-align: center; margin-bottom: 0.75rem; width: 100%;">
+                    <div class="author-row">
+                        <a href="https://jihanyang.github.io/" target="_blank"><span class="author-name">Jihan Yang</span></a><sup>1*</sup>,
+                        <a href="https://www.zifanzhao.com" target="_blank"><span class="author-name">Zifan Zhao</span></a><sup>1*</sup>,
+                        <a href="https://xichenpan.com/" target="_blank"><span class="author-name">Xichen Pan</span></a><sup>1</sup>,
+                        <a href="https://github.com/vealocia" target="_blank"><span class="author-name">Shusheng Yang</span></a><sup>1</sup>,
+                        <a href="https://junyi42.github.io/" target="_blank"><span class="author-name">Junyi Zhang</span></a><sup>2</sup>,
+                    </div>
+                    <div class="author-row">
+                        <a href="https://bingykang.github.io/" target="_blank"><span class="author-name">Bingyi Kang</span></a><sup>1</sup>,
+                        <a href="https://howardhsu.github.io/" target="_blank"><span class="author-name">Hu Xu</span></a><sup>3</sup>,
+                        <a href="https://www.sainingxie.com/" target="_blank"><span class="author-name">Saining Xie</span></a><sup>1</sup>
+                    </div>
+                </div>
+                <div class="affiliations" style="text-align: center; font-size: 1rem; color: #666; width: 100%;">
+                    <span><sup>1</sup>New York University</span>&nbsp;&nbsp;
+                    <span><sup>2</sup>UC Berkeley</span>&nbsp;&nbsp;
+                    <span><sup>3</sup>Meta FAIR</span>
+                </div>
+                <div style="text-align: center; font-size: 0.95rem; color: #888; margin-top: 0.3rem; width: 100%;">
+                    <sup>*</sup>Equal contribution
+                </div>
+            </div>
+        </div>
+
+
+        <h1 class="text">Overview</h1>
+
+        <d-figure id="fig-teaser">
+            <figure>
+                <img data-zoomable="" draggable="false" src="static/img/teaser.png" alt="Cambrian-P teaser figure">
+                <figcaption>
+                    <strong>Figure 1: Cambrian-<i>P</i> in video QA.</strong>
+                    Cambrian-<i>P</i> equips current video MLLMs with native camera-pose prediction via an extra camera token per frame. By positioning each video frame in a shared spatial coordinate frame, the model effectively reasons about the underlying 3D world projected in video.
+                </figcaption>
+            </figure>
+        </d-figure>
+
+
+        <p class="text">
+            Camera pose matters. The position and orientation of each viewpoint define a shared spatial coordinate frame that relates observations across video frames. Yet this signal is largely absent from multimodal LLMs (MLLMs) for video understanding, which process frames as isolated 2D snapshots, instead of the persistent scene humans perceive. We revisit pose as a lightweight supervisory signal and introduce <strong>Cambrian-<i>P</i></strong>, a video MLLM augmented with per-frame learnable camera tokens and a pose regression head. With a carefully designed sampling scheme, the model achieves substantial gains of 4.5–6.5% on spatial reasoning benchmarks such as VSI-Bench, generalizes across eight additional spatial and general video QA benchmarks, and, as a byproduct, achieves state-of-the-art streaming pose estimation on ScanNet. Surprisingly, training on pseudo-annotated poses from in-the-wild video further improves general video QA benchmarks, showing pose helps beyond spatial reasoning. Together, these results position camera pose as a fundamental signal for video models that reason about the physical world.
+        </p>
+
+
+        <div class="icon-row">
+            <a href="#method" class="icon-link">
+                <img src="./static/img/icons/method.svg" alt="Method Icon" class="icon">
+                <span>Method</span>
+            </a>
+            <a href="#vqa-results" class="icon-link">
+                <img src="./static/img/icons/vqa.svg" alt="VQA Icon" class="icon">
+                <span>Spatial VQA Results</span>
+            </a>
+            <a href="#pose-results" class="icon-link">
+                <img src="./static/img/icons/pose.svg" alt="Pose Icon" class="icon">
+                <span>Camera Pose Estimation</span>
+            </a>
+            <a href="#analysis" class="icon-link">
+                <img src="./static/img/icons/analysis.svg" alt="Analysis Icon" class="icon">
+                <span>Analysis</span>
+            </a>
+        </div>
+
+        <p class="click-hint2" style="width: 85%;">
+            <strong>Click any icon to jump to the corresponding section.</strong>
+        </p>
+
+        <hr>
+
+
+        <!-- ================== METHOD ================== -->
+        <div id="method" class="vsi-benchmark">
+            <div class="sub-section">
+                <h1 class="text">Cambrian-<i>P</i></h1>
+
+                <p class="text" align="justify">
+                    <strong>Why pose?</strong> Video is the 2D observation of a dynamic 3D scene from a coherent sequence of viewpoints. Each viewpoint is defined by an observer's pose, <i>i.e.</i>, its 3D position and orientation, specifying how the camera is embedded in the physical world. Pose is the lightest 3D signal: it compactly encodes how views relate geometrically, enforces global consistency through rigid-body constraints, and disentangles camera motion from scene dynamics. <em>Camera pose is not merely a useful auxiliary cue, but a foundational inductive bias for spatially aware video understanding.</em>
+                </p>
+
+                <d-figure id="fig-arch">
+                    <figure>
+                        <img data-zoomable="" draggable="false" src="static/img/arch.png" alt="Cambrian-P architecture">
+                        <figcaption>
+                            <strong>Figure 2: Cambrian-<i>P</i> architecture.</strong>
+                            Cambrian-<i>P</i> imposes minimal modifications to existing MLLM architectures, introducing only two learnable pose tokens and a lightweight pose head. These tokens are appended to the visual tokens of each frame and positioned before text embeddings.
+                        </figcaption>
+                    </figure>
+                </d-figure>
+
+                <p class="text" align="justify">
+                    <strong>Architecture.</strong> Cambrian-<i>P</i> builds on the <a href="https://github.com/cambrian-mllm/cambrian-s" target="_blank">Cambrian-<i>S</i></a> backbone (SigLIP2-SO400m vision encoder + Qwen2.5 LLM). To enable pose estimation inside the LLM's feature space, we introduce two learnable camera tokens, <code>c_first</code> and <code>c_rest</code>, appended after the visual tokens of each frame. After the LLM forward pass, a linear projector and a four-layer self-attention head regress a 9-D pose encoding (translation, quaternion, horizontal and vertical field-of-view) for every frame, with all poses expressed in the coordinate system of the first camera.
+                </p>
+
+                <p class="text" align="justify">
+                    <strong>Training objective.</strong> The total loss combines next-token prediction with a pose regression loss. The pose loss is a weighted L1 over translation, quaternion rotation, and field-of-view. Translation is normalized by the average consecutive-frame distance \( \bar d \) so that indoor and outdoor scenes contribute comparable gradients, and a stop-gradient least-squares scale aligns predictions to ground truth on non-metric datasets.
+                </p>
+
+                <d-figure id="fig-sampling">
+                    <figure>
+                        <img data-zoomable="" draggable="false" src="static/img/sampling.png" alt="Interleaved training of Cambrian-P">
+                        <figcaption>
+                            <strong>Figure 3: Interleaved training.</strong>
+                            <em>Top:</em> augmented pose-only samples using dynamic frame sampling and only pose supervision. <em>Bottom:</em> samples using uniform frame sampling with both VQA and pose supervision. <code>L</code> is the total number of frames in the video.
+                        </figcaption>
+                    </figure>
+                </d-figure>
+
+                <p class="text" align="justify">
+                    <strong>Bridging the training-dynamics gap.</strong> VQA and pose estimation have conflicting needs: VQA prefers uniform temporal sampling and minimal augmentation, while pose estimation prefers random starts, variable intervals, and heavy augmentation. We resolve this with two ingredients:
+                </p>
+                <ul class="text">
+                    <li><strong>Interleaved training</strong>: dedicated pose-only samples are processed with the augmentation/sampling preferred by pose models and supervised only by \( \mathcal{L}_{\text{pose}} \), allowing the pose objective to scale independently of VQA.</li>
+                    <li><strong>Random-jitter frame sampling</strong>: each uniformly sampled frame index for VQA is perturbed by a small random offset, breaking the memorization of fixed frame–pose correspondences without harming VQA coverage.</li>
+                </ul>
+            </div>
+        </div>
+
+
+        <!-- ================== VQA RESULTS ================== -->
+        <div id="vqa-results" class="vsi-evaluation">
+            <h1 class="text">Improved Spatial Video QA</h1>
+
+            <p class="text" align="justify">
+                Cambrian-<i>P</i> is fine-tuned from Cambrian-<i>S</i>-7B (stage 3) on VSI-590K and yields state-of-the-art performance on VSI-Bench. Compared to its no-pose counterpart, it gains <strong>+4.5%</strong> on VSI-Bench, with the largest improvements on tasks that demand global spatial understanding such as absolute distance, relative direction, and route planning.
+            </p>
+
+            <!-- VSI-Bench main comparison table -->
+            <div class="table-wrapper">
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th rowspan="2">Model</th>
+                                <th rowspan="2">LM</th>
+                                <th rowspan="2">Avg.</th>
+                                <th colspan="4">Numerical Answer</th>
+                                <th colspan="4">Multiple-Choice Answer</th>
+                            </tr>
+                            <tr>
+                                <th>Obj. Count</th><th>Abs. Dist.</th><th>Obj. Size</th><th>Room Size</th>
+                                <th>Rel. Dist.</th><th>Rel. Dir.</th><th>Route Plan</th><th>Appr. Order</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="group-header"><td colspan="11"><i>General-purpose Models</i></td></tr>
+                            <tr><td>GPT-4o</td><td>Unk.</td><td>34.0</td><td>46.2</td><td>5.3</td><td>43.8</td><td>38.2</td><td>37.0</td><td>41.3</td><td>31.5</td><td>28.5</td></tr>
+                            <tr><td>Gemini-2.5 Pro</td><td>Unk.</td><td>51.5</td><td>43.8</td><td>34.9</td><td>64.3</td><td>42.8</td><td>61.1</td><td>47.8</td><td>45.9</td><td>71.3</td></tr>
+                            <tr><td>Qwen2.5VL-7B</td><td>Qwen2.5-7B</td><td>29.3</td><td>25.2</td><td>10.5</td><td>36.4</td><td>29.6</td><td>38.4</td><td>38.0</td><td>29.8</td><td>26.8</td></tr>
+                            <tr><td>InternVL-3 8B</td><td>Qwen2.5-7B</td><td>42.1</td><td>68.1</td><td>39.0</td><td>48.4</td><td>33.6</td><td>48.3</td><td>36.4</td><td>27.3</td><td>35.4</td></tr>
+                            <tr><td>InternVL-3.5 8B</td><td>Qwen3-8B</td><td>56.3</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
+                            <tr><td>Qwen3-VL 8B</td><td>Qwen3-8B</td><td>56.6</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
+
+                            <tr class="group-header"><td colspan="11"><i>Spatial-specialist Models</i></td></tr>
+                            <tr><td>VST 7B</td><td>Qwen2.5-7B</td><td>61.2</td><td>71.6</td><td>43.8</td><td>75.5</td><td>69.2</td><td>60.0</td><td>55.6</td><td>44.3</td><td>69.2</td></tr>
+                            <tr><td>VLM-3R 7B</td><td>Qwen2-7B</td><td>60.9</td><td>70.2</td><td>49.4</td><td>69.2</td><td>67.1</td><td>65.4</td><td>80.5</td><td>45.4</td><td>40.1</td></tr>
+                            <tr><td>VG-LLM 8B</td><td>Qwen2.5-7B</td><td>50.7</td><td>67.9</td><td>37.7</td><td>58.6</td><td>62.0</td><td>46.6</td><td>40.7</td><td>32.4</td><td>59.2</td></tr>
+                            <tr><td>Cambrian-<i>S</i> 7B</td><td>Qwen2.5-7B</td><td>67.5</td><td>73.2</td><td>50.5</td><td>74.9</td><td>72.2</td><td>71.1</td><td>76.2</td><td>41.8</td><td>80.1</td></tr>
+                            <tr><td>SenseNova-SI 8B</td><td>Qwen2.5-7B</td><td>68.7</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
+                            <tr><td>GeoThinker 7B</td><td>Qwen2.5-7B</td><td>68.5</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
+                            <tr><td>GeoThinker 8B</td><td>Qwen3-8B</td><td>72.6</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
+                            <tr><td>Cambrian-<i>S</i>-7B<sup>&dagger;</sup></td><td>Qwen2.5-7B</td><td>69.2</td><td>73.6</td><td>53.7</td><td>75.2</td><td>74.7</td><td>71.5</td><td>82.0</td><td>38.7</td><td>84.3</td></tr>
+                            <tr class="ours"><td><strong>Cambrian-<i>P</i></strong></td><td>Qwen2.5-7B</td><td class="best">73.7</td><td class="best">74.9</td><td class="best">60.1</td><td class="best">76.0</td><td class="best">76.9</td><td class="best">74.8</td><td class="best">89.5</td><td class="best">52.6</td><td class="best">85.0</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <figcaption><strong>Table 1:</strong> VSI-Bench results. <sup>&dagger;</sup>Cambrian-<i>S</i> fine-tuned only on VSI-590K. Best results in <strong>bold</strong>.</figcaption>
+            </div>
+
+            <!-- VSTI-Bench summary -->
+            <h2 class="text" style="margin-top: 40px;">Camera-Movement Understanding (VS<i>Temporal</i>I-Bench)</h2>
+            <p class="text" align="justify">
+                We further fine-tune Cambrian-<i>P</i> on VSI-590K + VLM-3R data and evaluate on VS<i>Temporal</i>I-Bench, which probes camera-motion understanding. Pose supervision yields a <strong>+20%</strong> jump on the camera-movement-direction subtask over the no-pose baseline.
+            </p>
+            <div class="table-wrapper">
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Method</th><th>Avg.</th>
+                                <th>Cam-Obj Abs. Dist.</th><th>Cam. Displace.</th>
+                                <th>Cam. Mov. Dir.</th><th>Obj-Obj Rel. Pos.</th><th>Cam-Obj Rel. Dist.</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>GPT-4o</td><td>38.2</td><td>29.5</td><td>23.4</td><td>37.3</td><td>58.1</td><td>42.5</td></tr>
+                            <tr><td>Gemini-1.5 Flash</td><td>32.1</td><td>28.5</td><td>20.9</td><td>24.4</td><td>52.6</td><td>33.9</td></tr>
+                            <tr><td>LLaVA-NeXT-Video-72B</td><td>44.0</td><td>32.3</td><td>10.5</td><td>48.1</td><td>78.3</td><td>50.9</td></tr>
+                            <tr><td>VLM-3R-7B</td><td>58.8</td><td>39.4</td><td>39.6</td><td>60.6</td><td>86.5</td><td>68.6</td></tr>
+                            <tr><td>GeoThinker-8B</td><td>67.4</td><td>38.4</td><td>45.8</td><td>84.2</td><td>93.6</td><td class="best">75.2</td></tr>
+                            <tr><td>Cambrian-<i>P</i> (w/o pose)</td><td>62.4</td><td>39.4</td><td>40.6</td><td>67.7</td><td>92.2</td><td>72.0</td></tr>
+                            <tr class="ours"><td>Cambrian-<i>P</i></td><td class="best">68.9</td><td class="best">42.5</td><td class="best">46.6</td><td class="best">87.7</td><td class="best">94.3</td><td>73.2</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <figcaption><strong>Table 2:</strong> VS<i>Temporal</i>I-Bench results. Pose supervision yields +20% on the camera-movement-direction subtask.</figcaption>
+            </div>
+
+            <!-- OOD generalization -->
+            <h2 class="text" style="margin-top: 40px;">Out-of-Distribution Generalization</h2>
+            <p class="text" align="justify">
+                Although Cambrian-<i>P</i> is fine-tuned only on VSI-590K, the local-to-global video understanding it acquires through pose supervision transfers to a wide range of out-of-distribution spatial and general video QA benchmarks.
+            </p>
+            <div class="table-wrapper">
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Model</th><th>SparBench</th><th>MMSIBench</th><th>MMSIVideo</th><th>MindCube</th>
+                                <th>MVBench</th><th>EgoSchema</th><th>Percept. Test</th><th>Tomato</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Cambrian-<i>P</i> (w/o pose)</td><td>32.7</td><td>26.2</td><td>20.1</td><td>34.3</td><td>51.9</td><td>49.6</td><td>56.4</td><td>20.4</td></tr>
+                            <tr class="ours"><td>Cambrian-<i>P</i></td><td class="best">35.9</td><td class="best">28.0</td><td class="best">22.9</td><td class="best">38.4</td><td class="best">53.5</td><td class="best">52.5</td><td class="best">58.4</td><td class="best">26.7</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <figcaption><strong>Table 3:</strong> Out-of-distribution generalization across 8 spatial and general video QA benchmarks.</figcaption>
+            </div>
+
+            <!-- Pseudo-annotated pose -->
+            <h2 class="text" style="margin-top: 40px;">Scaling Pose Supervision with Pseudo Labels</h2>
+            <p class="text" align="justify">
+                Ground-truth camera pose annotations are only available in a few 3D datasets (ScanNet, ScanNet++, ARKitScenes inside VSI-590K). To scale pose supervision to general-domain videos, we pseudo-annotate <strong>CamS-590K</strong>, a 590K-clip subsample of Cambrian-<i>S</i>-3M, the open-domain video instruction-tuning corpus used in Cambrian-<i>S</i> Stage&nbsp;3. The pipeline runs (i) a scene-cut detector, (ii) a Qwen3-VL pose-aware quality filter that drops synthetic, text-overlaid, screen-recorded, blurry, or through-glass clips, (iii) <a href="https://arxiv.org/abs/2509.13988" target="_blank">VIPE</a> for streaming pose recovery, and (iv) a trajectory-quality pass that interpolates frames violating per-frame velocity / acceleration / rotation limits. The resulting pseudo poses are routed through the same interleaved training recipe as GT poses, with no architecture change.
+            </p>
+            <p class="text" align="justify">
+                Adding CamS-590K boosts general video QA but slightly dips VSI-Bench, showing that generic video tuning does not by itself preserve spatial reasoning. GT pose restores the spatial gain without giving up the general-VQA improvements, and layering VIPE pseudo poses on CamS data pushes all four benchmarks up further. These results suggest that pseudo poses, even when derived from noisy in-the-wild videos, provide a scalable supervision signal for video understanding.
+            </p>
+            <div class="table-wrapper">
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Training Data</th><th>Pose Sup.</th><th>% Pose Sup.</th>
+                                <th>VSI-Bench</th><th>MVBench</th><th>Perception Test</th><th>EgoSchema</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="group-header"><td colspan="7"><i>Spatial VQA Data Only</i></td></tr>
+                            <tr><td>VSI-590K</td><td>—</td><td>0%</td><td>71.2</td><td>51.7</td><td>56.7</td><td>48.5</td></tr>
+                            <tr><td>VSI-590K</td><td>GT</td><td>49%</td><td>73.7</td><td>53.8</td><td>58.1</td><td>51.3</td></tr>
+                            <tr class="group-header"><td colspan="7"><i>Spatial VQA + General VQA Data</i></td></tr>
+                            <tr><td>VSI-590K + CamS-590K</td><td>—</td><td>0%</td><td>70.9</td><td>68.0</td><td>66.9</td><td>71.2</td></tr>
+                            <tr><td>VSI-590K + CamS-590K</td><td>GT</td><td>25%</td><td>73.7</td><td>67.9</td><td>67.8</td><td>71.7</td></tr>
+                            <tr class="ours"><td>VSI-590K + CamS-590K</td><td>GT + Pseudo</td><td>48%</td><td class="best">73.9</td><td class="best">69.3</td><td class="best">67.9</td><td class="best">73.6</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <figcaption><strong>Table 4:</strong> Cambrian-<i>P</i> with general VQA training data and pseudo-pose supervision (128 input frames). Adding CamS-590K boosts general video QA but slightly hurts VSI-Bench without pose; GT pose restores the spatial gain; VIPE pseudo poses on CamS-590K improve all four benchmarks under an otherwise unchanged recipe.</figcaption>
+            </div>
+        </div>
+
+
+        <!-- ================== POSE RESULTS ================== -->
+        <div id="pose-results" class="viusal-representation-block">
+            <h1 class="text">Streaming Camera Pose Estimation</h1>
+
+            <p class="text" align="justify">
+                As a byproduct of pose supervision, Cambrian-<i>P</i> doubles as a competitive streaming camera-pose estimator. It achieves the lowest ATE on ScanNet among all streaming methods, despite using a standard MLLM backbone (causal SigLIP encoder, no DINOv2, no bidirectional transformer). On TUM-dynamic and Sintel it remains competitive with specialist models like CUT3R, StreamVGGT, and Point3R.
+            </p>
+
+            <div class="table-wrapper">
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th rowspan="2">Model</th>
+                                <th colspan="3">ScanNet</th>
+                                <th colspan="3">TUM-dynamic</th>
+                                <th colspan="3">Sintel</th>
+                            </tr>
+                            <tr>
+                                <th>ATE ↓</th><th>RPE-t ↓</th><th>RPE-r ↓</th>
+                                <th>ATE ↓</th><th>RPE-t ↓</th><th>RPE-r ↓</th>
+                                <th>ATE ↓</th><th>RPE-t ↓</th><th>RPE-r ↓</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="group-header"><td colspan="10"><i>Offline Models</i></td></tr>
+                            <tr><td>VGGT</td><td>0.035</td><td>0.015</td><td>0.380</td><td>0.009</td><td>0.008</td><td>0.350</td><td>0.172</td><td>0.061</td><td>0.470</td></tr>
+                            <tr><td>π³</td><td class="best">0.031</td><td class="best">0.013</td><td class="best">0.347</td><td>0.014</td><td>0.009</td><td class="best">0.312</td><td class="best">0.074</td><td class="best">0.040</td><td class="best">0.282</td></tr>
+                            <tr><td>MapAnything</td><td>0.052</td><td>0.025</td><td>0.720</td><td>0.029</td><td>0.023</td><td>0.370</td><td>0.226</td><td>0.077</td><td>0.640</td></tr>
+                            <tr><td>MASt3R-GA</td><td>0.078</td><td>0.020</td><td>0.475</td><td>0.038</td><td>0.012</td><td>0.448</td><td>0.185</td><td>0.060</td><td>1.496</td></tr>
+                            <tr><td>MonST3R-GA</td><td>0.077</td><td>0.018</td><td>0.529</td><td>0.098</td><td>0.019</td><td>0.935</td><td>0.111</td><td>0.044</td><td>0.869</td></tr>
+                            <tr class="group-header"><td colspan="10"><i>Streaming Models</i></td></tr>
+                            <tr><td>StreamVGGT</td><td>0.127</td><td>0.041</td><td>1.880</td><td>0.062</td><td>0.030</td><td>0.690</td><td>0.273</td><td>0.109</td><td>0.850</td></tr>
+                            <tr><td>CUT3R</td><td>0.096</td><td>0.022</td><td>0.590</td><td>0.045</td><td>0.015</td><td>0.440</td><td>0.215</td><td>0.070</td><td>0.630</td></tr>
+                            <tr><td>Point3R</td><td>0.097</td><td>0.035</td><td>2.791</td><td>0.058</td><td>0.031</td><td>0.758</td><td>0.442</td><td>0.154</td><td>1.897</td></tr>
+                            <tr><td>Spann3R</td><td>0.096</td><td>0.023</td><td>0.661</td><td>0.056</td><td>0.021</td><td>0.591</td><td>0.329</td><td>0.110</td><td>4.471</td></tr>
+                            <tr><td>G²VLM</td><td>0.148</td><td>0.048</td><td>1.220</td><td>0.129</td><td>0.044</td><td>0.700</td><td>0.301</td><td>0.135</td><td>1.450</td></tr>
+                            <tr class="ours"><td>Cambrian-<i>P</i> (Ours)</td><td class="best">0.078</td><td>0.023</td><td>0.880</td><td>0.046</td><td>0.020</td><td>0.580</td><td>0.239</td><td>0.081</td><td>2.440</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <figcaption><strong>Table 5:</strong> Camera pose estimation on ScanNet, TUM-dynamic, and Sintel. Best values among streaming methods in <strong>bold</strong>.</figcaption>
+            </div>
+
+        </div>
+
+
+        <!-- ================== ANALYSIS ================== -->
+        <div id="analysis" class="vsi-evaluation">
+            <h1 class="text">Analysis</h1>
+
+            <p class="text" align="justify">
+                <strong>Scaling.</strong> The pose objective scales gracefully along all three axes — model size, data size, and training iterations — with the gap over the no-pose baseline widening as we scale up.
+            </p>
+
+            <d-figure id="fig-scaling">
+                <figure>
+                    <div style="display: flex; gap: 1em; justify-content: center; align-items: center; flex-wrap: wrap;">
+                        <img data-zoomable="" draggable="false" src="static/img/scaling_vqa.png" alt="Scaling of Cambrian-P (VQA)" style="max-width: 48%; height: auto;">
+                        <img data-zoomable="" draggable="false" src="static/img/scaling_pose.png" alt="Scaling of Cambrian-P (pose ATE)" style="max-width: 48%; height: auto;">
+                    </div>
+                    <figcaption>
+                        <strong>Figure 5: Scaling.</strong> Larger models or more data both yield higher VSI-Bench scores and lower pose ATE across benchmarks.
+                    </figcaption>
+                </figure>
+            </d-figure>
+
+            <p class="text" align="justify">
+                <strong>Camera pose &gt; depth.</strong> Adding a depth head yields smaller VQA gains than pose, and combining pose + depth slightly hurts both objectives. Within the pose loss, both translation and rotation contribute meaningfully; field-of-view alone behaves comparably to depth.
+            </p>
+
+            <p class="text" align="justify">
+                <strong>Pose makes MLLMs think more globally.</strong> Grouping VSI-Bench questions by normalized object distance (near / medium / far), pose supervision delivers the largest gains on <em>far</em> object pairs (e.g., +6.6% on relative distance and +10.2% on relative direction for far questions), suggesting that pose enables more global spatial reasoning.
+            </p>
+
+            <d-figure id="fig-distance">
+                <figure>
+                    <img data-zoomable="" draggable="false" src="static/img/distance_related_improv.png" alt="Improvement vs object distance">
+                    <figcaption>
+                        <strong>Figure 6: Camera pose improves global spatial reasoning.</strong>
+                        Performance gain of Cambrian-<i>P</i> over its no-pose counterpart increases with normalized object distance for both relative-distance and relative-direction questions in VSI-Bench.
+                    </figcaption>
+                </figure>
+            </d-figure>
+
+            <p class="text" align="justify">
+                <strong>Latency.</strong> Despite having 6–10× more parameters than specialist 3D reconstruction models, Cambrian-<i>P</i> achieves lower per-frame latency thanks to (i) compact SigLIP visual tokens, (ii) causal-attention FLOPs savings, and (iii) the standard KV-cache mechanism of LLM inference. In offline mode it processes 90 ScanNet frames in 2.16 s; in streaming mode it matches CUT3R's per-frame cost.
+            </p>
+
+            <div class="table-wrapper">
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Method</th><th>#Params</th>
+                                <th>Offline / seq (s)</th><th>Offline / frame (s)</th>
+                                <th>Streaming / seq (s)</th><th>Streaming / frame (s)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>VGGT</td><td>1.26B</td><td>9.90</td><td>0.11</td><td>—</td><td>—</td></tr>
+                            <tr><td>CUT3R</td><td>0.80B</td><td>5.22</td><td>0.06</td><td>6.03</td><td>0.07</td></tr>
+                            <tr><td>StreamVGGT</td><td>1.26B</td><td>—</td><td>—</td><td>9.00</td><td>0.10</td></tr>
+                            <tr class="ours"><td>Cambrian-<i>P</i> (Ours)</td><td>8.20B</td><td class="best">2.16</td><td class="best">0.02</td><td class="best">5.76</td><td class="best">0.06</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <figcaption><strong>Table 6:</strong> Inference latency on the ScanNet test set (NVIDIA L40S, 90-frame sequences).</figcaption>
+            </div>
+        </div>
+
+
+        <!-- ================== CONCLUSION ================== -->
+        <div id="conclusion">
+            <h2 class="text" style="margin-top: 40px; margin-bottom: 10px">Conclusion</h2>
+            <p class="text" align="justify">
+                We introduce Cambrian-<i>P</i>, a pose-grounded video understanding model that equips standard MLLMs with the capability to connect individual frames in a shared 3D space. With a simple yet scalable architectural design and tailored training dynamics, Cambrian-<i>P</i> improves spatial and general video QA, and achieves competitive streaming pose estimation against state-of-the-art methods. Our results position camera pose as an important missing signal for video MLLMs: it grounds frames in a globally consistent 3D space and encourages learning cross-frame correspondences. Cambrian-<i>P</i> advances MLLMs toward real-world grounded video understanding.
+            </p>
+
+            <d-figure id="fig-pose-traj">
+                <figure>
+                    <img data-zoomable="" draggable="false" src="static/img/scannet_test_batch.png" alt="Pose trajectories on ScanNet test scenes">
+                    <figcaption>
+                        <strong>Figure 4: Camera pose trajectories on ScanNet test scenes.</strong>
+                        Ground truth (gray dashed) vs. predictions (blue) from Cambrian-<i>P</i>, CUT3R, StreamVGGT, and G²VLM. These scenes are disjoint from the VSI-Bench evaluation sequences — Cambrian-<i>P</i> generalizes to unseen indoor environments, capturing both global path shape and fine-grained turns.
+                    </figcaption>
+                </figure>
+            </d-figure>
+        </div>
+
+
+        <!-- ================== BIBTEX ================== -->
+        <div id="bibtex" style="position: relative; margin-top: 40px; margin-bottom: 0px; color: gray;">
+            <h2 class="text" style="margin-top:0px; margin-bottom:10px">BibTeX</h2>
+            <pre><code>(TODO)</code></pre>
+        </div>
+
+    </d-article>
+
+
+    </body>
+</html>
