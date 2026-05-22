@@ -485,7 +485,6 @@
             </div>
 
             <div class="carousel">
-                <button class="carousel-arrow prev" type="button" aria-label="previous">‹</button>
                 <div class="thumbnail-container thumbnail-qualitative">
                     <img data-scene="scene0149_00_route" data-ate="0.102" src="static/img/viewer_thumbs/scene0149_00_route.jpg" alt="route planning · scene0149_00_route · ATE 0.10m">
                     <img data-scene="arkits_47204578_reldir" data-ate="0.208" src="static/img/viewer_thumbs/arkits_47204578_reldir.jpg" alt="object rel direction hard · arkits_47204578_reldir · ATE 0.21m">
@@ -493,7 +492,6 @@
                     <img data-scene="scene0645_00_counting" data-ate="0.313" src="static/img/viewer_thumbs/scene0645_00_counting.jpg" alt="object counting · scene0645_00_counting · ATE 0.31m">
                     <img data-scene="spp_5748ce6f01" data-ate="0.204" src="static/img/viewer_thumbs/spp_5748ce6f01.jpg" alt="object size estimation · spp_5748ce6f01 · ATE 0.20m">
                 </div>
-                <button class="carousel-arrow next" type="button" aria-label="next">›</button>
             </div>
 
             <style>
@@ -543,23 +541,7 @@
               .thumbnail-container::-webkit-scrollbar-thumb:hover { background: #64748b; }
               .carousel { position: relative; display: flex; align-items: center; }
               .carousel .thumbnail-container { flex: 1 1 auto; }
-              .carousel-arrow {
-                flex: 0 0 auto;
-                width: 32px; height: 96px;
-                border: 1px solid #e5e7eb;
-                background: rgba(255,255,255,0.92);
-                color: #1f2937;
-                font-size: 22px; line-height: 1;
-                cursor: pointer; border-radius: 6px;
-                user-select: none;
-                transition: background 0.15s ease, border-color 0.15s ease;
-              }
-              .carousel-arrow:hover { background: #f1f5f9; border-color: #cbd5e1; }
-              .carousel-arrow:disabled { opacity: 0.3; cursor: default; background: #fff; }
-              .carousel-arrow.prev { margin-right: 6px; }
-              .carousel-arrow.next { margin-left: 6px; }
               @media (max-width: 768px) {
-                .carousel-arrow { height: 78px; width: 26px; font-size: 18px; }
                 .thumbnail-container img { height: 78px; }
               }
             </style>
@@ -577,23 +559,6 @@
                     thumbs.forEach(t => t.classList.remove("thumbnail-selected"));
                     el.classList.add("thumbnail-selected");
                   });
-                });
-                document.querySelectorAll(".carousel").forEach(carousel => {
-                  const strip = carousel.querySelector(".thumbnail-container");
-                  const prev  = carousel.querySelector(".carousel-arrow.prev");
-                  const next  = carousel.querySelector(".carousel-arrow.next");
-                  if (!strip || !prev || !next) return;
-                  const updateButtons = () => {
-                    const max = strip.scrollWidth - strip.clientWidth;
-                    prev.disabled = strip.scrollLeft <= 2;
-                    next.disabled = strip.scrollLeft >= max - 2;
-                  };
-                  const step = () => Math.max(120, strip.clientWidth * 0.8);
-                  prev.addEventListener("click", () => strip.scrollBy({ left: -step(), behavior: "smooth" }));
-                  next.addEventListener("click", () => strip.scrollBy({ left:  step(), behavior: "smooth" }));
-                  strip.addEventListener("scroll", updateButtons, { passive: true });
-                  window.addEventListener("resize", updateButtons);
-                  requestAnimationFrame(updateButtons);
                 });
               });
             </script>
