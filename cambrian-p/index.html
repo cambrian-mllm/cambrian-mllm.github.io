@@ -462,7 +462,7 @@
                     <strong>Bridging the training-dynamics gap.</strong> VQA and pose estimation have conflicting needs: VQA prefers uniform temporal sampling and minimal augmentation, while pose estimation prefers random starts, variable intervals, and heavy augmentation. We resolve this with two ingredients:
                 </p>
                 <ul class="text">
-                    <li><strong>Interleaved training</strong>: dedicated pose-only samples are processed with the augmentation/sampling preferred by pose models and supervised only by \( \mathcal{L}_{\text{pose}} \), allowing the pose objective to scale independently of VQA.</li>
+                    <li><strong>Interleaved training</strong>: we mix VQA-only, pose-only, and joint VQA+pose samples in training. Dedicated pose-only samples use pose-model sampling and augmentation and are supervised only by \( \mathcal{L}_{\text{pose}} \), allowing pose training to scale independently of VQA.</li>
                     <li><strong>Random-jitter frame sampling</strong>: each uniformly sampled frame index for VQA is perturbed by a small random offset, breaking the memorization of fixed frame–pose correspondences without harming VQA coverage.</li>
                 </ul>
             </div>
