@@ -4,6 +4,6 @@
   <!-- 3D axes inside bubble -->
   <line x1="22" y1="36" x2="22" y2="20" stroke="#2ecc71"/>
   <line x1="22" y1="36" x2="38" y2="36" stroke="#e74c3c"/>
-  <line x1="22" y1="36" x2="14" y2="44" stroke="#ff6b35"/>
+  <line x1="22" y1="36" x2="14" y2="44" stroke="#3498db"/>
   <circle cx="22" cy="36" r="2" fill="#FBBC04" stroke="none"/>
 </svg>
