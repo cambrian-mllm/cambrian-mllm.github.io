@@ -262,6 +262,19 @@
         color: var(--text-primary);
         text-decoration: none;
      }
+     /* Per-card opt-in: lock to 384 × 384 exactly. Sits in a col-span-4 grid
+        cell (wider than 384 px at desktop) and is centered horizontally.
+        Below 384 px cell width the card scales down 1:1 instead of overflowing. */
+     .featured-card.featured-square {
+        height: auto;
+        width: min(100%, 384px);
+        max-width: 384px;
+        aspect-ratio: 1 / 1;
+        margin: 0 auto;
+     }
+     /* align-items: start so Cambrian-P's 384px height doesn't pull siblings;
+        each card keeps its own height. */
+     .featured-grid { align-items: start; }
      
      .featured-card img {
         height: 100%;
@@ -484,14 +497,19 @@
         </div>
 
         <section class="featured-banners">
-            <div class="grid grid-cols-1 md:grid-cols-10 gap-4">
-                <a href="https://cambrian-mllm.github.io/cambrian-p" target="_blank" class="featured-card md:col-span-3 bg-kraft">
+            <!-- Single grid as before: 3 + 4 + 3 in row 1, 5 + 5 in row 2.
+                 Only Cambrian-P gets `.featured-square` so its height tracks
+                 its own width (aspect 1/1); the other tiles keep the original
+                 fixed height. align-items: start so Cambrian-P's shorter
+                 height doesn't pull the others. -->
+            <div class="grid grid-cols-1 md:grid-cols-10 gap-4 featured-grid">
+                <a href="https://cambrian-mllm.github.io/cambrian-p" target="_blank" class="featured-card featured-square md:col-span-4 bg-kraft">
                     <img src="imgs/cambrian-p.png" alt="Cambrian-P" onerror="this.src='https://placehold.co/400x400/d4a27f/ffffff?text=Cambrian-P'; this.onerror=null;">
                     <div class="text-container">
                         <h3 class="featured-title">Cambrian-P</h3>
                     </div>
                 </a>
-                <a href="cambrian-s" target="_blank" class="featured-card md:col-span-4 bg-book-cloth">
+                <a href="cambrian-s" target="_blank" class="featured-card md:col-span-3 bg-book-cloth">
                     <img src="imgs/cambrian-s-v2.webp" alt="Cambrian-S" onerror="this.src='https://placehold.co/800x400/cc785c/ffffff?text=Cambrian-S'; this.onerror=null;">
                     <div class="text-container">
                         <h3 class="featured-title">Cambrian-S</h3>
