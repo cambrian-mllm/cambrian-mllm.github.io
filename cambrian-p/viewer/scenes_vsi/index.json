@@ -1,0 +1,69 @@
+{
+  "scenes": [
+    {
+      "id": "scene0149_00_route",
+      "scene_id": "scene0149_00",
+      "question_type": "route_planning",
+      "question": "You are a robot beginning at the sink and facing the sink. You want to navigate to the refrigerator. You will perform the following actions (Note: for each [please fill in], choose either 'turn back,' 'turn left,' or 'turn right.'): 1. [please fill in] 2. Go forward until the wall. 3. [please fill in] 4. Go forward until the refrigerator. You have reached the final destination.",
+      "ground_truth": "A",
+      "prediction": "A",
+      "prior_prediction": "C",
+      "has_mesh": true,
+      "has_trajectory": true,
+      "has_video": true,
+      "ate": 0.9433056962598645
+    },
+    {
+      "id": "arkits_47204578_reldir",
+      "scene_id": "47204578",
+      "question_type": "object_rel_direction_hard",
+      "question": "If I am standing by the table and facing the tv, is the stool to my front-left, front-right, back-left, or back-right?\nThe directions refer to the quadrants of a Cartesian plane (if I am standing at the origin and facing along the positive y-axis).",
+      "ground_truth": "A",
+      "prediction": "A",
+      "prior_prediction": "B",
+      "has_mesh": true,
+      "has_trajectory": true,
+      "has_video": true,
+      "ate": 1.3223382462131523
+    },
+    {
+      "id": "spp_bcd2436daf",
+      "scene_id": "bcd2436daf",
+      "question_type": "object_abs_distance",
+      "question": "Measuring from the closest point of each object, what is the distance between the chair and the heater (in meters)?",
+      "ground_truth": "1.2",
+      "prediction": "1.2",
+      "prior_prediction": "0.8",
+      "has_mesh": true,
+      "has_trajectory": true,
+      "has_video": true,
+      "ate": 1.2447490797674727
+    },
+    {
+      "id": "scene0645_00_counting",
+      "scene_id": "scene0645_00",
+      "question_type": "object_counting",
+      "question": "How many lamp(s) are in this room?",
+      "ground_truth": "3",
+      "prediction": "3",
+      "prior_prediction": "2",
+      "has_mesh": true,
+      "has_trajectory": true,
+      "has_video": true,
+      "ate": 1.5289937544386778
+    },
+    {
+      "id": "spp_5748ce6f01",
+      "scene_id": "5748ce6f01",
+      "question_type": "object_size_estimation",
+      "question": "What is the length of the longest dimension (length, width, or height) of the table, measured in centimeters?",
+      "ground_truth": "188",
+      "prediction": "180",
+      "prior_prediction": "219",
+      "has_mesh": true,
+      "has_trajectory": true,
+      "has_video": true,
+      "ate": 1.2475374438174158
+    }
+  ]
+}

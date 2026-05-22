@@ -397,6 +397,10 @@
                 <img src="./static/img/icons/vqa.svg" alt="VQA Icon" class="icon">
                 <span>Spatial VQA Results</span>
             </a>
+            <a href="#qualitative-visualization" class="icon-link">
+                <img src="./static/img/icons/world.svg" alt="Qualitative Viz Icon" class="icon">
+                <span>Qualitative Visualization</span>
+            </a>
             <a href="#pose-results" class="icon-link">
                 <img src="./static/img/icons/pose.svg" alt="Pose Icon" class="icon">
                 <span>Camera Pose Estimation</span>
@@ -462,7 +466,139 @@
         </div>
 
 
-        <!-- ================== VQA RESULTS ================== -->
+        
+        <!-- ================== QUALITATIVE VISUALIZATION ================== -->
+        <!-- 150% width + -20% margin-left so the section spans the same width
+             as .table-wrapper / #fig-* (i.e., aligned with the result tables). -->
+        <div id="qualitative-visualization" style="width: 150%; margin: 0 0 0 -20%;">
+            <h2 class="text" align="center" style="margin-top: 40px; margin-bottom: 8px">Qualitative Visualization</h2>
+
+            <div class="viewer-card">
+                <iframe id="qual-viz-iframe"
+                        src="viewer/?scene=scene0149_00_route"
+                        title="Cambrian-P Qualitative Viewer"
+                        loading="lazy"
+                        allow="fullscreen"></iframe>
+            </div>
+
+            <div class="carousel">
+                <button class="carousel-arrow prev" type="button" aria-label="previous">‹</button>
+                <div class="thumbnail-container thumbnail-qualitative">
+                    <img data-scene="scene0149_00_route" data-ate="0.102" src="static/img/viewer_thumbs/scene0149_00_route.jpg" alt="route planning · scene0149_00_route · ATE 0.10m">
+                    <img data-scene="arkits_47204578_reldir" data-ate="0.208" src="static/img/viewer_thumbs/arkits_47204578_reldir.jpg" alt="object rel direction hard · arkits_47204578_reldir · ATE 0.21m">
+                    <img data-scene="spp_bcd2436daf" data-ate="0.223" src="static/img/viewer_thumbs/spp_bcd2436daf.jpg" alt="object abs distance · spp_bcd2436daf · ATE 0.22m">
+                    <img data-scene="scene0645_00_counting" data-ate="0.313" src="static/img/viewer_thumbs/scene0645_00_counting.jpg" alt="object counting · scene0645_00_counting · ATE 0.31m">
+                    <img data-scene="spp_5748ce6f01" data-ate="0.204" src="static/img/viewer_thumbs/spp_5748ce6f01.jpg" alt="object size estimation · spp_5748ce6f01 · ATE 0.20m">
+                </div>
+                <button class="carousel-arrow next" type="button" aria-label="next">›</button>
+            </div>
+
+            <style>
+              .viewer-card {
+                position: relative;
+                width: 100%;
+                height: 860px;
+                margin: 0 auto 18px;
+                background: #ffffff;
+                border-radius: 16px;
+                box-shadow: 0 10px 30px rgba(15, 23, 42, 0.10), 0 2px 8px rgba(15, 23, 42, 0.04);
+                overflow: hidden;
+              }
+              .viewer-card iframe {
+                position: absolute; inset: 0;
+                width: 100%; height: 100%; border: 0;
+              }
+              .thumbnail-container {
+                display: flex; flex-wrap: nowrap; overflow-x: auto;
+                gap: 10px; padding: 6px 2px 10px;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: thin;
+                align-items: center;
+                /* Center the 5 thumbs in the wide section so they sit under
+                   the iframe instead of left-aligning. They fit in one row,
+                   no horizontal scrolling needed on desktop. */
+                justify-content: center;
+              }
+              .thumbnail-container img {
+                flex: 0 0 auto;
+                height: 96px; width: auto;
+                object-fit: cover;
+                border: 3px solid transparent;
+                border-radius: 6px;
+                cursor: pointer;
+                transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+              }
+              .thumbnail-container img:hover { transform: scale(1.06); border-color: #cbd5e1; }
+              .thumbnail-container img.thumbnail-selected {
+                border-color: #4ea3ff;
+                box-shadow: 0 0 8px rgba(78, 163, 242, 0.5);
+                transform: scale(1.08);
+              }
+              .thumbnail-container::-webkit-scrollbar { height: 6px; }
+              .thumbnail-container::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
+              .thumbnail-container::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 10px; }
+              .thumbnail-container::-webkit-scrollbar-thumb:hover { background: #64748b; }
+              .carousel { position: relative; display: flex; align-items: center; }
+              .carousel .thumbnail-container { flex: 1 1 auto; }
+              .carousel-arrow {
+                flex: 0 0 auto;
+                width: 32px; height: 96px;
+                border: 1px solid #e5e7eb;
+                background: rgba(255,255,255,0.92);
+                color: #1f2937;
+                font-size: 22px; line-height: 1;
+                cursor: pointer; border-radius: 6px;
+                user-select: none;
+                transition: background 0.15s ease, border-color 0.15s ease;
+              }
+              .carousel-arrow:hover { background: #f1f5f9; border-color: #cbd5e1; }
+              .carousel-arrow:disabled { opacity: 0.3; cursor: default; background: #fff; }
+              .carousel-arrow.prev { margin-right: 6px; }
+              .carousel-arrow.next { margin-left: 6px; }
+              @media (max-width: 768px) {
+                .carousel-arrow { height: 78px; width: 26px; font-size: 18px; }
+                .thumbnail-container img { height: 78px; }
+              }
+            </style>
+
+            <script>
+              document.addEventListener("DOMContentLoaded", function () {
+                const iframe = document.getElementById("qual-viz-iframe");
+                const thumbs = document.querySelectorAll(".thumbnail-qualitative img");
+                if (thumbs[0]) thumbs[0].classList.add("thumbnail-selected");
+                thumbs.forEach(el => {
+                  el.addEventListener("click", () => {
+                    const sid = el.getAttribute("data-scene");
+                    if (!sid) return;
+                    iframe.src = "viewer/?scene=" + encodeURIComponent(sid);
+                    thumbs.forEach(t => t.classList.remove("thumbnail-selected"));
+                    el.classList.add("thumbnail-selected");
+                  });
+                });
+                document.querySelectorAll(".carousel").forEach(carousel => {
+                  const strip = carousel.querySelector(".thumbnail-container");
+                  const prev  = carousel.querySelector(".carousel-arrow.prev");
+                  const next  = carousel.querySelector(".carousel-arrow.next");
+                  if (!strip || !prev || !next) return;
+                  const updateButtons = () => {
+                    const max = strip.scrollWidth - strip.clientWidth;
+                    prev.disabled = strip.scrollLeft <= 2;
+                    next.disabled = strip.scrollLeft >= max - 2;
+                  };
+                  const step = () => Math.max(120, strip.clientWidth * 0.8);
+                  prev.addEventListener("click", () => strip.scrollBy({ left: -step(), behavior: "smooth" }));
+                  next.addEventListener("click", () => strip.scrollBy({ left:  step(), behavior: "smooth" }));
+                  strip.addEventListener("scroll", updateButtons, { passive: true });
+                  window.addEventListener("resize", updateButtons);
+                  requestAnimationFrame(updateButtons);
+                });
+              });
+            </script>
+        </div>
+
+
+
+<!-- ================== VQA RESULTS ================== -->
         <div id="vqa-results" class="vsi-evaluation">
             <h1 class="text">Improved Spatial Video QA</h1>
 
